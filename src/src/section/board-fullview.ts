@@ -2,7 +2,7 @@ import { setupCanvas } from "../canvas/canvas"
 
 export function setupFullView(element: HTMLDivElement) {
     element.innerHTML = `
-        <canvas></canvas>
+        <canvas id="fullview-canvas"></canvas>
         <div class= "properties">
             <div class="properties-content"> 
                 <h2>Fullview Properties</h2>

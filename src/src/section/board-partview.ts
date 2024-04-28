@@ -2,7 +2,7 @@ import { setupCanvas } from "../canvas/canvas"
 
 export function setupPartView(element: HTMLDivElement) {
     element.innerHTML = `
-        <canvas></canvas>
+        <canvas id="partview-canvas"></canvas>
         <div class= "properties">
             <div class="properties-content"> 
                 <h2>Partview Properties</h2>
@@ -76,5 +76,5 @@ export function setupPartView(element: HTMLDivElement) {
             </div>
         </div>
     `
-    setupCanvas(document.querySelector<HTMLDivElement>('#fullview-canvas')!)
+    setupCanvas(document.querySelector<HTMLDivElement>('#partview-canvas')!)
 }
