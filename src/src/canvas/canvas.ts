@@ -1,4 +1,4 @@
 export function setupCanvas(element: HTMLDivElement) {
-    //TODO
+    //TODO SETUP WEBGL
     element = element
 }
