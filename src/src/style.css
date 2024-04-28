@@ -84,7 +84,7 @@ canvas {
 }
 
 .properties-content {
-  max-height: 90%;
+  height: 90%;
   margin: 3%;
   overflow-y: auto;
 }
