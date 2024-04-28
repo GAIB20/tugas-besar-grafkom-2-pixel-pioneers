@@ -50,13 +50,54 @@ body {
   font-weight: bold;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#board {
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-.card {
-  padding: 2em;
+.board-section {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.middle-tray {
+  width: 20%;
+  height: 100%;
+  background-color: #242424;
+}
+
+canvas {
+  width: 100%;
+  height: 50%;
+  background-color: white;
+}
+
+.properties {
+  width: 100%;
+  height: 50%;
+  background-color: #242424;
+}
+
+.hierarchy {
+  width: 100%;
+  height: 50%;
+  background-color: #454545;
+}
+
+.options {
+  width: 100%;
+  height: 50%;
+  background-color: #454545;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
 }
 
 button {
@@ -82,15 +123,6 @@ button:focus-visible {
   background-color: #646cff;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+p {
+  margin: 0;
 }
