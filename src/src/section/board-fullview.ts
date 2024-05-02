@@ -25,7 +25,7 @@ export function setupFullView(element: HTMLDivElement) {
                         <select id="myDropdown" name="options">
                             <option value="option1">Oblique</option>
                             <option value="option2">Orthographic</option>
-                            <option value="option3">Perspective</option>
+                            <option value="option3">Perspective (1-point)</option>
                         </select>
                     </div>
                     <div class="slider-container-2">
