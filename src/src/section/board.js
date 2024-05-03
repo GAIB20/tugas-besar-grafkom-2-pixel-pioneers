@@ -1,5 +1,5 @@
-import { setupFullView } from "./board-fullview.js";
-import { setupPartView } from "./board-partview.js";
+import { setupFullView } from "./board-fullview.js"
+import { setupPartView } from "./board-partview.js"
 
 export function setupBoard(element) {
     element.innerHTML = `
@@ -7,7 +7,50 @@ export function setupBoard(element) {
         </div>
         <div class="middle-tray">
             <div class="hierarchy">
-                <p>Hierarchy</p>
+                <table style="overflow: auto; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Hierarchy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">
+                                <div style="margin-left: 0px;">
+                                    <input type="submit" id="insp-compTree-RBody" value="RBody" class="">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div style="margin-left: 20px;">
+                                    <input type="submit" id="insp-compTree-PBody" value="PBody" class="">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div style="margin-left: 20px;">
+                                    <input type="submit" id="insp-compTree-RHead" value="RHead" class="">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div style="margin-left: 40px;">
+                                    <input type="submit" id="insp-compTree-PHead" value="PHead" class="">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <div style="margin-left: 20px;">
+                                    <input type="submit" id="insp-compTree-RArmL" value="RArmL" class="selected">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="options">
                 <p>File.txt</p>
