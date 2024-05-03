@@ -35,6 +35,9 @@ export class Component {
   get children() {
     return this._children;
   }
+  get type() {
+    return "Component";
+  }
 
   // Setter
   set parent(parent) {
@@ -97,4 +100,32 @@ export class Component {
     }
     return this;
   }
+
+  
+  toJSON() {
+    return {
+        type: this.type,
+        position: this.position,
+        rotation: this.rotation,
+        scale: this.scale,
+        localMatrix: this.localMatrix,
+        worldMatrix: this.worldMatrix,
+        parent: this.parent?.toJSON(),
+        children: this.children.map((child) => child.toJSON()),
+    }
+}
+
+fromJSON(json, obj=null) {
+    if (!obj) obj = new Component();
+    obj.position = json.position;
+    obj.rotation = json.rotation;
+    obj.scale = json.scale;
+    obj.localMatrix = json.localMatrix;
+    obj.worldMatrix = json.worldMatrix;
+    obj.parent = json.parent;
+    json.forEach(child => {
+        obj.add(child.fromJSON(child));
+    });
+    return obj;
+}
 }
