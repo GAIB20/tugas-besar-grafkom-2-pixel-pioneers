@@ -1,7 +1,7 @@
-import { setupCanvas } from "../canvas/canvas.js";
+import { WebGL } from "../canvas/canvas";
 
 export function setupPartView(element) {
-    element.innerHTML = `
+  element.innerHTML = `
         <canvas id="partview-canvas"></canvas>
         <div class= "properties">
             <div class="properties-content"> 
@@ -76,5 +76,7 @@ export function setupPartView(element) {
             </div>
         </div>
     `;
-    setupCanvas(element.querySelector('#partview-canvas'));
+
+  const gl = new WebGL();
+  gl.initialize_gl(document.querySelector("#partview-canvas"));
 }
