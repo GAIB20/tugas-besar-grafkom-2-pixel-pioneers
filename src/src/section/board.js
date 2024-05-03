@@ -1,7 +1,7 @@
-import { setupFullView } from "./board-fullview"
-import { setupPartView } from "./board-partview"
+import { setupFullView } from "./board-fullview.js";
+import { setupPartView } from "./board-partview.js";
 
-export function setupBoard(element: HTMLDivElement) {
+export function setupBoard(element) {
     element.innerHTML = `
         <div id="fullview" class="board-section">
         </div>
@@ -16,10 +16,18 @@ export function setupBoard(element: HTMLDivElement) {
                 <button class="btn-purple">Reset</button>
             </div>
         </div>
-        </div>
         <div id="partview" class="board-section">
         </div>
-    `
-    setupFullView(document.querySelector<HTMLDivElement>('#fullview')!)
-    setupPartView(document.querySelector<HTMLDivElement>('#partview')!)
+    `;
+
+    const fullviewElement = document.querySelector('#fullview');
+    const partviewElement = document.querySelector('#partview');
+
+    if (fullviewElement) {
+        setupFullView(fullviewElement);
+    }
+
+    if (partviewElement) {
+        setupPartView(partviewElement);
+    }
 }

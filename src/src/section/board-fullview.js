@@ -1,6 +1,6 @@
-import { setupCanvas } from "../canvas/canvas"
+import { setupCanvas } from "../canvas/canvas.js"
 
-export function setupFullView(element: HTMLDivElement) {
+export function setupFullView(element) {
     element.innerHTML = `
         <canvas id="fullview-canvas"></canvas>
         <div class= "properties">
@@ -94,5 +94,5 @@ export function setupFullView(element: HTMLDivElement) {
             </div>
         </div>
     `
-    setupCanvas(document.querySelector<HTMLDivElement>('#fullview-canvas')!)
+    setupCanvas(document.querySelector('#fullview-canvas'));
 }

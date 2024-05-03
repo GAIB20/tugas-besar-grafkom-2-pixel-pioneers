@@ -1,7 +1,7 @@
-import { Matrix } from "./matrix";
+import { Matrix } from "./matrix.js";
 
 export class Matrix4 extends Matrix {
-    constructor(data: number[][]) {
+    constructor(data) {
         if (data.length !== 16) throw new Error("Matrix4 must have 16 elements");
         super(data, 4, 4);
     }

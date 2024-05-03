@@ -1,18 +1,19 @@
-import { Vector3 } from "./vector3";
-import { Matrix } from "./matrix";
+import { Vector3 } from "../../math/vector3.js";
+import { Matrix } from "../../math/matrix.js";
 
 export class Component {
-    private _position: Vector3 = new Vector3();
-    private _rotation: Vector3 = new Vector3();
-    private _scale: Vector3 = new Vector3(1, 1, 1);
-    private _localMatrix: Matrix = Matrix.identity();
-    private _worldMatrix: Matrix = Matrix.identity();
-    private _parent?: Component;
-    private _children: Component[] = []
-    visible=true
+    constructor() {
+        this._position = new Vector3();
+        this._rotation = new Vector3();
+        this._scale = new Vector3(1, 1, 1);
+        this._localMatrix = Matrix.identity();
+        this._worldMatrix = Matrix.identity();
+        this._parent = undefined;
+        this._children = [];
+        this.visible = true;
+    }
 
-
-    // Public getter, prevent re-instance new object
+    // Getters
     get position() { return this._position; }
     get rotation() { return this._rotation; }
     get scale() { return this._scale; }
@@ -21,16 +22,13 @@ export class Component {
     get worldMatrix() { return this._worldMatrix; }
     get children() { return this._children; }
 
-
-    // Public setter
-    // Should update world matrix if parent changed
+    // Setter
     set parent(parent) {
         if (this._parent !== parent) {
             this._parent = parent;
             this.computeWorldMatrix(false, true);
         }
     }
-
 
     computeLocalMatrix() {
         this._localMatrix = Matrix.mul(
@@ -40,14 +38,12 @@ export class Component {
         );
     }
 
-
-    computeWorldMatrix(updateParent=true, updateChildren=true) {
-        // If updateParent, update world matrix of our ancestors
-        // (.parent, .parent.parent, .parent.parent.parent, ...)
+    computeWorldMatrix(updateParent = true, updateChildren = true) {
         if (updateParent && this.parent)
             this.parent.computeWorldMatrix(true, false);
-        // Update this node
+
         this.computeLocalMatrix();
+        
         if (this.parent) {
             this._worldMatrix = Matrix.mul(
                 this.parent.worldMatrix,
@@ -56,41 +52,35 @@ export class Component {
         } else {
             this._worldMatrix = this._localMatrix.clone();
         }
-        // If updateChildren, update our children
-        // (.children, .children.children, .children.children.children, ...)
-        if (updateChildren)
-            for (let i = 0; i < this._children.length; i++)
-                this._children[i].computeWorldMatrix(false, true);
+
+        if (updateChildren) {
+            this._children.forEach(child => {
+                child.computeWorldMatrix(false, true);
+            });
+        }
     }
- 
-    /**
-     * Tambah node sebagai child dari node ini.
-     *
-     * Jika node sudah memiliki parent, maka node akan
-     * dilepas dari parentnya terlebih dahulu.
-     */
-    add(node: Component): Component {
+
+    add(node) {
         if (node.parent !== this) {
             node.removeFromParent();
             node.parent = this;
         }
-        this.children.push(node);
+        this._children.push(node);
         return this;
     }
 
-
-    remove(node: Component): void {
+    remove(node) {
         const index = this._children.indexOf(node);
         if (index !== -1) {
             this._children.splice(index, 1);
             node.parent = undefined;
         }
     }
-    
-
 
     removeFromParent() {
-        if (this.parent) this.parent.remove(this);
+        if (this.parent) {
+            this.parent.remove(this);
+        }
         return this;
     }
 }

@@ -1,9 +1,9 @@
 export class Quaternion {
-    constructor(public x: number = 0, public y: number = 0, public z: number = 0, public w: number = 1) {
+    constructor(x = 0, y = 0, z = 0, w = 1) {
         this.set(x, y, z, w);
     }
 
-    set(x: number, y: number, z: number, w: number = 1): Quaternion {
+    set(x, y, z, w = 1) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -11,7 +11,7 @@ export class Quaternion {
         return this;
     }
 
-    clone(): Quaternion {
+    clone() {
         return new Quaternion(this.x, this.y, this.z, this.w);
     }
 }

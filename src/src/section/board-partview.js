@@ -1,6 +1,6 @@
-import { setupCanvas } from "../canvas/canvas"
+import { setupCanvas } from "../canvas/canvas.js";
 
-export function setupPartView(element: HTMLDivElement) {
+export function setupPartView(element) {
     element.innerHTML = `
         <canvas id="partview-canvas"></canvas>
         <div class= "properties">
@@ -75,6 +75,6 @@ export function setupPartView(element: HTMLDivElement) {
                 </div>
             </div>
         </div>
-    `
-    setupCanvas(document.querySelector<HTMLDivElement>('#partview-canvas')!)
+    `;
+    setupCanvas(element.querySelector('#partview-canvas'));
 }
