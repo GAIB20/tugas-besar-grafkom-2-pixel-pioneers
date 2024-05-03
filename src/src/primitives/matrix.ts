@@ -2,14 +2,18 @@ import { Vector3 } from "./vector3";
 
 export class Matrix {
     private data: number[][];
+    private m: number;
+    private n: number;
 
-    constructor(data?: number[][]) {
+    constructor(data?: number[][], m?: number, n?: number) {
         this.data = data ?? [
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 1, 0],
             [0, 0, 0, 1]
         ];
+        this.m = m ?? 4;
+        this.n = n ?? 4;
     }
 
     static identity(): Matrix {
@@ -19,6 +23,12 @@ export class Matrix {
     clone(): Matrix {
         const newData = this.data.map(row => row.slice());
         return new Matrix(newData);
+    }
+
+    get(i: number, j: number): number {
+        if (i < 0 || i >= this.m || j < 0 || j >= this.n)
+            throw new Error("Index out of range.");
+        return this.data[i][j];
     }
 
     static mul(...matrices: Matrix[]): Matrix {
