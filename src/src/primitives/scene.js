@@ -1,4 +1,5 @@
 import { Component } from "./component.js";
+import { Color } from "./color.js";
 
 export class Scene extends Component {
     backgroundColor;

@@ -1,5 +1,6 @@
 import { Vector3 } from "../math/vector3.js";
 import { Matrix } from "../math/matrix.js";
+import { Deserialize } from "./deserialize.js";
 
 export class Component {
   constructor() {
@@ -105,12 +106,11 @@ export class Component {
   toJSON() {
     return {
         type: this.type,
-        position: this.position,
-        rotation: this.rotation,
-        scale: this.scale,
-        localMatrix: this.localMatrix,
-        worldMatrix: this.worldMatrix,
-        parent: this.parent?.toJSON(),
+        position: this.position.toJSON(),
+        rotation: this.rotation.toJSON(),
+        scale: this.scale.toJSON(),
+        localMatrix: this.localMatrix.toJSON(),
+        worldMatrix: this.worldMatrix.toJSON(),
         children: this.children.map((child) => child.toJSON()),
     }
 }
@@ -122,9 +122,8 @@ fromJSON(json, obj=null) {
     obj.scale = json.scale;
     obj.localMatrix = json.localMatrix;
     obj.worldMatrix = json.worldMatrix;
-    obj.parent = json.parent;
     json.forEach(child => {
-        obj.add(child.fromJSON(child));
+        obj.add(Deserialize(child));
     });
     return obj;
 }
