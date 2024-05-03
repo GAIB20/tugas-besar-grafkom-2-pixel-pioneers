@@ -1,5 +1,5 @@
 import { Component } from "../primitives/component";
-import { Matrix } from "../primitives/matrix";
+import { Matrix } from "../math/matrix";
 
 export class Camera extends Component {
     protected _projectionMatrix: Matrix = Matrix.identity();

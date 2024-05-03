@@ -1,5 +1,5 @@
-import { Vector3 } from "./vector3";
-import { Matrix } from "./matrix";
+import { Vector3 } from "../math/vector3";
+import { Matrix } from "../math/matrix";
 
 export class Component {
     private _position: Vector3 = new Vector3();
