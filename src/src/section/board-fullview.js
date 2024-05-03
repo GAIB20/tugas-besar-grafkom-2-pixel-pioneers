@@ -1,4 +1,4 @@
-import { WebGL } from "../canvas/canvas";
+import { setupCanvas } from "../canvas/canvas";
 
 export function setupFullView(element) {
   element.innerHTML = `
@@ -10,7 +10,7 @@ export function setupFullView(element) {
                 <div class="transformation-container">
                     <div class="slider-container-2">
                         <p>Angle</p>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-camera-angle-slider">
                         <p>0</p>
                     </div>
                     <div class="slider-container-2">
@@ -94,6 +94,5 @@ export function setupFullView(element) {
             </div>
         </div>
     `;
-  const gl = new WebGL();
-  gl.initialize_gl(document.querySelector("#fullview-canvas"));
+  setupCanvas(document.querySelector("#fullview-canvas"), document.querySelector("#fullview-camera-angle-slider"));
 }
