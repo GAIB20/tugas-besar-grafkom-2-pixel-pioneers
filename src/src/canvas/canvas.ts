@@ -27,8 +27,6 @@ export class WebGL {
             gl_FragColor = vec4(fragColor, 1.0);
         }
     `;
-
-    this.initialize_gl();
   }
 
   // Create shader program
@@ -91,15 +89,7 @@ export class WebGL {
     return shader;
   };
 
-  initialize_gl = () => {
-    const canvas: HTMLCanvasElement = document.querySelector("canvas")!;
-    const containerCanvas: HTMLElement =
-      document.getElementById("container-canva")!;
-
-    // Set width and height
-    canvas.width = containerCanvas.offsetWidth;
-    canvas.height = containerCanvas.offsetHeight;
-
+  initialize_gl = (canvas: HTMLCanvasElement) => {
     // Initialize GL
     const gl: WebGLRenderingContext | null = canvas.getContext("webgl");
 
@@ -111,6 +101,9 @@ export class WebGL {
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.clearColor(1.0, 1.0, 1.0, 1.0);
     }
+
+    // Save gl
+    this.gl = gl;
 
     // Initialize a shader program
     this.create_shader_program();
