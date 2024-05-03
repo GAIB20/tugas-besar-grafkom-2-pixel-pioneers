@@ -1,9 +1,4 @@
 export class WebGL {
-  vertex_shader_source: string;
-  fragment_shader_source: string;
-  gl: any;
-  shader_program: any;
-
   constructor() {
     // Vertex shader program
     this.vertex_shader_source = `
@@ -65,7 +60,7 @@ export class WebGL {
   };
 
   // Function to load shader
-  load_shader = (type: any, source: string) => {
+  load_shader = (type, source) => {
     // Create object shader
     const shader = this.gl.createShader(type);
 
@@ -89,9 +84,9 @@ export class WebGL {
     return shader;
   };
 
-  initialize_gl = (canvas: HTMLCanvasElement) => {
+  initialize_gl = (canvas) => {
     // Initialize GL
-    const gl: WebGLRenderingContext | null = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl");
 
     // Check if browser supports WebGL or not
     if (gl === null) {

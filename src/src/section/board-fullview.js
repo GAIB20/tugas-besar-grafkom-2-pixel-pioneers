@@ -1,7 +1,7 @@
-import { WebGL } from "../canvas/canvas"
+import { WebGL } from "../canvas/canvas";
 
-export function setupFullView(element: HTMLDivElement) {
-    element.innerHTML = `
+export function setupFullView(element) {
+  element.innerHTML = `
         <canvas id="fullview-canvas"></canvas>
         <div class= "properties">
             <div class="properties-content"> 
@@ -93,7 +93,7 @@ export function setupFullView(element: HTMLDivElement) {
                 </div>
             </div>
         </div>
-    `
-    const gl = new WebGL();
-    gl.initialize_gl(document.querySelector('#fullview-canvas')!)
+    `;
+  const gl = new WebGL();
+  gl.initialize_gl(document.querySelector("#fullview-canvas"));
 }
