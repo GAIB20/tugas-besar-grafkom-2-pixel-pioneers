@@ -4,6 +4,7 @@ import { Deserialize } from "./deserialize.js";
 
 export class Component {
   constructor() {
+    this.name = '';
     this._position = new Vector3();
     this._rotation = new Vector3();
     this._scale = new Vector3(1, 1, 1);
@@ -105,26 +106,26 @@ export class Component {
   
   toJSON() {
     return {
+        name: this.name,
         type: this.type,
         position: this.position.toJSON(),
         rotation: this.rotation.toJSON(),
         scale: this.scale.toJSON(),
-        localMatrix: this.localMatrix.toJSON(),
-        worldMatrix: this.worldMatrix.toJSON(),
         children: this.children.map((child) => child.toJSON()),
     }
 }
 
 fromJSON(json, obj=null) {
     if (!obj) obj = new Component();
-    obj.position = json.position;
-    obj.rotation = json.rotation;
-    obj.scale = json.scale;
-    obj.localMatrix = json.localMatrix;
-    obj.worldMatrix = json.worldMatrix;
-    json.forEach(child => {
+    obj.name = json.name;
+    obj.position.set(...position);
+    obj.rotation.set(...rotation); // Kalau di contoh, rotation tidak di read dari json
+    obj.scale.set(...json.scale);
+
+    json.children.forEach(child => {
         obj.add(Deserialize(child));
     });
+
     return obj;
 }
 }
