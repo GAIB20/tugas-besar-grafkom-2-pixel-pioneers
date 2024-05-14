@@ -10,12 +10,12 @@ export function setupPartView(element) {
                 <div class="transformation-container">
                     <div class="slider-container-2">
                         <p>Angle</p>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="partview-camera-angle-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="partview-camera-angle-slider">
                         <p>0</p>
                     </div>
                     <div class="slider-container-2">
                         <p>Radius</p>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
+                        <input type="range" min="0" max="400" value="200" class="slider" id="partview-camera-radius-slider">
                         <p>0</p>
                     </div>
                 </div>
@@ -77,5 +77,5 @@ export function setupPartView(element) {
         </div>
     `;
 
-    setupCanvas(document.querySelector("#partview-canvas"), document.querySelector("#partview-camera-angle-slider"));
+    setupCanvas(document.querySelector("#partview-canvas"), document.querySelector("#partview-camera-angle-slider"), document.querySelector("#partview-camera-radius-slider"));
 }

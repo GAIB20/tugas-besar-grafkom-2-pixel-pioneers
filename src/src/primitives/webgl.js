@@ -27,6 +27,12 @@ export class WebGL {
             gl_FragColor = v_color;
         }
       `
+      this.createProgram();
+      this.positionLocation = this.gl.getAttribLocation(this.program, "a_position");
+      this.colorLocation = this.gl.getAttribLocation(this.program, "a_color");
+      this.matrixLocation = this.gl.getUniformLocation(this.program, "u_matrix");
+      this.positionBuffer = this.gl.createBuffer();
+      this.colorBuffer = this.gl.createBuffer();
     }
   
     createShader(type, source) {
@@ -63,66 +69,6 @@ export class WebGL {
       this.program = program;
       return this.program;
     }
-  
-    attribLocation() {
-        // Ensure the program is available and valid before using it.
-        if (!this.program) {
-          console.error("No valid program available.");
-          return -1;
-        }
-      
-        this.attribLocation = this.gl.getAttribLocation(this.program, "a_position");
-        return this.attribLocation;
-    }
-      
-  
-    createAndBindBuffer() {
-      const positionBuffer = this.gl.createBuffer();
-      this.positionBuffer = positionBuffer;
-  
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
-    }
-  
-    bufferData(positions) {
-      this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array(positions),
-        this.gl.STATIC_DRAW
-      );
-    }
-  
-    setViewPort() {
-      this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-    }
-  
-    clear() {
-      this.gl.clearColor(1, 1, 1, 1);
-      this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-    }
-  
-    useProgramAndEnableVertex() {
-      this.gl.useProgram(this.program);
-      this.gl.enableVertexAttribArray(this.attribLocation);
-    }
-  
-    bindBuffer() {
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
-    }
-  
-    vertexAttribPointer(size, type, normalize, stride, offset) {
-      this.gl.vertexAttribPointer(
-        this.attribLocation,
-        size,
-        type,
-        normalize,
-        stride,
-        offset
-      );
-    }
-  
-    draw(primitiveType, count) {
-      this.gl.drawArrays(primitiveType, 0, count);
-    }
 
     static resizeCanvasToDisplaySize(canvas, multiplier) {
         multiplier = multiplier || 1;
@@ -134,5 +80,40 @@ export class WebGL {
           return true;
         }
         return false;
+    }
+
+    setupScene(verticesData, colorsData) {
+      const numVertices = verticesData.length / 3; 
+      const numColors = colorsData.length / 3; 
+  
+      if (numVertices !== numColors) {
+          console.error("Number of vertices and colors must match.");
+          return;
       }
+  
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, verticesData, this.gl.STATIC_DRAW);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.colorBuffer);
+      this.gl.bufferData(this.gl.ARRAY_BUFFER, colorsData, this.gl.STATIC_DRAW);
+  
+      this.numVertices = numVertices;
+  }
+  
+
+    render(currentCamera) {
+      WebGL.resizeCanvasToDisplaySize(this.gl.canvas);
+      this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+      this.gl.enable(this.gl.CULL_FACE);
+      this.gl.enable(this.gl.DEPTH_TEST);
+      this.gl.useProgram(this.program);
+      this.gl.enableVertexAttribArray(this.positionLocation);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+      this.gl.vertexAttribPointer(this.positionLocation, 3, this.gl.FLOAT, false, 0, 0);
+      this.gl.enableVertexAttribArray(this.colorLocation);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.colorBuffer);
+      this.gl.vertexAttribPointer(this.colorLocation, 3, this.gl.UNSIGNED_BYTE, true, 0, 0);
+      this.gl.uniformMatrix4fv(this.matrixLocation, false, currentCamera.viewProjectionMatrix.data);
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, this.numVertices);
+    }
   }

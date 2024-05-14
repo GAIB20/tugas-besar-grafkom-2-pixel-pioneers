@@ -1,6 +1,6 @@
 import { Vector3 } from "../math/vector3.js";
 import { Matrix } from "../math/matrix.js";
-import { Deserialize } from "./deserialize.js";
+// import { Deserialize } from "./deserialize.js";
 
 export class Component {
   constructor() {
@@ -115,17 +115,17 @@ export class Component {
     }
 }
 
-fromJSON(json, obj=null) {
-    if (!obj) obj = new Component();
-    obj.name = json.name;
-    obj.position.set(...position);
-    obj.rotation.set(...rotation); // Kalau di contoh, rotation tidak di read dari json
-    obj.scale.set(...json.scale);
+// fromJSON(json, obj=null) {
+//     if (!obj) obj = new Component();
+//     obj.name = json.name;
+//     obj.position.set(...position);
+//     obj.rotation.set(...rotation); // Kalau di contoh, rotation tidak di read dari json
+//     obj.scale.set(...json.scale);
 
-    json.children.forEach(child => {
-        obj.add(Deserialize(child));
-    });
+//     json.children.forEach(child => {
+//         obj.add(Deserialize(child));
+//     });
 
-    return obj;
-}
+//     return obj;
+// }
 }

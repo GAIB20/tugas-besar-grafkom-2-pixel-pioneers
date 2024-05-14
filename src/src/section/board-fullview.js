@@ -15,7 +15,7 @@ export function setupFullView(element) {
                     </div>
                     <div class="slider-container-2">
                         <p>Radius</p>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
+                        <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-radius-slider">
                         <p>0</p>
                     </div>
                 </div>
@@ -94,5 +94,5 @@ export function setupFullView(element) {
             </div>
         </div>
     `;
-  setupCanvas(document.querySelector("#fullview-canvas"), document.querySelector("#fullview-camera-angle-slider"));
+  setupCanvas(document.querySelector("#fullview-canvas"), document.querySelector("#fullview-camera-angle-slider"), document.querySelector("#fullview-camera-radius-slider"));
 }
