@@ -20,7 +20,7 @@ export class Matrix4 extends Matrix {
   }
 
   static oblique(left, right, bottom, top, near, far, angle, scale=0.5, zoom=1.0) {
-    angle *= DEG2RAD;
+    angle *= Math.PI / 180;
     const d = [
         (right - left) / (2 * zoom),
         (top - bottom) / (2 * zoom),
