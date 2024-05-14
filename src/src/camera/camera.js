@@ -1,6 +1,5 @@
 import { Matrix } from "../math/matrix.js";
 import { Matrix4 } from "../math/matrix4.js";
-import { Vector3 } from "../math/vector3.js";
 
 export class Camera {
   constructor(cameraAngleDeg, radius) {

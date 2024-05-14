@@ -1,5 +1,5 @@
 import { Matrix4 } from "../math/matrix4.js";
-import { Camera } from "./camera.js";
+import { Camera } from "./Camera.js";
 
 export class PerspectiveCamera extends Camera {
   constructor(gl, fieldOfViewDeg, cameraAngleDeg, radius, zNear, zFar) {
