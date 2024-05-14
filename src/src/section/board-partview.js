@@ -1,4 +1,4 @@
-import { WebGL } from "../canvas/canvas";
+import { setupCanvas } from "../canvas/canvas";
 
 export function setupPartView(element) {
   element.innerHTML = `
@@ -10,7 +10,7 @@ export function setupPartView(element) {
                 <div class="transformation-container">
                     <div class="slider-container-2">
                         <p>Angle</p>
-                        <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
+                        <input type="range" min="1" max="100" value="50" class="slider" id="partview-camera-angle-slider">
                         <p>0</p>
                     </div>
                     <div class="slider-container-2">
@@ -77,6 +77,5 @@ export function setupPartView(element) {
         </div>
     `;
 
-  const gl = new WebGL();
-  gl.initialize_gl(document.querySelector("#partview-canvas"));
+    setupCanvas(document.querySelector("#partview-canvas"), document.querySelector("#partview-camera-angle-slider"));
 }
