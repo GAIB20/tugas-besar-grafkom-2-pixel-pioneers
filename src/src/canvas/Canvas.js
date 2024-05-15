@@ -8,6 +8,7 @@ import {
   verticesData,
 } from "./testdata";
 import { WebGL } from "../primitives/WebGL";
+import { rpVertices, rpColors } from "./rectanglePipe";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = element;

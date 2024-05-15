@@ -90,6 +90,62 @@ export class WebGL {
     return false;
   }
 
+  createAttributeSetters(program) {
+    function createAttributeSetter(info) {
+      // Initialization Time
+      const loc = gl.getAttribLocation(program, info.name);
+      return (...values) => {
+        // Render Time (saat memanggil setAttributes() pada render loop)
+        const v = values[0];
+        if (v instanceof BufferAttribute) {
+          v._buffer = v._buffer || gl.createBuffer(); // Initialize bufffer if not exist
+          gl.bindBuffer(gl.ARRAY_BUFFER, v._buffer);
+          if (v.isDirty) {
+            // Data Changed Time (note that buffer is already binded)
+            gl.bufferData(gl.ARRAY_BUFFER, v.data, gl.STATIC_DRAW);
+            v.consume();
+          }
+          gl.enableVertexAttribArray(loc);
+          gl.vertexAttribPointer(
+            loc,
+            v.size,
+            v.dtype,
+            v.normalize,
+            v.stride,
+            v.offset
+          );
+        } else {
+          gl.disableVertexAttribArray(loc);
+          if (v instanceof Float32Array)
+            gl[`vertexAttrib${v.length}fv`](loc, v);
+          else gl[`vertexAttrib${values.length}f`](loc, ...values);
+        }
+      };
+    }
+
+    const attribSetters = {};
+    const numAttribs = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+    for (let i = 0; i < numAttribs; i++) {
+      const info = gl.getActiveAttrib(program, i);
+      if (!info) continue;
+      attribSetters[info.name] = createAttributeSetter(info);
+    }
+    return attribSetters;
+  }
+
+  setAttribute(programInfo, attributeName, ...data) {
+    const setters = programInfo.attributeSetters;
+    if (attributeName in setters) {
+      const shaderName = `a_${attributeName}`;
+      setters[shaderName](...data);
+    }
+  }
+
+  setAttributes(programInfo, attributes) {
+    for (let attributeName in attributes)
+      setAttribute(programInfo, attributeName, attributes[attributeName]);
+  }
+
   setupScene(verticesData, colorsData) {
     const numVertices = verticesData.length / 3;
     const numColors = colorsData.length / 3;
