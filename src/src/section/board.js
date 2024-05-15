@@ -1,5 +1,5 @@
-import { setupFullView } from "./board-fullview.js"
-import { setupPartView } from "./board-partview.js"
+import { setupFullView } from "./BoardFullView.js"
+import { setupPartView } from "./BoardPartView.js"
 
 export function setupBoard(element) {
     element.innerHTML = `

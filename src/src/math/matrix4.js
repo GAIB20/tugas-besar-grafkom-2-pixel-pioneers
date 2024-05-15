@@ -1,4 +1,4 @@
-import { Matrix } from "./matrix.js";
+import { Matrix } from "./Matrix.js";
 
 export class Matrix4 extends Matrix {
   constructor(data) {
@@ -15,32 +15,52 @@ export class Matrix4 extends Matrix {
     ]);
   }
 
-  static ortographic(left, right, bottom, top, near, far) {
+  static ortographic(left, right, bottom, top, near, far) {}
 
-  }
-
-  static oblique(left, right, bottom, top, near, far, angle, scale=0.5, zoom=1.0) {
+  static oblique(
+    left,
+    right,
+    bottom,
+    top,
+    near,
+    far,
+    angle,
+    scale = 0.5,
+    zoom = 1.0
+  ) {
     angle *= Math.PI / 180;
     const d = [
-        (right - left) / (2 * zoom),
-        (top - bottom) / (2 * zoom),
-        (right - left) / 2,
-        (top - bottom) / 2,
+      (right - left) / (2 * zoom),
+      (top - bottom) / (2 * zoom),
+      (right - left) / 2,
+      (top - bottom) / 2,
     ];
     const border = [
-        -(d[2] + d[0])/2,
-        (d[2] + d[0])/2,
-        -(d[3] + d[1])/2,
-        (d[3] + d[1])/2,
+      -(d[2] + d[0]) / 2,
+      (d[2] + d[0]) / 2,
+      -(d[3] + d[1]) / 2,
+      (d[3] + d[1]) / 2,
     ];
     return Matrix4.premul(
-        Matrix4.orthographic(...border, near, far),
-        new Matrix4([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            -scale * Math.cos(angle), scale * Math.sin(angle), 1, 0,
-            0, 0, 0, 1,
-        ]),
+      Matrix4.orthographic(...border, near, far),
+      new Matrix4([
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -scale * Math.cos(angle),
+        scale * Math.sin(angle),
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+      ])
     );
   }
 
@@ -49,10 +69,22 @@ export class Matrix4 extends Matrix {
     var rangeInv = 1.0 / (near - far);
 
     return new Matrix4([
-      f / aspect, 0, 0, 0,
-      0, f, 0, 0,
-      0, 0, (near + far) * rangeInv, -1,
-      0, 0, near * far * rangeInv * 2, 0
+      f / aspect,
+      0,
+      0,
+      0,
+      0,
+      f,
+      0,
+      0,
+      0,
+      0,
+      (near + far) * rangeInv,
+      -1,
+      0,
+      0,
+      near * far * rangeInv * 2,
+      0,
     ]);
   }
 
@@ -134,57 +166,32 @@ export class Matrix4 extends Matrix {
   }
 
   static translation(tx, ty, tz) {
-    return new Matrix4([
-       1,  0,  0,  0,
-       0,  1,  0,  0,
-       0,  0,  1,  0,
-       tx, ty, tz, 1,
-    ]);
+    return new Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1]);
   }
 
   static xRotation(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return new Matrix4([
-      1, 0, 0, 0,
-      0, c, s, 0,
-      0, -s, c, 0,
-      0, 0, 0, 1,
-    ]);
+    return new Matrix4([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1]);
   }
 
   static yRotation(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return new Matrix4([
-      c, 0, -s, 0,
-      0, 1, 0, 0,
-      s, 0, c, 0,
-      0, 0, 0, 1,
-    ]);
+    return new Matrix4([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1]);
   }
 
   static zRotation(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return new Matrix4([
-       c, s, 0, 0,
-      -s, c, 0, 0,
-       0, 0, 1, 0,
-       0, 0, 0, 1,
-    ]);
+    return new Matrix4([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
   }
 
   static scaling(sx, sy, sz) {
-    return new Matrix4([
-      sx, 0,  0,  0,
-      0, sy,  0,  0,
-      0,  0, sz,  0,
-      0,  0,  0,  1,
-    ]);
+    return new Matrix4([sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1]);
   }
 
   static normalize(v) {
@@ -195,27 +202,39 @@ export class Matrix4 extends Matrix {
       return [0, 0, 0];
     }
   }
-  
+
   static cross(a, b) {
-    return [a[1] * b[2] - a[2] * b[1],
-            a[2] * b[0] - a[0] * b[2],
-            a[0] * b[1] - a[1] * b[0]];
+    return [
+      a[1] * b[2] - a[2] * b[1],
+      a[2] * b[0] - a[0] * b[2],
+      a[0] * b[1] - a[1] * b[0],
+    ];
   }
 
   static lookAt(cameraPosition, target, up) {
     var zAxis = Matrix4.normalize(
-        Matrix4.subtractVectors(cameraPosition, target));
+      Matrix4.subtractVectors(cameraPosition, target)
+    );
     var xAxis = Matrix4.normalize(Matrix4.cross(up, zAxis));
     var yAxis = Matrix4.normalize(Matrix4.cross(zAxis, xAxis));
 
     return new Matrix4([
-       xAxis[0], xAxis[1], xAxis[2], 0,
-       yAxis[0], yAxis[1], yAxis[2], 0,
-       zAxis[0], zAxis[1], zAxis[2], 0,
-       cameraPosition[0],
-       cameraPosition[1],
-       cameraPosition[2],
-       1,
+      xAxis[0],
+      xAxis[1],
+      xAxis[2],
+      0,
+      yAxis[0],
+      yAxis[1],
+      yAxis[2],
+      0,
+      zAxis[0],
+      zAxis[1],
+      zAxis[2],
+      0,
+      cameraPosition[0],
+      cameraPosition[1],
+      cameraPosition[2],
+      1,
     ]);
   }
 
@@ -247,16 +266,16 @@ export class Matrix4 extends Matrix {
     var m31 = m[3 * 4 + 1];
     var m32 = m[3 * 4 + 2];
     var m33 = m[3 * 4 + 3];
-    var tmp_0  = m22 * m33;
-    var tmp_1  = m32 * m23;
-    var tmp_2  = m12 * m33;
-    var tmp_3  = m32 * m13;
-    var tmp_4  = m12 * m23;
-    var tmp_5  = m22 * m13;
-    var tmp_6  = m02 * m33;
-    var tmp_7  = m32 * m03;
-    var tmp_8  = m02 * m23;
-    var tmp_9  = m22 * m03;
+    var tmp_0 = m22 * m33;
+    var tmp_1 = m32 * m23;
+    var tmp_2 = m12 * m33;
+    var tmp_3 = m32 * m13;
+    var tmp_4 = m12 * m23;
+    var tmp_5 = m22 * m13;
+    var tmp_6 = m02 * m33;
+    var tmp_7 = m32 * m03;
+    var tmp_8 = m02 * m23;
+    var tmp_9 = m22 * m03;
     var tmp_10 = m02 * m13;
     var tmp_11 = m12 * m03;
     var tmp_12 = m20 * m31;
@@ -272,14 +291,26 @@ export class Matrix4 extends Matrix {
     var tmp_22 = m00 * m11;
     var tmp_23 = m10 * m01;
 
-    var t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
-        (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
-    var t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
-        (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
-    var t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
-        (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
-    var t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
-        (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
+    var t0 =
+      tmp_0 * m11 +
+      tmp_3 * m21 +
+      tmp_4 * m31 -
+      (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
+    var t1 =
+      tmp_1 * m01 +
+      tmp_6 * m21 +
+      tmp_9 * m31 -
+      (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
+    var t2 =
+      tmp_2 * m01 +
+      tmp_7 * m11 +
+      tmp_10 * m31 -
+      (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
+    var t3 =
+      tmp_5 * m01 +
+      tmp_8 * m11 +
+      tmp_11 * m21 -
+      (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
 
     var d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
 
@@ -288,30 +319,66 @@ export class Matrix4 extends Matrix {
       d * t1,
       d * t2,
       d * t3,
-      d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
-            (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
-      d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
-            (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
-      d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
-            (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
-      d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
-            (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
-      d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
-            (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
-      d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
-            (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
-      d * ((tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33) -
-            (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
-      d * ((tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23) -
-            (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
-      d * ((tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12) -
-            (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
-      d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) -
-            (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
-      d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
-            (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
-      d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
-            (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02))
+      d *
+        (tmp_1 * m10 +
+          tmp_2 * m20 +
+          tmp_5 * m30 -
+          (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
+      d *
+        (tmp_0 * m00 +
+          tmp_7 * m20 +
+          tmp_8 * m30 -
+          (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
+      d *
+        (tmp_3 * m00 +
+          tmp_6 * m10 +
+          tmp_11 * m30 -
+          (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
+      d *
+        (tmp_4 * m00 +
+          tmp_9 * m10 +
+          tmp_10 * m20 -
+          (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
+      d *
+        (tmp_12 * m13 +
+          tmp_15 * m23 +
+          tmp_16 * m33 -
+          (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
+      d *
+        (tmp_13 * m03 +
+          tmp_18 * m23 +
+          tmp_21 * m33 -
+          (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
+      d *
+        (tmp_14 * m03 +
+          tmp_19 * m13 +
+          tmp_22 * m33 -
+          (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
+      d *
+        (tmp_17 * m03 +
+          tmp_20 * m13 +
+          tmp_23 * m23 -
+          (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
+      d *
+        (tmp_14 * m22 +
+          tmp_17 * m32 +
+          tmp_13 * m12 -
+          (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
+      d *
+        (tmp_20 * m32 +
+          tmp_12 * m02 +
+          tmp_19 * m22 -
+          (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
+      d *
+        (tmp_18 * m12 +
+          tmp_23 * m32 +
+          tmp_15 * m02 -
+          (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
+      d *
+        (tmp_22 * m22 +
+          tmp_16 * m02 +
+          tmp_21 * m12 -
+          (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
     ]);
   }
 }

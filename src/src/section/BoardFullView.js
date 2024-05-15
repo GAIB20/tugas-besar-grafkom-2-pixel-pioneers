@@ -1,4 +1,4 @@
-import { setupCanvas } from "../canvas/canvas";
+import { setupCanvas } from "../canvas/Canvas";
 
 export function setupFullView(element) {
   element.innerHTML = `
@@ -94,5 +94,9 @@ export function setupFullView(element) {
             </div>
         </div>
     `;
-  setupCanvas(document.querySelector("#fullview-canvas"), document.querySelector("#fullview-camera-angle-slider"), document.querySelector("#fullview-camera-radius-slider"));
+  setupCanvas(
+    document.querySelector("#fullview-canvas"),
+    document.querySelector("#fullview-camera-angle-slider"),
+    document.querySelector("#fullview-camera-radius-slider")
+  );
 }

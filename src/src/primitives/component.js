@@ -1,10 +1,10 @@
-import { Vector3 } from "../math/vector3.js";
-import { Matrix } from "../math/matrix.js";
-// import { Deserialize } from "./deserialize.js";
+import { Vector3 } from "../math/Vector3.js";
+import { Matrix } from "../math/Matrix.js";
+import { Deserialize } from "./Deserialize.js";
 
 export class Component {
   constructor() {
-    this.name = '';
+    this.name = "";
     this._position = new Vector3();
     this._rotation = new Vector3();
     this._scale = new Vector3(1, 1, 1);
@@ -103,29 +103,28 @@ export class Component {
     return this;
   }
 
-  
   toJSON() {
     return {
-        name: this.name,
-        type: this.type,
-        position: this.position.toJSON(),
-        rotation: this.rotation.toJSON(),
-        scale: this.scale.toJSON(),
-        children: this.children.map((child) => child.toJSON()),
-    }
-}
+      name: this.name,
+      type: "Component",
+      position: this.position.toJSON(),
+      rotation: this.rotation.toJSON(),
+      scale: this.scale.toJSON(),
+      children: this.children.map((child) => child.toJSON()),
+    };
+  }
 
-// fromJSON(json, obj=null) {
-//     if (!obj) obj = new Component();
-//     obj.name = json.name;
-//     obj.position.set(...position);
-//     obj.rotation.set(...rotation); // Kalau di contoh, rotation tidak di read dari json
-//     obj.scale.set(...json.scale);
+  fromJSON(json, obj = null) {
+    if (!obj) obj = new Component();
+    obj.name = json.name;
+    obj.position.set(...position);
+    obj.rotation.set(...rotation);
+    obj.scale.set(...json.scale);
 
-//     json.children.forEach(child => {
-//         obj.add(Deserialize(child));
-//     });
+    json.children.forEach((child) => {
+      obj.add(Deserialize(child));
+    });
 
-//     return obj;
-// }
+    return obj;
+  }
 }

@@ -1,28 +1,33 @@
-import { Component } from "./component.js";
-import { Color } from "./color.js";
+import { Component } from "./Component.js";
+import { Color } from "./Color.js";
 
 export class Scene extends Component {
-    backgroundColor;
+  backgroundColor;
 
-    constructor() {
-        super();
-        this.backgroundColor = new Color();
-    }
+  constructor() {
+    super();
+    this.backgroundColor = new Color();
+  }
 
-    get type() { return "Scene"; }
+  get type() {
+    return "Scene";
+  }
 
-    set backgroundColor(backgroundColor) { this.backgroundColor = backgroundColor; }
+  set backgroundColor(backgroundColor) {
+    this.backgroundColor = backgroundColor;
+  }
 
-    toJSON() {
-        return { 
-            ...super.toJSON(),
-            backgroundColor: this.backgroundColor.toJSON(),
-        };
-    }
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      backgroundColor: this.backgroundColor.toJSON(),
+      type: "Scene",
+    };
+  }
 
-    static fromJSON(json, obj=null) {
-        if (!obj) obj = new Scene();
-        super.fromJSON(json, obj);
-        return obj;
-    }
+  static fromJSON(json, obj = null) {
+    if (!obj) obj = new Scene();
+    super.fromJSON(json, obj);
+    return obj;
+  }
 }
