@@ -1,3 +1,4 @@
+import { type } from "react-typical";
 import { BufferAttribute } from "./BufferAttribute.js";
 import { BufferGeometry } from "./BufferGeometry.js";
 
@@ -6,6 +7,7 @@ export class BoxGeometry extends BufferGeometry {
     super();
     this.width = width;
     this.height = height;
+    this.depth = depth;
 
     const hw = width / 2,
       hh = height / 2,
@@ -94,5 +96,24 @@ export class BoxGeometry extends BufferGeometry {
 
     this.setAttribute("position", new BufferAttribute(vertices, 3));
     this.calculateNormals();
+  }
+
+  toJSON() {
+    const parent = super.toJSON();
+    delete parent.attributes.position;
+    return {
+      ...parent,
+      width: this.width,
+      height: this.height,
+      depth: this.depth,
+      type: "BoxGeometry",
+    };
+  }
+
+  static fromJSON(json, geometry = null) {
+    if (!geometry)
+      geometry = new BoxGeometry(json.width, json.height, json.depth);
+    super.fromJSON(json, geometry);
+    return geometry;
   }
 }

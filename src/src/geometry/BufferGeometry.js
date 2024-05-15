@@ -49,4 +49,30 @@ export class BufferGeometry {
     // Perform normal calculation here.
     this.setAttribute("normal", normal);
   }
+
+  toJSON() {
+    const attributes = {};
+    Object.entries(this.attributes).forEach(([name, value]) => {
+      if (name === "normal") return;
+      attributes[name] = value.toJSON();
+    });
+
+    return {
+      type: "BufferGeometry",
+      attributes: attributes,
+    };
+  }
+
+  static fromJSON(json, geometry = null) {
+    if (!geometry) geometry = new BufferGeometry();
+
+    for (const name in json.attributes) {
+      geometry.setAttribute(
+        name,
+        BufferAttribute.fromJSON(json.attributes[name])
+      );
+    }
+
+    return geometry;
+  }
 }

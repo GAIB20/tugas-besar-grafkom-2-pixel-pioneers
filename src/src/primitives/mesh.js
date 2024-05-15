@@ -1,3 +1,6 @@
+import { DeserializeGeometry } from "../geometry/Deserialize";
+import { DeserializeMaterial } from "../material/Deserialize";
+
 class Mesh extends Node {
   constructor(geometry, material) {
     super();

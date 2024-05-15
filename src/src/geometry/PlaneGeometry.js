@@ -31,4 +31,21 @@ export class PlaneGeometry extends BufferGeometry {
     this.setAttribute("position", new BufferAttribute(vertices, 3));
     this.calculateNormals();
   }
+
+  toJSON() {
+    const parent = super.toJSON();
+    delete parent.attributes.position;
+    return {
+      ...parent,
+      width: this.width,
+      height: this.height,
+      type: "BoxGeometry",
+    };
+  }
+
+  static fromJSON(json, geometry = null) {
+    if (!geometry) geometry = new PlaneGeometry(json.width, json.height);
+    super.fromJSON(json, geometry);
+    return geometry;
+  }
 }

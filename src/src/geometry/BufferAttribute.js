@@ -86,4 +86,27 @@ export class BufferAttribute {
     }
     return data;
   }
+
+  toJSON() {
+    const options = {
+      dtype: this._dtype,
+      normalize: this._normalize,
+      stride: this._stride,
+      offset: this._offset,
+      isDirty: this._isDirty,
+    };
+
+    return {
+      data: this._data,
+      size: this._size,
+      options: options,
+      type: "BufferAttribute",
+    };
+  }
+
+  static fromJSON(json, buffer = null) {
+    if (!buffer)
+      buffer = new BufferAttribute(json.data, json.size, json.options);
+    return buffer;
+  }
 }
