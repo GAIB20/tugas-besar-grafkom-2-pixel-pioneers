@@ -12,7 +12,15 @@ export class Vector3 {
     return this;
   }
 
+  toArray() {
+    return [this.x, this.y, this.z];
+  }
+
   clone() {
     return new Vector3(this.x, this.y, this.z);
+  }
+
+  toJSON() {
+    return this.toArray();
   }
 }
