@@ -23,7 +23,7 @@ const magenta = [255, 0, 255];
 const cyan = [0, 255, 255];
 const black = [0, 0, 0];
 
-export const vertices = new Float32Array([
+export const rpVertices = new Float32Array([
   // outer front face
   x1, y1, z1,
   x2, y1, z1,  
@@ -292,7 +292,7 @@ function repeatColor(count, color) {
   return repeatedColors;
 }
 
-export const colors = new Uint8Array([
+export const rpColors = new Uint8Array([
   // outer front face
   ...repeatColor(6, red),
 
