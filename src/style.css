@@ -66,6 +66,7 @@ body {
 }
 
 .middle-tray {
+  overflow-y: auto;
   width: 20%;
   height: 100%;
   background-color: #242424;
@@ -112,6 +113,19 @@ canvas {
   justify-content: space-between;
   align-items: center;
   gap: 2%;
+}
+
+.animation-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 2%;
+}
+
+.selected {
+  color: #fff;
+  background-color: #454545;
+  border: 1px solid #fff;
 }
 
 .slider-container {
