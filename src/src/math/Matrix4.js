@@ -8,38 +8,48 @@ export class Matrix4 extends Matrix {
 
   static identity() {
     return new Matrix4([
-      [1, 0, 0, 0],
-      [0, 1, 0, 0],
-      [0, 0, 1, 0],
-      [0, 0, 0, 1],
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
     ]);
   }
 
-  static ortographic(left, right, bottom, top, near, far) {
-    const width = right - left;
-    const height = top - bottom;
-    const depth = far - near;
-    const tx = -(right + left) / width;
-    const ty = -(top + bottom) / height;
-    const tz = -(far + near) / depth;
-    return new M4([
-      2 / width,
-      0,
-      0,
-      0,
-      0,
-      2 / height,
-      0,
-      0,
-      0,
-      0,
-      -2 / depth,
-      0,
-      tx,
-      ty,
-      tz,
-      1,
+  static projection(width, height, depth) {
+    return new Matrix4([
+       2 / width, 0, 0, 0,
+       0, -2 / height, 0, 0,
+       0, 0, 2 / depth, 0,
+      -1, 1, 0, 1,
     ]);
+  }
+
+  static orthographic(left, right, bottom, top, near, far) {
+    const lr = 1 / (left - right);
+    const bt = 1 / (bottom - top);
+    const nf = 1 / (near - far);
+
+    const out = Matrix4.identity();
+    const e = out.data;
+
+    e[0] = -2 * lr;
+    e[1] = 0;
+    e[2] = 0;
+    e[3] = 0;
+    e[4] = 0;
+    e[5] = -2 * bt;
+    e[6] = 0;
+    e[7] = 0;
+    e[8] = 0;
+    e[9] = 0;
+    e[10] = 2 * nf;
+    e[11] = 0;
+    e[12] = (left + right) * lr;
+    e[13] = (top + bottom) * bt;
+    e[14] = (far + near) * nf;
+    e[15] = 1;
+
+    return out;
   }
 
   static oblique(
@@ -114,23 +124,23 @@ export class Matrix4 extends Matrix {
   }
 
   static translate(m, tx, ty, tz) {
-    return Matrix4.multiply(m, Matrix4.translation(tx, ty, tz).data);
+    return Matrix4.multiply(m.data, Matrix4.translation(tx, ty, tz).data);
   }
 
   static xRotate(m, angleInRadians) {
-    return Matrix4.multiply(m, Matrix4.xRotation(angleInRadians));
+    return Matrix4.multiply(m.data, Matrix4.xRotation(angleInRadians).data);
   }
 
   static yRotate(m, angleInRadians) {
-    return Matrix4.multiply(m, Matrix4.yRotation(angleInRadians));
+    return Matrix4.multiply(m.data, Matrix4.yRotation(angleInRadians).data);
   }
 
   static zRotate(m, angleInRadians) {
-    return Matrix4.multiply(m, Matrix4.zRotation(angleInRadians));
+    return Matrix4.multiply(m.data, Matrix4.zRotation(angleInRadians).data);
   }
 
   static scale(m, sx, sy, sz) {
-    return Matrix4.multiply(m, Matrix4.scaling(sx, sy, sz));
+    return Matrix4.multiply(m.data, Matrix4.scaling(sx, sy, sz).data);
   }
 
   static multiply(a, b) {
@@ -166,7 +176,7 @@ export class Matrix4 extends Matrix {
     var b31 = b[3 * 4 + 1];
     var b32 = b[3 * 4 + 2];
     var b33 = b[3 * 4 + 3];
-    return new Matrix([
+    return new Matrix4([
       b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
       b00 * a01 + b01 * a11 + b02 * a21 + b03 * a31,
       b00 * a02 + b01 * a12 + b02 * a22 + b03 * a32,
@@ -272,6 +282,16 @@ export class Matrix4 extends Matrix {
       }
     }
     return dst;
+  }
+
+  static shear(matrix, shx, shy) {
+    const shearMatrix = new Matrix4([
+      1, 0, 0, 0,
+      shx, 1, 0, 0,
+      shy, 0, 1, 0,
+      0, 0, 0, 1
+    ]);
+    return Matrix4.multiply(matrix.data, shearMatrix.data);
   }
 
   static inverse(m) {
