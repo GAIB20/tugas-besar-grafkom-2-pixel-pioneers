@@ -1,16 +1,10 @@
 import { Matrix4 } from "../math/Matrix4.js";
-import { Camera } from "./Camera.js";
+import { OrthographicCamera } from "./OrthographicCamera.js";
 
-export class ObliqueCamera extends Camera {
-  constructor(left, right, top, bottom, near, far, angle = 45) {
-    super();
-    this.left = left;
-    this.right = right;
-    this.top = top;
-    this.bottom = bottom;
-    this.near = near;
-    this.far = far;
-    this.angle = angle;
+export class ObliqueCamera extends OrthographicCamera {
+  constructor(gl, left, right, bottom, top, zNear, zFar) {
+    super(gl, left, right, bottom, top, zNear, zFar);
+    this.theta = 30; 
     this.computeProjectionMatrix();
   }
 
@@ -19,16 +13,12 @@ export class ObliqueCamera extends Camera {
   }
 
   computeProjectionMatrix() {
-    this.projectionMatrix = Matrix4.oblique(
-      this.left,
-      this.right,
-      this.bottom,
-      this.top,
-      this.near,
-      this.far,
-      this.angle,
-      0.5,
-      1.0
-    );
+    super.computeProjectionMatrix();
+
+    const tanTheta = Math.tan(this.theta * Math.PI / 180);
+    const shearX = -tanTheta * Math.sign(this.right - this.left);
+    const shearY = -tanTheta * Math.sign(this.top - this.bottom);
+
+    this._viewProjectionMatrix = Matrix4.shear(this._viewProjectionMatrix, shearX, shearY);
   }
 }
