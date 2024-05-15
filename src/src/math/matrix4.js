@@ -16,7 +16,18 @@ export class Matrix4 extends Matrix {
   }
 
   static ortographic(left, right, bottom, top, near, far) {
-
+    const width = right - left;
+    const height = top - bottom;
+    const depth = far - near;
+    const tx = -(right + left) / width;
+    const ty = -(top + bottom) / height;
+    const tz = -(far + near) / depth;
+    return new M4([
+        2 / width, 0, 0, 0,
+        0, 2 / height, 0, 0,
+        0, 0, -2 / depth, 0,
+        tx, ty, tz, 1,
+    ]);
   }
 
   static oblique(left, right, bottom, top, near, far, angle, scale=0.5, zoom=1.0) {

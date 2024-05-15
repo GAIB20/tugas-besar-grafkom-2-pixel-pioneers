@@ -1,5 +1,5 @@
 import { Matrix4 } from "../math/matrix4.js";
-import { Camera } from "./index.js";
+import { Camera } from "./Camera.js";
 
 export class ObliqueCamera extends Camera {
     constructor(left, right, top, bottom, near, far, angle=45) {
