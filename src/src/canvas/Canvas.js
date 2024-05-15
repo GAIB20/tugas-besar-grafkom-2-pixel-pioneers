@@ -7,9 +7,7 @@ import {
   colorsCube,
   verticesData,
 } from "./testdata";
-import { rpVertices,rpColors } from "./rectanglePipe";
-
-import { WebGL } from "../primitives/Webgl";
+import { WebGL } from "../primitives/WebGL";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = element;
@@ -19,8 +17,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   }
 
   var webgl = new WebGL(gl);
-  // webgl.setupScene(vertices, colors);
-  webgl.setupScene(rpVertices, rpColors);
+  webgl.setupScene(vertices, colors);
 
   var currentCamera = new PerspectiveCamera(gl, 60, 0, 200, 1, 2000);
   webgl.render(currentCamera);

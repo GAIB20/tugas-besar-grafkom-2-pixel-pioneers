@@ -1,4 +1,4 @@
-import { setupCanvas } from "../canvas/canvas";
+import { setupCanvas } from "../canvas/Canvas";
 
 export function setupPartView(element) {
   element.innerHTML = `
@@ -77,5 +77,9 @@ export function setupPartView(element) {
         </div>
     `;
 
-    setupCanvas(document.querySelector("#partview-canvas"), document.querySelector("#partview-camera-angle-slider"), document.querySelector("#partview-camera-radius-slider"));
+  setupCanvas(
+    document.querySelector("#partview-canvas"),
+    document.querySelector("#partview-camera-angle-slider"),
+    document.querySelector("#partview-camera-radius-slider")
+  );
 }

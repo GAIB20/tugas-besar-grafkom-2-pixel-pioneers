@@ -304,8 +304,12 @@ export const colors = new Uint8Array([
         255,  0,  0,
         255,  0,  0,
         255,  0,  0,
+        255,  0,  0,
+        255,  0,  0,
     
         // Back face
+        0, 255,  0,
+        0, 255,  0,
         0, 255,  0,
         0, 255,  0,
         0, 255,  0,
@@ -316,8 +320,12 @@ export const colors = new Uint8Array([
         0,  0, 255,
         0,  0, 255,
         0,  0, 255,
+        0,  0, 255,
+        0,  0, 255,
     
         // Bottom face
+        255, 255,  0,
+        255, 255,  0,
         255, 255,  0,
         255, 255,  0,
         255, 255,  0,
@@ -328,8 +336,12 @@ export const colors = new Uint8Array([
         0, 255, 255,
         0, 255, 255,
         0, 255, 255,
+        0, 255, 255,
+        0, 255, 255,
     
         // Left face
+        255,  0, 255,
+        255,  0, 255,
         255,  0, 255,
         255,  0, 255,
         255,  0, 255,
@@ -337,42 +349,57 @@ export const colors = new Uint8Array([
     ]);
 
 
-  export const verticesData = new Float32Array([
-    // Front face
-    -30, -30,  30, // Vertex 1
-     30, -30,  30, // Vertex 2
-     30,  30,  30, // Vertex 3
-    -30,  30,  30, // Vertex 4
+//   
 
-    // Back face
-    -30, -30, -30, // Vertex 5
-    -30,  30, -30, // Vertex 6
-     30,  30, -30, // Vertex 7
-     30, -30, -30, // Vertex 8
+export const verticesData = new Float32Array([
+  // Front face
+  -30, -30,  30, // Vertex 1
+   30, -30,  30, // Vertex 2
+   30,  30,  30, // Vertex 3
+  -30,  30,  30, // Vertex 4
+  -30, -30,  30, // Vertex 5 (Repeated from front face)
+   30,  30,  30, // Vertex 6 (Repeated from front face)
 
-    // Top face
-    -30,  30, -30, // Vertex 9 (Shared with back face)
-    -30,  30,  30, // Vertex 4 (Shared with front face)
-     30,  30,  30, // Vertex 3 (Shared with front face)
-     30,  30, -30, // Vertex 6 (Shared with back face)
+  // Back face
+   30,  30, -30, // Vertex 9
+   30, -30, -30, // Vertex 8
+  -30, -30, -30, // Vertex 7
+  -30,  30, -30, // Vertex 10
+   30,  30, -30, // Vertex 11 (Repeated from back face)
+  -30, -30, -30, // Vertex 12 (Repeated from back face)
 
-    // Bottom face
-    -30, -30, -30, // Vertex 5 (Shared with back face)
-     30, -30, -30, // Vertex 8 (Shared with back face)
-     30, -30,  30, // Vertex 2 (Shared with front face)
-    -30, -30,  30, // Vertex 1 (Shared with front face)
+  // Top face
+  -30,  30, -30, // Vertex 10 (Shared with back face)
+   30,  30, -30, // Vertex 9 (Shared with back face)
+   30,  30,  30, // Vertex 6 (Shared with front face)
+  -30,  30,  30, // Vertex 5 (Shared with front face)
+  -30,  30, -30, // Vertex 10 (Shared with back face)
+   30,  30,  30, // Vertex 3 (Shared with front face)
 
-    // Right face
-     30, -30, -30, // Vertex 8 (Shared with back face)
-     30,  30, -30, // Vertex 7 (Shared with back face)
-     30,  30,  30, // Vertex 3 (Shared with front face)
-     30, -30,  30, // Vertex 2 (Shared with front face)
+  // Bottom face
+   30, -30,  30, // Vertex 2 (Shared with front face)
+   30, -30, -30, // Vertex 8 (Shared with back face)
+  -30, -30, -30, // Vertex 7 (Shared with back face)
+  -30, -30,  30, // Vertex 1 (Shared with front face)
+   30, -30,  30, // Vertex 2 (Shared with front face)
+  -30, -30, -30, // Vertex 7 (Shared with back face)
 
-    // Left face
-    -30, -30, -30, // Vertex 5 (Shared with back face)
-    -30, -30,  30, // Vertex 1 (Shared with front face)
-    -30,  30,  30, // Vertex 4 (Shared with front face)
-    -30,  30, -30, // Vertex 6 (Shared with back face)
+  // Right face
+   30,  30,  30, // Vertex 6 (Shared with front face)
+   30, -30, 30, // Vertex 9 (Shared with back face)
+   30, -30, -30, // Vertex 8 (Shared with back face)
+   30,  30,  30, // Vertex 3 (Shared with front face)
+   30, -30, -30, // Vertex 8 (Shared with back face)
+   30,  30, -30, // Vertex 2 (Shared with front face)
+
+  // Left face
+  -30, -30, -30, // Vertex 7 (Shared with back face)
+  -30, -30,  30, // Vertex 1 (Shared with front face)
+  -30,  30,  30, // Vertex 4 (Shared with front face)
+  -30,  30, -30, // Vertex 10 (Shared with back face)
+  -30, -30, -30, // Vertex 7 (Shared with back face)
+  -30,  30,  30, // Vertex 4 (Shared with front face)
 ]);
+
 
     

@@ -73,41 +73,4 @@ export function setupBoard(element) {
     if (partviewElement) {
         setupPartView(partviewElement);
     }
-
-    const buttonsHTML = createComponentButtons(tree);
-    const tbody = document.querySelector('tbody');
-    Object.values(buttonsHTML).forEach(buttonHTML => {
-        tbody.insertAdjacentHTML('beforeend', buttonHTML);
-    });
-
 }
-
-function createComponentButtons(tree, depth = 0) {
-    let buttons = {};
-
-    Object.keys(tree).forEach((compName) => {
-        const comp = tree[compName];
-        buttons[compName] = `<tr>
-                                <td colspan="4">
-                                    <div style="margin-left: ${depth * 20}px;">
-                                        <input type="submit" id="insp-compTree-${compName}" value="${compName}" class="">
-                                    </div>
-                                </td>
-                             </tr>`;
-        buttons = {
-            ...buttons,
-            ...createComponentButtons(comp.children, depth + 1),
-        };
-    });
-
-    return buttons;
-}
-
-// Assume 'tree' is your component tree object
-const tree = {
-    RBody: { children: { Child1: { children: {Child2: { children: {} }} }, Child2: { children: {} } } },
-    PBody: { children: {} },
-    RHead: { children: {} },
-    PHead: { children: {} },
-    RArmL: { children: {} }
-};

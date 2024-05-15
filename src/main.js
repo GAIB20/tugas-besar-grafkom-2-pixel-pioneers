@@ -1,8 +1,8 @@
-import './style.css'
-import { setupBoard } from './src/section/board.js'
-import { setupHeader } from './src/section/header.js'
+import "./style.css";
+import { setupBoard } from "./src/section/Board.js";
+import { setupHeader } from "./src/section/Header.js";
 
-document.querySelector('#app').innerHTML = `
+document.querySelector("#app").innerHTML = `
         <div>
             <div id="header">
             </div>
@@ -11,6 +11,5 @@ document.querySelector('#app').innerHTML = `
         </div>
     `;
 
-;
-setupHeader(document.querySelector('#header'));
-setupBoard(document.querySelector('#board'));
+setupHeader(document.querySelector("#header"));
+setupBoard(document.querySelector("#board"));
