@@ -1,6 +1,7 @@
 import { PerspectiveCamera } from "../camera/PerspectiveCamera";
 import { Matrix4 } from "../math/matrix4";
-import { vertices, colors, verticesCube, colorsCube, verticesData } from "./testdata";
+// import { vertices, colors, verticesCube, colorsCube, verticesData } from "./testdata";
+import { vertices, colors } from "./rectanglePipe";
 import { WebGL } from "../primitives/webgl";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
@@ -11,7 +12,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     }
   
     var webgl = new WebGL(gl);
-    webgl.setupScene(verticesData, colorsCube);
+    webgl.setupScene(vertices, colors);
     
     var currentCamera = new PerspectiveCamera(gl, 60, 0, 200, 1, 2000);  
     webgl.render(currentCamera);
