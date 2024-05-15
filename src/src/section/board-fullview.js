@@ -91,6 +91,25 @@ export function setupFullView(element) {
                         <p>0</p>
                     </div>
                 </div>
+                <h4>Animation</h4>
+                <div class="animation-container">
+                    <div class="slider-container">
+                        <p>Frame</p>
+                        <input type="range" min="1" max="60" value="50" class="slider" id="mySlider">
+                        <p>0</p>
+                    </div>
+                    <div>
+                        <button id="playButton">Toggle Play</button>
+                        <div>
+                            <input type="checkbox" id="autoReplayCheckbox">
+                            <label for="autoReplayCheckbox">Auto Replay</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="reverseCheckbox">
+                            <label for="reverseCheckbox">Reverse</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
