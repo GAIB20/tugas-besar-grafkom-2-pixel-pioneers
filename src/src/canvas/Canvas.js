@@ -13,6 +13,7 @@ import { BufferGeometry } from "../geometry/BufferGeometry";
 import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
+import { Geometry } from "../geometry/Geometry";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = element;
@@ -30,14 +31,10 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var scene = new Scene();
 
   // Define geometry
-  var geometry = new BoxGeometry(100, 100, 100);
+  var geometry = new Geometry(pyramid, pyramidColor);
 
   // Define material
-  var material = new BasicMaterial(
-    "Basic",
-    new Color(1, 0, 0, 1),
-    pyramidColor
-  );
+  var material = new BasicMaterial("Basic", new Color(0, 1, 0, 1));
 
   // Define mesh
   var mesh = new Mesh(geometry, material);

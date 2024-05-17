@@ -398,15 +398,15 @@ export const pyramid = new Float32Array([
   0,
 
   // Βottom
+  -5,
+  -45,
+  -45,
   5,
   -45,
   -45,
   5,
   -45,
   45,
-  5,
-  -45,
-  -45,
 
   -5,
   -45,
