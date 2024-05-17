@@ -190,7 +190,6 @@ export class WebGL {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
-    console.log(currentCamera);
     this.renderComponent(scene, {
       cameraPosition: currentCamera.worldPosition,
       viewMatrix: currentCamera.viewProjectionMatrix,

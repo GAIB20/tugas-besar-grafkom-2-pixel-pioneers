@@ -1,3 +1,4 @@
+import { Vector3 } from "../math/Vector3.js";
 import { BufferAttribute } from "./BufferAttribute.js";
 
 export class BufferGeometry {
@@ -55,9 +56,27 @@ export class BufferGeometry {
     if (forceNewAttribute || !normal)
       normal = new BufferAttribute(
         new Float32Array(position.length),
-        position.itemSize
+        position.size
       );
-    // Perform normal calculation here.
+
+    const pA = new Vector3(),
+      pB = new Vector3(),
+      pC = new Vector3();
+    for (let i = 0; i < position.length; i += 3) {
+      pA.fromBufferAttribute(position, i);
+      pB.fromBufferAttribute(position, i + 1);
+      pC.fromBufferAttribute(position, i + 2);
+
+      pC.sub(pB);
+      pB.sub(pA);
+      pB.cross(pC);
+
+      const d = pB.normalize().toArray();
+      normal.set(i, d);
+      normal.set(i + 1, d);
+      normal.set(i + 2, d);
+    }
+
     this.setAttribute("normal", normal);
   }
 

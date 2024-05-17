@@ -14,6 +14,7 @@ import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
 import { Geometry } from "../geometry/Geometry";
+import { PhongMaterial } from "../material/PhongMaterial";
 import { DeserializePrimitive } from "../primitives/Deserialize";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
@@ -23,7 +24,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     return;
   }
 
-  var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)]
+  var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
 
   var webgl = new WebGL(gl);
@@ -38,76 +39,107 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var geometry = new Geometry(pyramid, pyramidColor);
 
   // Define material
-  var material = new BasicMaterial("Basic", new Color(0, 1, 0, 1));
+  var material = new PhongMaterial("Phong");
 
   // Define mesh
   var mesh = new Mesh(geometry, material);
 
   scene.add(mesh);
 
-  document.querySelector("#fullview-camera-anglex-slider").addEventListener("input", function (event) {
-    currentCamera.setCameraAngleDeg('X', event.target.value);
-    console.log('x', event.target.value);
-    webgl.render(scene, currentCamera);
-  });
+  document
+    .querySelector("#fullview-camera-anglex-slider")
+    .addEventListener("input", function (event) {
+      currentCamera.setCameraAngleDeg("X", event.target.value);
+      webgl.render(scene, currentCamera);
+    });
 
-  document.querySelector("#fullview-camera-angley-slider").addEventListener("input", function (event) {
-    currentCamera.setCameraAngleDeg('Y', event.target.value);
-    webgl.render(scene, currentCamera);
-  });
+  document
+    .querySelector("#fullview-camera-angley-slider")
+    .addEventListener("input", function (event) {
+      currentCamera.setCameraAngleDeg("Y", event.target.value);
+      webgl.render(scene, currentCamera);
+    });
 
-  document.querySelector("#fullview-camera-anglez-slider").addEventListener("input", function (event) {
-    currentCamera.setCameraAngleDeg('Z', event.target.value);
-    console.log('z', event.target.value);
-    webgl.render(scene, currentCamera);
-  });
+  document
+    .querySelector("#fullview-camera-anglez-slider")
+    .addEventListener("input", function (event) {
+      currentCamera.setCameraAngleDeg("Z", event.target.value);
+      webgl.render(scene, currentCamera);
+    });
 
   radiusSlider.addEventListener("input", function (event) {
     currentCamera.radiusDeg = parseFloat(event.target.value);
     webgl.render(scene, currentCamera);
   });
 
-  document.getElementById("full-view-add-camera").addEventListener("click", function() {
-    var select = document.getElementById("fullview-camera-dropdown");
-    var option = document.createElement("option");
-    option.text = "Camera " + (select.options.length + 1);
-    option.value = select.options.length + 1;
-    select.add(option);
-    select.selectedIndex = select.options.length - 1;
-    cameras.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000))
-    currentCameraIdx = select.options.length - 1;
-    currentCamera = cameras[currentCameraIdx];
-    document.getElementById("fullview-camera-type-dropdown").value = 3;
-    console.log(currentCamera);
-    console.log(cameras);
-    webgl.render(scene, currentCamera);
-  });
-
-  document.getElementById("fullview-camera-dropdown").addEventListener("change", function() {
-    currentCameraIdx = this.value-1;
-    currentCamera = cameras[currentCameraIdx];
-    var type = currentCamera.type
-    if (type == "PerspectiveCamera") {
+  document
+    .getElementById("full-view-add-camera")
+    .addEventListener("click", function () {
+      var select = document.getElementById("fullview-camera-dropdown");
+      var option = document.createElement("option");
+      option.text = "Camera " + (select.options.length + 1);
+      option.value = select.options.length + 1;
+      select.add(option);
+      select.selectedIndex = select.options.length - 1;
+      cameras.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000));
+      currentCameraIdx = select.options.length - 1;
+      currentCamera = cameras[currentCameraIdx];
       document.getElementById("fullview-camera-type-dropdown").value = 3;
-    } else if (type == "ObliqueCamera") {
-      document.getElementById("fullview-camera-type-dropdown").value = 1;
-    } else {
-      document.getElementById("fullview-camera-type-dropdown").value = 2;
-    }
-    webgl.render(scene, currentCamera);
-  });
+      webgl.render(scene, currentCamera);
+    });
 
-  document.getElementById("fullview-camera-type-dropdown").addEventListener("change", function() {
-    if (this.value == 2) {
-      cameras[currentCameraIdx] = new OrthographicCamera(gl, -10, 10, -10, 10, 0.1, 100);
-    } else if (this.value == 1) {
-      cameras[currentCameraIdx] = new ObliqueCamera(gl, -10, 10, -10, 10, 0.1, 100);;
-    } else if (this.value == 3) {
-      cameras[currentCameraIdx] = new PerspectiveCamera(gl, 60, 0, 200, 1, 2000);
-    }
-    currentCamera = cameras[currentCameraIdx];
-    webgl.render(scene, currentCamera);
-  });
+  document
+    .getElementById("fullview-camera-dropdown")
+    .addEventListener("change", function () {
+      currentCameraIdx = this.value - 1;
+      currentCamera = cameras[currentCameraIdx];
+      var type = currentCamera.type;
+      if (type == "PerspectiveCamera") {
+        document.getElementById("fullview-camera-type-dropdown").value = 3;
+      } else if (type == "ObliqueCamera") {
+        document.getElementById("fullview-camera-type-dropdown").value = 1;
+      } else {
+        document.getElementById("fullview-camera-type-dropdown").value = 2;
+      }
+      webgl.render(scene, currentCamera);
+    });
+
+  document
+    .getElementById("fullview-camera-type-dropdown")
+    .addEventListener("change", function () {
+      if (this.value == 2) {
+        cameras[currentCameraIdx] = new OrthographicCamera(
+          gl,
+          -10,
+          10,
+          -10,
+          10,
+          0.1,
+          100
+        );
+      } else if (this.value == 1) {
+        cameras[currentCameraIdx] = new ObliqueCamera(
+          gl,
+          -10,
+          10,
+          -10,
+          10,
+          0.1,
+          100
+        );
+      } else if (this.value == 3) {
+        cameras[currentCameraIdx] = new PerspectiveCamera(
+          gl,
+          60,
+          0,
+          200,
+          1,
+          2000
+        );
+      }
+      currentCamera = cameras[currentCameraIdx];
+      webgl.render(scene, currentCamera);
+    });
 
   const fileInput = document.getElementById('file-input');
   const loadModelButton = document.getElementById('load-model');
