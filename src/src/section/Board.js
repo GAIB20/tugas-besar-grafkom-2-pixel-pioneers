@@ -1,5 +1,5 @@
-import { setupFullView } from "./BoardFullView.js"
-import { setupPartView } from "./BoardPartView.js"
+import { setupFullView } from "./BoardFullView";
+import { setupPartView } from "./BoardPartView";
 
 export function setupBoard(element) {
     element.innerHTML = `
@@ -53,9 +53,10 @@ export function setupBoard(element) {
                 </table>
             </div>
             <div class="options">
-                <p>File.txt</p>
-                <button class="btn-purple">Choose File</button>
-                <button class="btn-purple">Save File</button>
+                <p id="fileNameDisplay">File.txt</p>
+                <button class="btn-purple" id="load-model">Choose File</button>
+                <input type="file" id="file-input" accept=".json" style="display: none;">
+                <button id="save-model" class="btn-purple">Save File</button>
                 <button class="btn-purple">Reset</button>
             </div>
         </div>

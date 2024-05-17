@@ -27,6 +27,10 @@ export class ShaderMaterial {
     return this._uniforms;
   }
 
+  set uniforms(value) {
+    this._uniforms = value;
+  }
+
   toJSON() {
     const uniforms = {};
 

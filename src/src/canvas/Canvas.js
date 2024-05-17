@@ -15,6 +15,7 @@ import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
+import "../primitives/Deserialize";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -35,15 +36,18 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var scene = new Scene();
 
   // Define geometry
-  var geometry = new Geometry(pyramid, pyramidColor);
+  // var geometry = new Geometry(pyramid, pyramidColor);
+  var geometry = new BoxGeometry(100,100,100);
 
   // Define material
   var material = new PhongMaterial("Phong");
 
   // Define mesh
-  var mesh = new Mesh(geometry, material);
+  var mesh = new Mesh(geometry, new BasicMaterial("Basic", new Color(0,1,0,1)));
 
   scene.add(mesh);
+
+  console.log(scene);
 
   document
     .querySelector("#fullview-camera-anglex-slider")
@@ -139,6 +143,41 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       currentCamera = cameras[currentCameraIdx];
       webgl.render(scene, currentCamera);
     });
+
+  const fileInput = document.getElementById('file-input');
+  const loadModelButton = document.getElementById('load-model');
+
+  loadModelButton.addEventListener('click', function() {
+    fileInput.click(); // Trigger file selection
+  });
+
+  // Load Model Button Event Listener
+  fileInput.addEventListener('change', function() {
+      const file = fileInput.files[0];
+      if (file) {
+          document.getElementById('fileNameDisplay').textContent = `${file.name}`;
+          const reader = new FileReader();
+          reader.readAsText(file, 'UTF-8');
+          reader.onload = function(event) {
+              const jsonModel = JSON.parse(event.target.result);
+              const read = window.DeserializePrimitive(jsonModel);
+              scene = read;
+              webgl.render(scene, currentCamera);
+          }
+      }
+  });
+
+  const saveModelButton = document.getElementById('save-model');
+  saveModelButton.addEventListener('click', function() {
+      const sceneJSON = scene.toJSON();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sceneJSON));
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "scene.json");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+  });
 
   var orbitControl = new OrbitControl(currentCamera, canvas);
 
