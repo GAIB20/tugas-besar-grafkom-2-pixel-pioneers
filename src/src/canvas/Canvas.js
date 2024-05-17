@@ -14,6 +14,7 @@ import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
 import { Geometry } from "../geometry/Geometry";
+import { DeserializePrimitive } from "../primitives/Deserialize";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -106,6 +107,42 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     }
     currentCamera = cameras[currentCameraIdx];
     webgl.render(scene, currentCamera);
+  });
+
+  const fileInput = document.getElementById('file-input');
+  const loadModelButton = document.getElementById('load-model');
+
+  loadModelButton.addEventListener('click', function() {
+    fileInput.click(); // Trigger file selection
+  });
+
+  // Load Model Button Event Listener
+  fileInput.addEventListener('change', function() {
+      const file = fileInput.files[0];
+      if (file) {
+          document.getElementById('fileNameDisplay').textContent = `${file.name}`;
+          const reader = new FileReader();
+          reader.readAsText(file, 'UTF-8');
+          reader.onload = function(event) {
+              const jsonModel = JSON.parse(event.target.result);
+              console.log(jsonModel);
+              console.log("hello");
+              console.log(DeserializePrimitive(jsonModel));
+          //     // canvasSetupFunction(jsonModel); // Call the canvas setup function with the loaded model
+          }
+      }
+  });
+
+  const saveModelButton = document.getElementById('save-model');
+  saveModelButton.addEventListener('click', function() {
+      const sceneJSON = scene.toJSON();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(sceneJSON));
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "scene.json");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
   });
 
   var orbitControl = new OrbitControl(currentCamera, canvas);
