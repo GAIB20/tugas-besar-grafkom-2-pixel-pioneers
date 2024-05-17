@@ -1,9 +1,19 @@
 import { BufferAttribute } from "./BufferAttribute.js";
 
 export class BufferGeometry {
-  constructor() {
+  constructor(vertexColors = []) {
     this._attributes = {};
-    this.useVertexColors = false;
+    if (vertexColors.length > 0) this._useVertexColors = true;
+    else this._useVertexColors = false;
+    this._vertexColors = vertexColors;
+  }
+
+  get useVertexColors() {
+    return this._useVertexColors;
+  }
+
+  get vertexColors() {
+    return this._vertexColors;
   }
 
   get attributes() {

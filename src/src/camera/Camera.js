@@ -7,7 +7,6 @@ export class Camera extends Component {
     super();
     this._projectionMatrix = Matrix4.identity();
     this._viewProjectionMatrix = Matrix4.identity();
-    this._cameraMatrix = Matrix4.identity();
     this._radius = radius;
   }
 

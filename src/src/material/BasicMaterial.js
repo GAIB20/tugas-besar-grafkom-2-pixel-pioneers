@@ -11,13 +11,19 @@ export class BasicMaterial extends ShaderMaterial {
         uniform mat4 u_worldMatrix;
         uniform mat4 u_viewMatrix;
         uniform vec4 u_color;
+        uniform bool u_useVertexColors;
 
         varying vec4 v_color;
 
         void main() {
             vec4 wPos = u_viewMatrix * u_worldMatrix * position;
             gl_Position = wPos;
-            v_color = mix(vec4(1,1,1,1), color, 0.0) * u_color;
+
+            if (u_useVertexColors) {
+              v_color = color;
+            } else {
+              v_color = u_color;
+            }
         }
         `;
 

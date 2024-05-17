@@ -1,4 +1,3 @@
-import { BufferAttribute } from "../geometry/BufferAttribute";
 import { ShaderMaterial } from "../material/ShaderMaterial";
 import { Mesh } from "./Mesh";
 import { SetterWebGLType, ShaderType } from "./Type";
@@ -56,7 +55,6 @@ export class WebGL {
     this.program = program;
     this.uniformSetters = this.createUniformSetters(this.program);
     this.attributeSetters = this.createAttributeSetters(this.program);
-
     return {
       program: this.program,
       uniformSetters: this.uniformSetters,
@@ -82,7 +80,6 @@ export class WebGL {
       );
       return true;
     }
-    return false;
   }
 
   createUniformSetters(program) {
@@ -211,6 +208,7 @@ export class WebGL {
         ...component.material.uniforms,
         ...uniforms,
         worldMatrix: component.worldMatrix,
+        useVertexColors: component.geometry.useVertexColors,
       });
       this.gl.drawArrays(
         this.gl.TRIANGLES,

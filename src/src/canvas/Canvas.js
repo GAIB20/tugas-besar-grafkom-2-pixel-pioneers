@@ -1,17 +1,10 @@
 import { PerspectiveCamera } from "../camera/PerspectiveCamera";
 import { OrthographicCamera } from "../camera/OrthographicCamera";
 import { Matrix4 } from "../math/Matrix4";
-import {
-  vertices,
-  colors,
-  verticesCube,
-  colorsCube,
-  verticesData,
-} from "./testdata";
 import { WebGL } from "../primitives/WebGL";
-import { rpVertices, rpColors } from "./rectanglePipe";
+import { rpVertices, rpColors } from "../models/hollow/rectanglePipe";
 import { ObliqueCamera } from "../camera/ObliqueCamera";
-import { pyramid, pyramidColor } from "./pyramid";
+import { pyramid, pyramidColor } from "../models/hollow/pyramid";
 import { OrbitControl } from "../camera/OrbitControl";
 import { Component } from "../primitives/Component";
 import { Scene } from "../primitives/Scene";
@@ -20,6 +13,7 @@ import { BufferGeometry } from "../geometry/BufferGeometry";
 import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
+import { Geometry } from "../geometry/Geometry";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -40,17 +34,15 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var scene = new Scene();
 
   // Define geometry
-  var geometry = new BoxGeometry(100, 100, 100);
+  var geometry = new Geometry(pyramid, pyramidColor);
 
   // Define material
-  var material = new BasicMaterial("Basic", new Color(1, 0, 0, 1));
+  var material = new BasicMaterial("Basic", new Color(0, 1, 0, 1));
 
   // Define mesh
   var mesh = new Mesh(geometry, material);
 
   scene.add(mesh);
-
-  webgl.render(scene, currentCamera);
 
   document.querySelector("#fullview-camera-anglex-slider").addEventListener("input", function (event) {
     currentCamera.setCameraAngleDeg('X', event.target.value);
@@ -116,5 +108,17 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     webgl.render(scene, currentCamera);
   });
 
-  var orbitControl = new OrbitControl(currentCamera, canvas, webgl);
+  var orbitControl = new OrbitControl(currentCamera, canvas);
+
+  function render() {
+    orbitControl.update();
+    webgl.render(scene, currentCamera);
+  }
+
+  canvas.addEventListener("mousemove", render);
+  canvas.addEventListener("mousedown", render);
+  canvas.addEventListener("mouseup", render);
+  canvas.addEventListener("wheel", render);
+
+  render();
 }

@@ -53,16 +53,16 @@ export class PerspectiveCamera extends Camera {
     );
 
     var cameraPosition = [
-      this._cameraMatrix.data[12],
-      this._cameraMatrix.data[13],
-      this._cameraMatrix.data[14],
+      this._localMatrix.data[12],
+      this._localMatrix.data[13],
+      this._localMatrix.data[14],
     ];
 
 
     var up = [0, 1, 0];
     var fPosition = [0, 0, 0];
-    this._cameraMatrix = Matrix4.lookAt(cameraPosition, fPosition, up);
-    this._viewProjectionMatrix = Matrix4.inverse(this._cameraMatrix.data);
+    this._localMatrix = Matrix4.lookAt(cameraPosition, fPosition, up);
+    this._viewProjectionMatrix = Matrix4.inverse(this._localMatrix.data);
     this._viewProjectionMatrix = Matrix4.multiply(
       this._projectionMatrix.data,
       this._viewProjectionMatrix.data
