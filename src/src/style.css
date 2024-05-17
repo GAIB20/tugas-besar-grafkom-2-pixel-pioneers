@@ -21,6 +21,18 @@ body {
   min-height: 100vh;
 }
 
+h2 {
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
+}
+
+.prop-title {
+  margin: 10%;
+}
+
 #header {
   width: 100vw;
   height: 8vh;
@@ -187,10 +199,6 @@ button:focus-visible {
 }
 .btn-purple:hover {
   background-color: #646cff;
-}
-
-p {
-  margin: 0;
 }
 
 select {

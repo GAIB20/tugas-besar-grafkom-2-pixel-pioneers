@@ -77,9 +77,9 @@ export function setupPartView(element) {
         </div>
     `;
 
-  setupCanvas(
-    document.querySelector("#partview-canvas"),
-    document.querySelector("#partview-camera-angle-slider"),
-    document.querySelector("#partview-camera-radius-slider")
-  );
+//   setupCanvas(
+//     document.querySelector("#partview-canvas"),
+//     document.querySelector("#partview-camera-angle-slider"),
+//     document.querySelector("#partview-camera-radius-slider")
+//   );
 }
