@@ -1,8 +1,10 @@
 import { Matrix } from "../math/Matrix.js";
 import { Matrix4 } from "../math/Matrix4.js";
+import { Component } from "../primitives/Component.js";
 
-export class Camera {
+export class Camera extends Component {
   constructor(radius) {
+    super();
     this._projectionMatrix = Matrix4.identity();
     this._viewProjectionMatrix = Matrix4.identity();
     this._cameraMatrix = Matrix4.identity();

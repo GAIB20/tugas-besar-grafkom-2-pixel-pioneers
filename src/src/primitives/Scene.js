@@ -6,7 +6,7 @@ export class Scene extends Component {
 
   constructor() {
     super();
-    this.backgroundColor = new Color();
+    this.backgroundColor = new Color(1, 1, 1, 1);
   }
 
   get type() {

@@ -1,4 +1,3 @@
-import { type } from "react-typical";
 import { BufferAttribute } from "./BufferAttribute.js";
 import { BufferGeometry } from "./BufferGeometry.js";
 
@@ -14,7 +13,10 @@ export class BoxGeometry extends BufferGeometry {
       hd = depth / 2;
 
     const vertices = new Float32Array([
-      // Front
+      // Front face
+      -hw,
+      hh,
+      hd,
       -hw,
       -hh,
       hd,
@@ -27,12 +29,18 @@ export class BoxGeometry extends BufferGeometry {
       -hw,
       hh,
       hd,
-      // Back
+      hw,
+      -hh,
+      hd,
+      // Back face
       -hw,
+      hh,
+      -hd,
+      hw,
       -hh,
       -hd,
       -hw,
-      hh,
+      -hh,
       -hd,
       hw,
       hh,
@@ -40,7 +48,10 @@ export class BoxGeometry extends BufferGeometry {
       hw,
       -hh,
       -hd,
-      // Top
+      -hw,
+      hh,
+      -hd,
+      // Top face
       -hw,
       hh,
       -hd,
@@ -53,7 +64,13 @@ export class BoxGeometry extends BufferGeometry {
       hw,
       hh,
       -hd,
-      // Bottom
+      -hw,
+      hh,
+      -hd,
+      hw,
+      hh,
+      hd,
+      // Bottom face
       -hw,
       -hh,
       -hd,
@@ -66,7 +83,41 @@ export class BoxGeometry extends BufferGeometry {
       -hw,
       -hh,
       hd,
-      // Left
+      -hw,
+      -hh,
+      -hd,
+      hw,
+      -hh,
+      hd,
+      // Right face
+      hw,
+      -hh,
+      -hd,
+      hw,
+      hh,
+      hd,
+      hw,
+      -hh,
+      hd,
+      hw,
+      -hh,
+      -hd,
+      hw,
+      hh,
+      -hd,
+      hw,
+      hh,
+      hd,
+      // Left face
+      -hw,
+      -hh,
+      -hd,
+      -hw,
+      hh,
+      hd,
+      -hw,
+      hh,
+      -hd,
       -hw,
       -hh,
       -hd,
@@ -75,22 +126,6 @@ export class BoxGeometry extends BufferGeometry {
       hd,
       -hw,
       hh,
-      hd,
-      -hw,
-      hh,
-      -hd,
-      // Right
-      hw,
-      -hh,
-      -hd,
-      hw,
-      hh,
-      -hd,
-      hw,
-      hh,
-      hd,
-      hw,
-      -hh,
       hd,
     ]);
 

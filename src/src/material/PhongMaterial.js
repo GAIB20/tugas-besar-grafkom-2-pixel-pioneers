@@ -12,9 +12,9 @@ export class PhongMaterial extends ShaderMaterial {
     // Define vertex shader for phong material
     const vertex_shader = `
         #define PI 3.1415926535897932384626433832795
-        attribute vec4 a_position;
-        attribute vec4 a_color;
-        attribute vec3 a_normal;
+        attribute vec4 position;
+        attribute vec4 color;
+        attribute vec3 normal;
 
         uniform mat4 u_worldMatrix;
         uniform mat4 u_viewMatrix;
@@ -25,11 +25,11 @@ export class PhongMaterial extends ShaderMaterial {
         varying vec3 v_normal, v_pos;
 
         void main() {
-            gl_Position = u_viewMatrix * u_worldMatrix * a_position;
+            gl_Position = u_viewMatrix * u_worldMatrix * position;
 
             v_pos = gl_Position.xyz / gl_Position.w;
-            v_normal = mat3(u_worldMatrix) * a_normal;
-            v_color = mix(vec4(1,1,1,1), a_color, float(u_useVertexColor));
+            v_normal = mat3(u_worldMatrix) * normal;
+            v_color = mix(vec4(1,1,1,1), color, float(u_useVertexColor));
         }
         `;
 

@@ -1,6 +1,6 @@
 import { Vector3 } from "../math/Vector3.js";
 import { Matrix } from "../math/Matrix.js";
-import { Deserialize } from "./Deserialize.js";
+import { Matrix4 } from "../math/Matrix4.js";
 
 export class Component {
   constructor() {
@@ -39,6 +39,10 @@ export class Component {
   }
   get type() {
     return "Component";
+  }
+  get worldPosition() {
+    this.computeWorldMatrix(true, false);
+    return Matrix4.getTranslation(this._worldMatrix);
   }
 
   // Setter
@@ -114,7 +118,7 @@ export class Component {
     };
   }
 
-  fromJSON(json, obj = null) {
+  static fromJSON(json, obj = null) {
     if (!obj) obj = new Component();
     obj.name = json.name;
     obj.position.set(...position);
@@ -122,7 +126,7 @@ export class Component {
     obj.scale.set(...json.scale);
 
     json.children.forEach((child) => {
-      obj.add(Deserialize(child));
+      obj.add(Global.DeserializePrimitive(child));
     });
 
     return obj;

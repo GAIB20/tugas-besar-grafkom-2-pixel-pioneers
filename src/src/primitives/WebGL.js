@@ -1,41 +1,21 @@
+import { BufferAttribute } from "../geometry/BufferAttribute";
+import { ShaderMaterial } from "../material/ShaderMaterial";
+import { Mesh } from "./Mesh";
+import { SetterWebGLType, ShaderType } from "./Type";
+
 export class WebGL {
   constructor(gl) {
     this.gl = gl;
-    this.vertexScript = `
-        attribute vec4 a_position;
-        attribute vec4 a_color;
-        
-        uniform mat4 u_matrix;
-        
-        varying vec4 v_color;
-        
-        void main() {
-            // Multiply the position by the matrix.
-            gl_Position = u_matrix * a_position;
-        
-            // Pass the color to the fragment shader.
-            v_color = a_color;
-        }
-      `;
-    this.fragmentScript = `
-        precision mediump float;
-
-        // Passed in from the vertex shader.
-        varying vec4 v_color;
-        
-        void main() {
-            gl_FragColor = v_color;
-        }
-      `;
-    this.createProgram();
-    this.positionLocation = this.gl.getAttribLocation(
-      this.program,
-      "a_position"
+    this.program = null;
+    this.shaderCache = {};
+    this.gl.viewport(
+      0,
+      0,
+      this.gl.canvas.clientWidth,
+      this.gl.canvas.clientHeight
     );
-    this.colorLocation = this.gl.getAttribLocation(this.program, "a_color");
-    this.matrixLocation = this.gl.getUniformLocation(this.program, "u_matrix");
-    this.positionBuffer = this.gl.createBuffer();
-    this.colorBuffer = this.gl.createBuffer();
+    const ro = new ResizeObserver(() => this.resizeCanvasToDisplaySize());
+    ro.observe(this.gl.canvas, { box: "content-box" });
   }
 
   createShader(type, source) {
@@ -53,15 +33,14 @@ export class WebGL {
     return shader;
   }
 
-  createProgram() {
-    var vertexShader = this.createShader(
-      this.gl.VERTEX_SHADER,
-      this.vertexScript
-    );
-    var fragmentShader = this.createShader(
-      this.gl.FRAGMENT_SHADER,
-      this.fragmentScript
-    );
+  setProgramInfo(info) {
+    if (this.program !== info) {
+      this.gl.useProgram(info.program);
+      this.program = info;
+    }
+  }
+
+  createProgram(vertexShader, fragmentShader) {
     const program = this.gl.createProgram();
     this.gl.attachShader(program, vertexShader);
     this.gl.attachShader(program, fragmentShader);
@@ -75,126 +54,173 @@ export class WebGL {
       return null;
     }
     this.program = program;
-    return this.program;
+    this.uniformSetters = this.createUniformSetters(this.program);
+    this.attributeSetters = this.createAttributeSetters(this.program);
+
+    return {
+      program: this.program,
+      uniformSetters: this.uniformSetters,
+      attributeSetters: this.attributeSetters,
+    };
   }
 
-  static resizeCanvasToDisplaySize(canvas, multiplier) {
+  resizeCanvasToDisplaySize(multiplier) {
     multiplier = multiplier || 1;
-    const width = (canvas.clientWidth * multiplier) | 0;
-    const height = (canvas.clientHeight * multiplier) | 0;
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
+    const width = (this.gl.canvas.clientWidth * multiplier) | 0;
+    const height = (this.gl.canvas.clientHeight * multiplier) | 0;
+    if (this.gl.canvas.width !== width || this.gl.canvas.height !== height) {
+      this.gl.canvas.width = width;
+      this.gl.canvas.height = height;
+      this.gl.viewport(0, 0, width, height);
+      return true;
+    } else {
+      this.gl.viewport(
+        0,
+        0,
+        this.gl.canvas.clientWidth,
+        this.gl.canvas.clientHeight
+      );
       return true;
     }
     return false;
   }
 
-  createAttributeSetters(program) {
-    function createAttributeSetter(info) {
-      // Initialization Time
-      const loc = gl.getAttribLocation(program, info.name);
-      return (...values) => {
-        // Render Time (saat memanggil setAttributes() pada render loop)
-        const v = values[0];
-        if (v instanceof BufferAttribute) {
-          v._buffer = v._buffer || gl.createBuffer(); // Initialize bufffer if not exist
-          gl.bindBuffer(gl.ARRAY_BUFFER, v._buffer);
-          if (v.isDirty) {
-            // Data Changed Time (note that buffer is already binded)
-            gl.bufferData(gl.ARRAY_BUFFER, v.data, gl.STATIC_DRAW);
-            v.consume();
-          }
-          gl.enableVertexAttribArray(loc);
-          gl.vertexAttribPointer(
-            loc,
-            v.size,
-            v.dtype,
-            v.normalize,
-            v.stride,
-            v.offset
-          );
+  createUniformSetters(program) {
+    let gl = this.gl;
+
+    function createUniformSetter(info) {
+      const loc = gl.getUniformLocation(program, info.name);
+      const isArray = info.size > 1 && info.name.substr(-3) === "[0]";
+      const type = SetterWebGLType[info.type];
+      return (v) => {
+        if (typeof v === "object" && "toArray" in v) v = v.toArray();
+        if (isArray) {
+          gl[`uniform${type}v`](loc, v);
         } else {
-          gl.disableVertexAttribArray(loc);
-          if (v instanceof Float32Array)
-            gl[`vertexAttrib${v.length}fv`](loc, v);
-          else gl[`vertexAttrib${values.length}f`](loc, ...values);
+          if (type.substr(0, 6) === "Matrix") {
+            gl[`uniform${type}`](loc, false, v);
+          } else {
+            if (Array.isArray(v)) gl[`uniform${type}`](loc, ...v);
+            else gl[`uniform${type}`](loc, v);
+          }
         }
       };
     }
 
-    const attribSetters = {};
+    const uniformSetters = {};
+    const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+    for (let i = 0; i < numUniforms; i++) {
+      const info = gl.getActiveUniform(program, i);
+      if (!info) break;
+      let name =
+        info.name.substr(-3) === "[0]"
+          ? info.name.substr(0, info.name.length - 3)
+          : info.name;
+      uniformSetters[name] = createUniformSetter(info);
+    }
+    return uniformSetters;
+  }
+
+  setUniforms(uniforms) {
+    const setters = this.program.uniformSetters;
+    for (let uniformName in uniforms) {
+      const shaderName = `u_${uniformName}`;
+      if (shaderName in setters) setters[shaderName](uniforms[uniformName]);
+    }
+  }
+
+  createAttributeSetters(program) {
+    let gl = this.gl;
+
+    function createAttributeSetter(info) {
+      const loc = gl.getAttribLocation(program, info.name);
+      return (value) => {
+        value._buffer = value._buffer || gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, value._buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, value.data, gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(
+          loc,
+          value.size,
+          value.dtype,
+          value.normalize,
+          value.stride,
+          value.offset
+        );
+      };
+    }
+
+    const attributeSetters = {};
     const numAttribs = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
     for (let i = 0; i < numAttribs; i++) {
       const info = gl.getActiveAttrib(program, i);
       if (!info) continue;
-      attribSetters[info.name] = createAttributeSetter(info);
+      attributeSetters[info.name] = createAttributeSetter(info);
     }
-    return attribSetters;
+    return attributeSetters;
   }
 
   setAttribute(programInfo, attributeName, ...data) {
     const setters = programInfo.attributeSetters;
     if (attributeName in setters) {
-      const shaderName = `a_${attributeName}`;
+      const shaderName = `${attributeName}`;
       setters[shaderName](...data);
     }
   }
 
   setAttributes(programInfo, attributes) {
     for (let attributeName in attributes)
-      setAttribute(programInfo, attributeName, attributes[attributeName]);
+      this.setAttribute(programInfo, attributeName, attributes[attributeName]);
   }
 
-  setupScene(verticesData, colorsData) {
-    const numVertices = verticesData.length / 3;
-    const numColors = colorsData.length / 3;
-
-    if (numVertices !== numColors) {
-      console.error("Number of vertices and colors must match.");
-      return;
+  createOrGetMaterial(material) {
+    if (material instanceof ShaderMaterial) {
+      const id = material.id;
+      if (!(id in this.shaderCache)) {
+        this.shaderCache[id] = this.createProgram(
+          this.createShader(ShaderType.VERTEX, material.vertexShader),
+          this.createShader(ShaderType.FRAGMENT, material.fragmentShader)
+        );
+      }
+      return this.shaderCache[id];
+    } else {
+      throw new Error("Unsupported material type.");
     }
-
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, verticesData, this.gl.STATIC_DRAW);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.colorBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, colorsData, this.gl.STATIC_DRAW);
-
-    this.numVertices = numVertices;
   }
 
-  render(currentCamera) {
-    WebGL.resizeCanvasToDisplaySize(this.gl.canvas);
-    this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+  render(scene, currentCamera) {
+    this.resizeCanvasToDisplaySize();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
-    this.gl.useProgram(this.program);
-    this.gl.enableVertexAttribArray(this.positionLocation);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
-    this.gl.vertexAttribPointer(
-      this.positionLocation,
-      3,
-      this.gl.FLOAT,
-      false,
-      0,
-      0
-    );
-    this.gl.enableVertexAttribArray(this.colorLocation);
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.colorBuffer);
-    this.gl.vertexAttribPointer(
-      this.colorLocation,
-      3,
-      this.gl.UNSIGNED_BYTE,
-      true,
-      0,
-      0
-    );
-    this.gl.uniformMatrix4fv(
-      this.matrixLocation,
-      false,
-      currentCamera.viewProjectionMatrix.data
-    );
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.numVertices);
+    this.renderComponent(scene, {
+      cameraPosition: currentCamera.worldPosition,
+      viewMatrix: currentCamera.viewProjectionMatrix,
+    });
+  }
+
+  renderComponent(component, uniforms) {
+    if (!component.visible) return;
+    component.computeWorldMatrix(false, true);
+    if (component instanceof Mesh && component.geometry.attributes.position) {
+      const material = component.material;
+      const info = this.createOrGetMaterial(material);
+      this.setProgramInfo(info);
+      this.setAttributes(info, component.geometry.attributes);
+      this.setUniforms({
+        ...component.material.uniforms,
+        ...uniforms,
+        worldMatrix: component.worldMatrix,
+      });
+      this.gl.drawArrays(
+        this.gl.TRIANGLES,
+        0,
+        component.geometry.attributes.position.count
+      );
+    }
+
+    for (let key in component.children) {
+      this.renderComponent(component.children[key], uniforms);
+    }
   }
 }

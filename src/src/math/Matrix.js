@@ -1,11 +1,6 @@
 export class Matrix {
   constructor(
-    data = [
-      [1, 0, 0, 0],
-      [0, 1, 0, 0],
-      [0, 0, 1, 0],
-      [0, 0, 0, 1],
-    ],
+    data = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
     m = 4,
     n = 4
   ) {
@@ -19,14 +14,13 @@ export class Matrix {
   }
 
   clone() {
-    const newData = this.data.map((row) => row.slice());
-    return new Matrix(newData, this.m, this.n);
+    return new Matrix(this.data.slice(), this.m, this.n);
   }
 
   get(i, j) {
     if (i < 0 || i >= this.m || j < 0 || j >= this.n)
       throw new Error("Index out of range.");
-    return this.data[i][j];
+    return this.data[i * this.n + j];
   }
 
   static mul(...matrices) {
@@ -36,25 +30,30 @@ export class Matrix {
 
     let result = matrices[0].clone();
 
+    if (result.m != result.n) {
+      throw new Error("Matrix is not square!");
+    }
+
     for (let m = 1; m < matrices.length; m++) {
       let currentMatrix = matrices[m];
+
+      if (result.m != currentMatrix.m || result.n != currentMatrix.n) {
+        throw new Error("Matrix mismatch!");
+      }
+
       let newResult = new Matrix(
-        [
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-          [0, 0, 0, 0],
-        ],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         4,
         4
       );
 
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          newResult.data[i][j] = 0;
-          for (let k = 0; k < 4; k++) {
-            newResult.data[i][j] +=
-              result.data[i][k] * currentMatrix.data[k][j];
+      for (let i = 0; i < result.n; i++) {
+        for (let j = 0; j < result.n; j++) {
+          newResult.data[i * result.n + j] = 0;
+          for (let k = 0; k < result.n; k++) {
+            newResult.data[i * result.n + j] +=
+              result.data[i * result.n + k] *
+              currentMatrix.data[k * result.n + j];
           }
         }
       }
@@ -65,73 +64,52 @@ export class Matrix {
     return result;
   }
 
-  static inv(matrix) {
-    const m = matrix.data;
-    const inv = new Array(4).fill(0).map(() => new Array(4).fill(0));
-    const det = Matrix.determinant(matrix);
-    if (det === 0) {
-      throw new Error("Matrix is not invertible");
-    }
-
-    // Calculate the cofactor matrix
-    for (let row = 0; row < 4; row++) {
-      for (let col = 0; col < 4; col++) {
-        let minor = Matrix.minor(m, row, col);
-        let cofactor =
-          ((row + col) % 2 === 0 ? 1 : -1) *
-          Matrix.determinant(new Matrix(minor));
-        inv[col][row] = cofactor / det;
-      }
-    }
-
-    return new Matrix(inv, 4, 4);
-  }
-
-  static minor(m, row, col) {
-    return m
-      .filter((_, r) => r !== row)
-      .map((row) => row.filter((_, c) => c !== col));
-  }
-
-  static determinant(m) {
-    const d = m.data;
-    if (d.length === 2) {
-      return d[0][0] * d[1][1] - d[0][1] * d[1][0];
-    }
-    let det = 0;
-    for (let i = 0; i < d[0].length; i++) {
-      det +=
-        d[0][i] *
-        ((i % 2 === 0 ? 1 : -1) *
-          Matrix.determinant(new Matrix(Matrix.minor(d, 0, i))));
-    }
-    return det;
-  }
-
-  premul(other) {
+  static premul(other) {
     return Matrix.mul(other, this);
   }
 
   static translation3d(v) {
     const m = Matrix.identity();
-    m.data[0][3] = v.x;
-    m.data[1][3] = v.y;
-    m.data[2][3] = v.z;
+    m.data[3 * m.n + 0] = v.x;
+    m.data[3 * m.n + 1] = v.y;
+    m.data[3 * m.n + 2] = v.z;
     return m;
   }
 
   static rotation3d(v) {
-    // Placeholder for actual rotation logic
     const m = Matrix.identity();
-    // Rotation logic would be implemented here
+    const { x, y, z } = v;
+
+    // Rotation around x-axis
+    m.data[5] = Math.cos(x);
+    m.data[6] = -Math.sin(x);
+    m.data[9] = Math.sin(x);
+    m.data[10] = Math.cos(x);
+
+    // Rotation around y-axis
+    m.data[0] = Math.cos(y);
+    m.data[2] = Math.sin(y);
+    m.data[8] = -Math.sin(y);
+    m.data[10] = Math.cos(y);
+
+    // Rotation around z-axis
+    m.data[0] = Math.cos(z);
+    m.data[1] = -Math.sin(z);
+    m.data[4] = Math.sin(z);
+    m.data[5] = Math.cos(z);
+
     return m;
   }
 
   static scale3d(v) {
     const m = Matrix.identity();
-    m.data[0][0] = v.x;
-    m.data[1][1] = v.y;
-    m.data[2][2] = v.z;
+    m.data[0] = v.x;
+    m.data[1 * m.n + 1] = v.y;
+    m.data[2 * m.n + 2] = v.z;
     return m;
+  }
+
+  toArray() {
+    return this.data;
   }
 }

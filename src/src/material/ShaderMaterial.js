@@ -8,6 +8,7 @@ export class ShaderMaterial {
     fragmentShader = "",
     uniforms = {}
   ) {
+    this.id = Date.now().toString(36) + Math.random().toString(36).slice(0, 2);
     this._name = name;
     this._vertexShader = vertexShader;
     this._fragmentShader = fragmentShader;

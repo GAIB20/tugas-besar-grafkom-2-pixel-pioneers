@@ -3,6 +3,7 @@ import { BufferAttribute } from "./BufferAttribute.js";
 export class BufferGeometry {
   constructor() {
     this._attributes = {};
+    this.useVertexColors = false;
   }
 
   get attributes() {

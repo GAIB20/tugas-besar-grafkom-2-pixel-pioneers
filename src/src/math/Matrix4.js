@@ -1,4 +1,5 @@
 import { Matrix } from "./Matrix.js";
+import { Vector3 } from "./Vector3.js";
 
 export class Matrix4 extends Matrix {
   constructor(data) {
@@ -7,20 +8,27 @@ export class Matrix4 extends Matrix {
   }
 
   static identity() {
-    return new Matrix4([
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1,
-    ]);
+    return new Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
   }
 
   static projection(width, height, depth) {
     return new Matrix4([
-       2 / width, 0, 0, 0,
-       0, -2 / height, 0, 0,
-       0, 0, 2 / depth, 0,
-      -1, 1, 0, 1,
+      2 / width,
+      0,
+      0,
+      0,
+      0,
+      -2 / height,
+      0,
+      0,
+      0,
+      0,
+      2 / depth,
+      0,
+      -1,
+      1,
+      0,
+      1,
     ]);
   }
 
@@ -200,6 +208,11 @@ export class Matrix4 extends Matrix {
     return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
   }
 
+  static getTranslation(m, v = null) {
+    if (v === null) v = new Vector3();
+    return v.set(...m.data.slice(12, 15));
+  }
+
   static translation(tx, ty, tz) {
     return new Matrix4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1]);
   }
@@ -286,10 +299,22 @@ export class Matrix4 extends Matrix {
 
   static shear(matrix, shx, shy) {
     const shearMatrix = new Matrix4([
-      1, 0, 0, 0,
-      shx, 1, 0, 0,
-      shy, 0, 1, 0,
-      0, 0, 0, 1
+      1,
+      0,
+      0,
+      0,
+      shx,
+      1,
+      0,
+      0,
+      shy,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1,
     ]);
     return Matrix4.multiply(matrix.data, shearMatrix.data);
   }
