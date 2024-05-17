@@ -39,7 +39,7 @@ export class PlaneGeometry extends BufferGeometry {
       ...parent,
       width: this.width,
       height: this.height,
-      type: "BoxGeometry",
+      type: "PlaneGeometry",
     };
   }
 

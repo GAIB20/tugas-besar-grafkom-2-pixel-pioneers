@@ -1,6 +1,7 @@
 import { BoxGeometry } from "./BoxGeometry";
 import { BufferAttribute } from "./BufferAttribute";
 import { BufferGeometry } from "./BufferGeometry";
+import { Geometry } from "./Geometry";
 import { PlaneGeometry } from "./PlaneGeometry";
 
 const DeserializeGeometry = (json) => {
@@ -13,6 +14,8 @@ const DeserializeGeometry = (json) => {
       return BoxGeometry.fromJSON(json);
     case "PlaneGeometry":
       return PlaneGeometry.fromJSON(json);
+    case "Geometry":
+      return Geometry.fromJSON(json);
     default:
       return null;
   }

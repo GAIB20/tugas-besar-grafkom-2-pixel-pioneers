@@ -11,7 +11,7 @@ export class Geometry extends BufferGeometry {
     super(colors);
 
     this.position = position;
-    this.vertices = vertices;
+    this.vertices = new Float32Array(vertices);
     this.size = size;
 
     const px = position.x,
@@ -46,21 +46,27 @@ export class Geometry extends BufferGeometry {
   toJSON() {
     const parent = super.toJSON();
     delete parent.attributes.position;
+    delete parent.attributes.color;
     return {
       ...parent,
       position: this.position,
       size: this.size,
       type: "Geometry",
+      vertices: JSON.stringify(this.vertices),
+      vertexColors: JSON.stringify(this.vertexColors),
     };
   }
 
   static fromJSON(json, geometry = null) {
     if (!geometry) {
+      console.log(json);
       geometry = new Geometry(
-        new Float32Array(json.vertices),
+        new Float32Array(Object.values(JSON.parse(json.vertices))),
+        new Uint8Array(Object.values(JSON.parse(json.vertexColors))),
         json.position,
         json.size
       );
+      console.log(geometry);
     }
     super.fromJSON(json, geometry);
     return geometry;

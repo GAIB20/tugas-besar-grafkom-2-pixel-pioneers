@@ -6,7 +6,7 @@ export class BufferGeometry {
     this._attributes = {};
     if (vertexColors.length > 0) this._useVertexColors = true;
     else this._useVertexColors = false;
-    this._vertexColors = vertexColors;
+    this._vertexColors = new Uint8Array(vertexColors);
   }
 
   get useVertexColors() {

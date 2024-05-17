@@ -58,16 +58,14 @@ export class ShaderMaterial {
 
   static fromJSON(json, material = null) {
     const uniforms = {};
-
     for (const key in json.uniforms) {
-      const [uniformType, uniformValue] = json.uniforms[key];
-
-      if (uniformType === "Vector3") {
-        uniforms[key] = Vector3.fromJSON(uniformValue);
-      } else if (uniformType === "Color") {
-        uniforms[key] = Color.fromJSON(uniformValue);
+      const uniform = json.uniforms[key];
+      if (uniform[0] === "Vector3") {
+        uniforms[key] = Vector3.fromJSON(uniform[1]);
+      } else if (uniform[0] === "Color") {
+        uniforms[key] = Color.fromJSON(uniform[1]);
       } else {
-        uniforms[key] = uniformValue;
+        uniforms[key] = uniform;
       }
     }
 
