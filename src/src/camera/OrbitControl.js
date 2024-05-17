@@ -1,15 +1,11 @@
 import { Component } from "../primitives/Component.js";
 
 export class OrbitControl {
-  constructor(camera, canvas, target = null) {
+  constructor(camera, canvas) {
     this.camera = camera;
     this.canvas = canvas;
-    this.target = target;
-    this.radius = 700;
+    this.radius = camera._radius;
     this.center = new Component();
-    this.allowPan = true;
-    this.allowZoom = true;
-    this.allowRotate = true;
     this.isPanning = false;
     this.isMoving = false;
     this.init();
@@ -37,25 +33,24 @@ export class OrbitControl {
   onMouseMove(event) {
     const dx = event.movementX,
       dy = event.movementY;
-    if (this.isMoving && this.allowRotate) {
+    if (this.isMoving) {
       this.center._rotation.x =
         this.center._rotation.x - ((dy * (Math.PI / 180)) % Math.PI) * 2;
       this.center._rotation.y =
         this.center._rotation.y - ((dx * (Math.PI / 180)) % Math.PI) * 2;
-    } else if (this.isPanning && this.allowPan) {
+    } else if (this.isPanning) {
       this.center._position.x -= dx;
       this.center._position.y += dy;
     }
   }
 
   onMouseWheel(event) {
-    if (!this.allowZoom) return;
-    this.camera.zoom += event.deltaY;
+    this.camera.radiusDeg = this.camera._radius + event.deltaY;
   }
 
   update() {
-    if (this.target) this.center._position.copy(this.target.position);
-    this.center.computeLocalMatrix();
+    this.center.computeWorldMatrix();
+    this.camera.computeProjectionMatrix();
   }
 
   destroy() {
