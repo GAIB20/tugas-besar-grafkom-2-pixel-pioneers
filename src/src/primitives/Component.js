@@ -121,12 +121,12 @@ export class Component {
   static fromJSON(json, obj = null) {
     if (!obj) obj = new Component();
     obj.name = json.name;
-    obj.position.set(...position);
-    obj.rotation.set(...rotation);
+    obj.position.set(...json.position);
+    obj.rotation.set(...json.rotation);
     obj.scale.set(...json.scale);
 
     json.children.forEach((child) => {
-      obj.add(Global.DeserializePrimitive(child));
+      obj.add(DeserializePrimitive(child));
     });
 
     return obj;

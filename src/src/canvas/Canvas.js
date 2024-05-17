@@ -15,7 +15,7 @@ import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
-import { DeserializePrimitive } from "../primitives/Deserialize";
+import "../primitives/Deserialize";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -36,15 +36,18 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var scene = new Scene();
 
   // Define geometry
-  var geometry = new Geometry(pyramid, pyramidColor);
+  // var geometry = new Geometry(pyramid, pyramidColor);
+  var geometry = new BoxGeometry(100,100,100);
 
   // Define material
   var material = new PhongMaterial("Phong");
 
   // Define mesh
-  var mesh = new Mesh(geometry, material);
+  var mesh = new Mesh(geometry, new BasicMaterial("Basic", new Color(0,1,0,1)));
 
   scene.add(mesh);
+
+  console.log(scene);
 
   document
     .querySelector("#fullview-camera-anglex-slider")
@@ -157,10 +160,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
           reader.readAsText(file, 'UTF-8');
           reader.onload = function(event) {
               const jsonModel = JSON.parse(event.target.result);
-              console.log(jsonModel);
-              console.log("hello");
-              console.log(DeserializePrimitive(jsonModel));
-          //     // canvasSetupFunction(jsonModel); // Call the canvas setup function with the loaded model
+              const read = window.DeserializePrimitive(jsonModel);
+              scene = read;
+              webgl.render(scene, currentCamera);
           }
       }
   });
