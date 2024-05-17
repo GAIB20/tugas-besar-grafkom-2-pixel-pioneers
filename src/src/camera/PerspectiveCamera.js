@@ -19,16 +19,14 @@ export class PerspectiveCamera extends Camera {
   }
 
   setCameraAngleDeg(type, value) {
-    if (type == 'X') {
+    if (type == "X") {
       this._cameraAngleXRadians = this.degToRad(value);
-    } else if (type == 'Y') {
+    } else if (type == "Y") {
       this._cameraAngleYRadians = this.degToRad(value);
-    } else if (type == 'Z') {
+    } else if (type == "Z") {
       this._cameraAngleZRadians = this.degToRad(value);
-  }
+    }
 
-    console.log("ANGLE", this._cameraAngleXRadians, this._cameraAngleYRadians, this._cameraAngleZRadians);
-    
     this.computeProjectionMatrix();
   }
 
@@ -40,11 +38,16 @@ export class PerspectiveCamera extends Camera {
       this.zFar
     );
 
-
     this._localMatrix = Matrix4.zRotation(this._cameraAngleZRadians);
-    this._localMatrix = Matrix4.multiply(this._localMatrix.data, Matrix4.yRotation(this._cameraAngleYRadians).data);
-    this._localMatrix = Matrix4.multiply(this._localMatrix.data, Matrix4.xRotation(this._cameraAngleXRadians).data);
-    
+    this._localMatrix = Matrix4.multiply(
+      this._localMatrix.data,
+      Matrix4.yRotation(this._cameraAngleYRadians).data
+    );
+    this._localMatrix = Matrix4.multiply(
+      this._localMatrix.data,
+      Matrix4.xRotation(this._cameraAngleXRadians).data
+    );
+
     this._localMatrix = Matrix4.translate(
       this._localMatrix,
       0,
@@ -57,17 +60,10 @@ export class PerspectiveCamera extends Camera {
       this._localMatrix.data[13],
       this._localMatrix.data[14],
     ];
-
-    
-    console.log(this._cameraMatrix);
-
     var up = [0, 1, 0];
     var fPosition = [0, 0, 0];
     this._localMatrix = Matrix4.lookAt(cameraPosition, fPosition, up);
-    console.log(this._localMatrix);
-    console.log(cameraPosition);
     this._viewProjectionMatrix = Matrix4.inverse(this._localMatrix.data);
-    console.log(this._viewProjectionMatrix);
     this._viewProjectionMatrix = Matrix4.multiply(
       this._projectionMatrix.data,
       this._viewProjectionMatrix.data

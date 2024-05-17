@@ -59,14 +59,12 @@ export class Geometry extends BufferGeometry {
 
   static fromJSON(json, geometry = null) {
     if (!geometry) {
-      console.log(json);
       geometry = new Geometry(
         new Float32Array(Object.values(JSON.parse(json.vertices))),
         new Uint8Array(Object.values(JSON.parse(json.vertexColors))),
         json.position,
         json.size
       );
-      console.log(geometry);
     }
     super.fromJSON(json, geometry);
     return geometry;

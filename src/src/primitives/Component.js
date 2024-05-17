@@ -55,10 +55,11 @@ export class Component {
 
   computeLocalMatrix() {
     this._localMatrix = Matrix.mul(
-      Matrix.translation3d(this._position),
+      Matrix.scale3d(this._scale),
       Matrix.rotation3d(this._rotation),
-      Matrix.scale3d(this._scale)
+      Matrix.translation3d(this._position)
     );
+    console.log(this._localMatrix);
   }
 
   computeWorldMatrix(updateParent = true, updateChildren = true) {
@@ -69,8 +70,8 @@ export class Component {
 
     if (this.parent) {
       this._worldMatrix = Matrix.mul(
-        this.parent.worldMatrix,
-        this._localMatrix
+        this._localMatrix,
+        this.parent.worldMatrix
       );
     } else {
       this._worldMatrix = this._localMatrix.clone();
