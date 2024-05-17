@@ -11,7 +11,6 @@ export class PhongMaterial extends ShaderMaterial {
   ) {
     // Define vertex shader for phong material
     const vertex_shader = `
-        #define PI 3.1415926535897932384626433832795
         attribute vec4 position;
         attribute vec4 color;
         attribute vec3 normal;
@@ -19,7 +18,7 @@ export class PhongMaterial extends ShaderMaterial {
         uniform mat4 u_worldMatrix;
         uniform mat4 u_viewMatrix;
         uniform vec2 u_resolution;
-        uniform bool u_useVertexColor;
+        uniform bool u_useVertexColors;
 
         varying vec4 v_color;
         varying vec3 v_normal, v_pos;
@@ -29,7 +28,7 @@ export class PhongMaterial extends ShaderMaterial {
 
             v_pos = gl_Position.xyz / gl_Position.w;
             v_normal = mat3(u_worldMatrix) * normal;
-            v_color = mix(vec4(1,1,1,1), color, float(u_useVertexColor));
+            v_color = mix(vec4(1,1,1,1), color, float(u_useVertexColors));
         }
         `;
 
@@ -38,7 +37,6 @@ export class PhongMaterial extends ShaderMaterial {
         precision mediump float;
 
         uniform float u_shininess;
-        uniform vec3 u_lightPosition;
         uniform vec3 u_cameraPosition;
         uniform vec4 u_ambientColor;
         uniform vec4 u_diffuseColor;
@@ -49,10 +47,9 @@ export class PhongMaterial extends ShaderMaterial {
 
         void main() {
             vec3 N = normalize(v_normal);
-            vec3 L = normalize(normalize(u_lightPosition) - v_pos);
-            vec3 H = normalize(L + normalize(u_cameraPosition));
+            vec3 H = normalize(normalize(u_cameraPosition));
 
-            float kDiff = max(dot(L, N), 0.0);
+            float kDiff = max(dot(-N, H), 0.0); // Removed light position
             vec3 diffuse = kDiff * u_diffuseColor.rgb;
 
             float kSpec = pow(max(dot(N, H), 0.0), u_shininess);
@@ -68,23 +65,23 @@ export class PhongMaterial extends ShaderMaterial {
 
     // Add new attribute : ambient, diffuse, specular, shininess
     super(name, vertex_shader, fragment_shader, {
-      ambient,
-      diffuse,
-      specular,
+      ambientColor: ambient,
+      diffuseColor: diffuse,
+      specularColor: specular,
       shininess,
     });
   }
 
   get ambient() {
-    return this.uniforms["ambient"];
+    return this.uniforms["ambientColor"];
   }
 
   get diffuse() {
-    return this.uniforms["diffuse"];
+    return this.uniforms["diffuseColor"];
   }
 
   get specular() {
-    return this.uniforms["specular"];
+    return this.uniforms["specularColor"];
   }
 
   get shininess() {
