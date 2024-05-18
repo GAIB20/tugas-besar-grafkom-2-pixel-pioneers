@@ -59,7 +59,6 @@ export class Component {
       Matrix.rotation3d(this._rotation),
       Matrix.translation3d(this._position)
     );
-    // console.log(this._localMatrix);
   }
 
   computeWorldMatrix(updateParent = true, updateChildren = true) {

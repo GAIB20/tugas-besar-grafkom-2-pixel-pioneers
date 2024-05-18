@@ -30,33 +30,21 @@ export class Transform {
     } else if (type == "Y") {
       this.translateY = 1.5 * value;
     } else if (type == "Z") {
-      this.translateZ = 1.5 * value;
+      this.translateZ = value;
     }
   }
 
   getLocalMatrix() {
     var localMatrix = Matrix4.identity();
-
-    localMatrix = Matrix4.multiply(
-      Matrix4.xRotation(this.angleX).data,
-      localMatrix.data
-    );
-    localMatrix = Matrix4.multiply(
-      Matrix4.yRotation(this.angleY).data,
-      localMatrix.data
-    );
-    localMatrix = Matrix4.multiply(
-      Matrix4.zRotation(this.angleZ).data,
-      localMatrix.data
-    );
-
     localMatrix = Matrix4.translate(
         localMatrix,
         this.translateX,
         this.translateY,
         this.translateZ
     );
-
+    
+    localMatrix = Matrix4.rotateOrigin(localMatrix, this.angleX, this.angleY, this.angleZ);
+    
     return localMatrix
   }
 }
