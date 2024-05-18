@@ -45,7 +45,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   // Define mesh
   var mesh = new Mesh(geometry, material);
 
-  scene.add(model);
+  scene.add(mesh);
 
   document
     .querySelector("#fullview-camera-anglex-slider")
