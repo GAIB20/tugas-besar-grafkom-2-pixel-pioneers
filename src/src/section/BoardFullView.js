@@ -143,23 +143,26 @@ export function setupFullView(element) {
             </div>
             <h4>Animation</h4>
             <div class="animation-container">
-                <div class="slider-container">
-                    <p>Frame</p>
-                    <input type="range" min="1" max="60" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                <div class="slider-container-3">
+                    <input type="range" min="1" max="60" value="1" class="slider" id="frameSlider">
+                    <p class="value-display" id="frameDisplay">1/60</p>
                 </div>
                 <div>
-                    <button id="playButton">Toggle Play</button>
-                    <div>
-                        <input type="checkbox" id="autoReplayCheckbox">
-                        <label for="autoReplayCheckbox">Auto Replay</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="reverseCheckbox">
-                        <label for="reverseCheckbox">Reverse</label>
-                    </div>
+                    <button id="first"><i class="fas fa-step-backward"></i></button>
+                    <button id="previous"><i class="fas fa-backward"></i></button>
+                    <button id="play-pause"><i class="fas fa-play"></i></button>
+                    <button id="next"><i class="fas fa-forward"></i></button>
+                    <button id="last"><i class="fas fa-step-forward"></i></button>
+                    <button id="reverse"><i class="fas fa-undo"></i></button>
+                    <button id="loop"><i class="fas fa-sync-alt"></i></button>
                 </div>
-            </div>
+                <div class="fps-controller">
+                    <p>Frames per Second</p>
+                    <div class="slider-container-2">
+                        <input type="range" min="1" max="60" value="30" class="slider" id="fpsSlider">
+                    </div>
+                    <p class="value-display" id="fpsDisplay">30 FPS</p>
+                </div>
         </div>
     </div>
 `;
