@@ -38,7 +38,5 @@ export class PerspectiveCamera extends Camera {
       this._projectionMatrix.data,
       this._viewProjectionMatrix.data
     );
-
-    console.log(this._viewProjectionMatrix);
   }
 }
