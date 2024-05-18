@@ -73,12 +73,3 @@ function createComponentButtons(tree, depth = 0) {
 
     return buttons;
 }
-
-// Assume 'tree' is your component tree object
-const tree = {
-    RBody: { children: { Child1: { children: {Child2: { children: {} }} }, Child2: { children: {} } } },
-    PBody: { children: {} },
-    RHead: { children: {} },
-    PHead: { children: {} },
-    RArmL: { children: {} }
-};
