@@ -16,8 +16,9 @@ import { Color } from "../primitives/Color";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-// import model from "../models/articulated/minecraft";
-import model from "../models/articulated/fish";
+// import minecraft from "../models/articulated/minecraft";
+import fish from "../models/articulated/fish";
+import { ArticulatedModel } from "../primitives/ArticulatedModel";
 
 export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#partview-canvas");
@@ -58,7 +59,10 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var material = new PhongMaterial("Phong");
   var mesh = new Mesh(geometry, material);
 
-  globalThis.app = {
+  const model = ArticulatedModel.fromModel(fish);
+  model.scale.mul(40);
+  // export default model
+  globalThis.partviewApp = {
     model
   }
   

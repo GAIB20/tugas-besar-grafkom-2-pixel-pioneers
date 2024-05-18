@@ -13,11 +13,12 @@ import { BufferGeometry } from "../geometry/BufferGeometry";
 import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
+import { ArticulatedModel } from "../primitives/ArticulatedModel";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-// import model from "../models/articulated/minecraft";
-import model from "../models/articulated/fish";
+// import minecraft from "../models/articulated/minecraft";
+import fish from "../models/articulated/fish";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -71,6 +72,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var material = new PhongMaterial("Phong");
   var mesh = new Mesh(geometry, material);
 
+  const model = ArticulatedModel.fromModel(fish);
+  model.scale.mul(40);
+
   globalThis.app = {
     model,
   };
@@ -82,6 +86,19 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     angleXValue.textContent = event.target.value;
     webgl.render(scene, currentCamera);
   });
+
+  console.log("pos", app.model.position)
+  console.log("rot", app.model.rotation)
+  console.log("sca", app.model.scale)
+  console.log("mod1", app.model)
+  // app.model = model.children.PBody
+
+  // scene.remove(model); // Menghapus semua objek dari scene
+  // app.model = model.children[0].children.find(child => child.name === "RTopHead");
+  // app.model.scale.mul(100)
+  // console.log("mod2", app.model)
+  // scene.add(app.model); // Menambahkan RTopHead ke scene
+  // webgl.render(scene, currentCamera); // Me-render ulang scene dengan kamera yang aktual
 
   angleYSlider.addEventListener("input", function (event) {
     currentCamera.setCameraAngleDeg("Y", event.target.value);
