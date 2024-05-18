@@ -153,4 +153,26 @@ export class ArticulatedModel extends Component {
 
     return obj;
   }
+
+  setRigTransformations(rigId, transformations) {
+    const rig = app.model._rigs[rigId.substring(1)];
+    console.log(app.model._rigs[rigId.substring(1)]);
+    if (!rig) {
+        console.error(`Rig ${rigId} not found`);
+        return;
+    }
+    if (transformations.position)
+        rig.position.set(...transformations.position);
+    if (transformations.rotation)
+        rig.rotation.set(...transformations.rotation);
+    if (transformations.scale)
+        rig.scale.set(...transformations.scale);
+  }
+
+  applyFrame(frame) {
+    Object.keys(frame).forEach((rigId) => {
+      console.log(rigId);
+      this.setRigTransformations(rigId, frame[rigId]);
+    });
+  }
 }
