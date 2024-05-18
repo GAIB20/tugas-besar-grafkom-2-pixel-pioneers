@@ -10,27 +10,18 @@ export class ArticulatedModel extends Component {
   _rigs = {};
   _materials = {};
 
-  addRig(...rig) {
-    if (rig.length > 1) {
-      rig.forEach((rig) => {
-        this.addRig(rig);
-      });
-      return this;
-    }
-    if (rig.length === 0) return this;
-
-    const curRig = rig[0];
-    if (curRig.getId() in this._rigs) {
-      throw new Error(`Rig with id ${curRig.getId()} already exists in model.`);
-    }
-    this._rigs[curRig.getId()] = curRig;
+  addRig(...rigs) {
+    rigs.forEach((rig) => {
+      if (rig.getId() in this._rigs) {
+        throw new Error(`Rig with id ${rig.getId()} already exists in model.`);
+      }
+      this._rigs[rig.getId()] = rig;
+    });
     return this;
   }
 
   removeRig(rig) {
-    if (rig.getId() in this._rigs) {
-      delete this._rigs[rig.getId()];
-    }
+    delete this._rigs[rig.getId()];
   }
 
   get type() {
@@ -50,16 +41,14 @@ export class ArticulatedModel extends Component {
       const components = {};
       children.forEach((child) => {
         if (child instanceof Rig || child instanceof Mesh) {
-          components[child.getName()] = {};
-          components[child.getName()].children = getComponentTree(
-            child.getChildren()
-          );
-          components[child.getName()].component = child;
+          components[child.name] = {};
+          components[child.name].children = getComponentTree(child.children);
+          components[child.name].component = child;
         }
       });
       return components;
     }
-    return getComponentTree(this.getChildren());
+    return getComponentTree(this.children);
   }
 
   static getRigs(obj) {
@@ -109,5 +98,59 @@ export class ArticulatedModel extends Component {
       if (md.children) this.fromModel(md.children, model, child);
     });
     return model;
+  }
+
+  toJSON() {
+    const data = super.toJSON();
+
+    // Remove material information from mesh objects
+    const trimMaterial = (obj) => {
+      if (obj.type === "Mesh") {
+        delete obj.material;
+      }
+      if (obj.children) {
+        obj.children.forEach(trimMaterial);
+      }
+    };
+    trimMaterial(data);
+
+    return {
+      ...data,
+      rigs: Object.keys(this._rigs),
+      materials: this._materials,
+      type: "ArticulatedModel",
+    };
+  }
+
+  static fromJSON(json, obj = null) {
+    if (!obj) obj = new ArticulatedModel();
+    super.fromJSON(json, obj);
+
+    // Restore rigs
+    const rigsTemp = this.getRigs(obj);
+    json.rigs.forEach((rigId) => {
+      if (!(rigId in rigsTemp)) {
+        throw new Error(`Rig with id ${rigId} not found in model.`);
+      }
+      obj.addRig(rigsTemp[rigId]);
+    });
+
+    // Restore materials
+    Object.entries(json.materials).forEach(([matName, mats]) => {
+      obj._materials[matName] = mats.map(DeserializeMaterial);
+    });
+
+    // Attach materials to mesh objects
+    const attachMaterial = (obj) => {
+      if (obj.type === "Mesh") {
+        obj.material = obj._materials[obj.name][0];
+      }
+      if (obj.children) {
+        obj.children.forEach(attachMaterial);
+      }
+    };
+    attachMaterial(obj);
+
+    return obj;
   }
 }
