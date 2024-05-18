@@ -91,54 +91,54 @@ export function setupFullView(element) {
             <div class="transformation-container">
                 <div class="slider-container">
                     <p>X</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="-50" max="50" value="0" class="slider" id="fullview-object-translatex-slider">
+                    <p id="fullview-object-translatex-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Y</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="-50" max="50" value="0" class="slider" id="fullview-object-translatey-slider">
+                    <p id="fullview-object-translatey-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Z</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="-50" max="50" value="0" class="slider" id="fullview-object-translatez-slider">
+                    <p id="fullview-object-translatez-value" class="value-display">0</p>
                 </div>
             </div>
             <h4>Angle</h4>
             <div class="transformation-container">
                 <div class="slider-container">
                     <p>X</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglex-slider">
+                    <p id="fullview-object-anglex-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Y</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-angley-slider">
+                    <p id="fullview-object-angley-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Z</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglez-slider">
+                    <p id="fullview-object-anglez-value" class="value-display">0</p>
                 </div>
             </div>
             <h4>Scale</h4>
             <div class="transformation-container">
                 <div class="slider-container">
                     <p>X</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="fullview-object-scalex-slider">
+                    <p id="fullview-object-scalex-value" class="value-display">1</p>
                 </div>
                 <div class="slider-container">
                     <p>Y</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="fullview-object-scaley-slider">
+                    <p id="fullview-object-scaley-value" class="value-display">1</p>
                 </div>
                 <div class="slider-container">
                     <p>Z</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="fullview-object-scalez-slider">
+                    <p id="fullview-object-scalez-value" class="value-display">1</p>
                 </div>
             </div>
             <h4>Animation</h4>
