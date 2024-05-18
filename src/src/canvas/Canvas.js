@@ -13,11 +13,13 @@ import { BufferGeometry } from "../geometry/BufferGeometry";
 import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
+import { ArticulatedModel } from "../primitives/ArticulatedModel";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-// import model from "../models/articulated/minecraft";
-import model from "../models/articulated/fish";
+// import minecraft from "../models/articulated/minecraft";
+import fish from "../models/articulated/fish";
+// import animation from "../models/articulated/minecraftAnimation";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -50,6 +52,41 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var translateZValue = document.querySelector(
     "#fullview-camera-translatez-value"
   );
+
+  // Object inspector
+  var angleObjXSlider = document.querySelector("#fullview-object-anglex-slider");
+  var angleObjYSlider = document.querySelector("#fullview-object-angley-slider");
+  var angleObjZSlider = document.querySelector("#fullview-object-anglez-slider");
+  var angleObjXValue = document.querySelector("#fullview-object-anglex-value");
+  var angleObjYValue = document.querySelector("#fullview-object-angley-value");
+  var angleObjZValue = document.querySelector("#fullview-object-anglez-value");
+
+  var scaleObjXSlider = document.querySelector("#fullview-object-scalex-slider");
+  var scaleObjYSlider = document.querySelector("#fullview-object-scaley-slider");
+  var scaleObjZSlider = document.querySelector("#fullview-object-scalez-slider");
+  var scaleObjXValue = document.querySelector("#fullview-object-scalex-value");
+  var scaleObjYValue = document.querySelector("#fullview-object-scaley-value");
+  var scaleObjZValue = document.querySelector("#fullview-object-scalez-value");
+
+  var translateObjXSlider = document.querySelector(
+    "#fullview-object-translatex-slider"
+  );
+  var translateObjYSlider = document.querySelector(
+    "#fullview-object-translatey-slider"
+  );
+  var translateObjZSlider = document.querySelector(
+    "#fullview-object-translatez-slider"
+  );
+  var translateObjXValue = document.querySelector(
+    "#fullview-object-translatex-value"
+  );
+  var translateObjYValue = document.querySelector(
+    "#fullview-object-translatey-value"
+  );
+  var translateObjZValue = document.querySelector(
+    "#fullview-object-translatez-value"
+  );
+
   var angleContainer = document.querySelector("#fullview-camera-angle");
   var obliqueContainer = document.querySelector(
     "#fullview-camera-oblique-angle"
@@ -71,12 +108,93 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var material = new PhongMaterial("Phong");
   var mesh = new Mesh(geometry, material);
 
+  const model = ArticulatedModel.fromModel(fish);
+  model.scale.mul(40);
+
   globalThis.app = {
     model,
   };
 
   scene.add(model);
 
+  // scene.remove(model); // Menghapus semua objek dari scene
+  // app.model = model.children[0].children.find(child => child.name === "RTopHead");
+  // app.model.scale.mul(100)
+  // console.log("mod2", app.model)
+  // scene.add(app.model); // Menambahkan RTopHead ke scene
+  // webgl.render(scene, currentCamera); // Me-render ulang scene dengan kamera yang aktual
+
+  // Object TRS section
+  // Fungsi untuk mengubah derajat menjadi radian
+  Math.radians = function (degrees) {
+    return degrees * Math.PI / 180;
+  };
+
+  var rotationSliders = {
+    x: angleObjXSlider,
+    y: angleObjYSlider,
+    z: angleObjZSlider
+  };
+
+  var rotationValues = {
+    x: angleObjXValue,
+    y: angleObjYValue,
+    z: angleObjZValue
+  };
+
+  Object.keys(rotationSliders).forEach(function (axis) {
+    rotationSliders[axis].addEventListener("input", function (event) {
+      var angle = parseFloat(event.target.value);
+      var angleRadian = Math.radians(angle);
+      rotationValues[axis].textContent = angle;
+      app.model.rotation[axis] = angleRadian;
+      webgl.render(scene, currentCamera);
+    });
+  });
+
+  var translationSliders = {
+    x: translateObjXSlider,
+    y: translateObjYSlider,
+    z: translateObjZSlider
+  };
+
+  var translationValues = {
+    x: translateObjXValue,
+    y: translateObjYValue,
+    z: translateObjZValue
+  };
+
+  Object.keys(translationSliders).forEach(function (axis) {
+    translationSliders[axis].addEventListener("input", function (event) {
+      var translation = parseFloat(event.target.value);
+      translationValues[axis].textContent = translation;
+      app.model.position[axis] = translation;
+      webgl.render(scene, currentCamera);
+    });
+  });
+
+  var scaleSliders = {
+    x: scaleObjXSlider,
+    y: scaleObjYSlider,
+    z: scaleObjZSlider
+  };
+
+  var scaleValues = {
+    x: scaleObjXValue,
+    y: scaleObjYValue,
+    z: scaleObjZValue
+  };
+
+  Object.keys(scaleSliders).forEach(function (axis) {
+    scaleSliders[axis].addEventListener("input", function (event) {
+      var scale = parseFloat(event.target.value);
+      scaleValues[axis].textContent = scale;
+      app.model.scale[axis] = scale * 40;
+      webgl.render(scene, currentCamera);
+    });
+  });
+
+  // Camera TRS section
   angleXSlider.addEventListener("input", function (event) {
     currentCamera.setCameraAngleDeg("X", event.target.value);
     angleXValue.textContent = event.target.value;
@@ -267,4 +385,126 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
 
     return currentCamera;
   }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const totalFrames = animation.frames.length;
+    let currentFrame = 1;
+    let isPlaying = false;
+    let isReversing = false;
+    let loop = false;
+    let fps = 30;
+    let playInterval;
+
+    const frameSlider = document.getElementById('frameSlider');
+    const frameDisplay = document.getElementById('frameDisplay');
+    const fpsSlider = document.getElementById('fpsSlider');
+    const fpsDisplay = document.getElementById('fpsDisplay');
+    const playPauseButton = document.getElementById('play-pause');
+    const reverseButton = document.getElementById('reverse');
+    const loopButton = document.getElementById('loop');
+
+    frameSlider.max = totalFrames;
+
+    function updateDisplay() {
+        frameSlider.value = currentFrame;
+        frameDisplay.textContent = `${currentFrame}/${totalFrames}`;
+    }
+
+    function updateFPS() {
+        fps = parseInt(fpsSlider.value);
+        fpsDisplay.textContent = `${fps} FPS`;
+        if (isPlaying) {
+            clearInterval(playInterval);
+            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
+        }
+    }
+
+    function play() {
+        if (!isPlaying) {
+            isPlaying = true;
+            playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
+        }
+    }
+
+    function pause() {
+        if (isPlaying) {
+            isPlaying = false;
+            playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+            clearInterval(playInterval);
+        }
+    }
+
+    function togglePlayPause() {
+        isPlaying ? pause() : play();
+    }
+
+    function nextFrame() {
+        currentFrame = (currentFrame % totalFrames) + 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+        if (currentFrame === 1 && !loop) {
+            pause();
+        }
+    }
+
+    function previousFrame() {
+        currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+        if (currentFrame === totalFrames && !loop) {
+            pause();
+        }
+    }
+
+    function firstFrame() {
+        currentFrame = 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+    }
+
+    function lastFrame() {
+        currentFrame = totalFrames;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+    }
+
+    function toggleLoop() {
+        loop = !loop;
+        loopButton.classList.toggle('active');
+    }
+
+    function toggleReverse() {
+        isReversing = !isReversing;
+        reverseButton.classList.toggle('active');
+        if (isPlaying) {
+            clearInterval(playInterval);
+            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
+        }
+    }
+
+    document.getElementById('first').addEventListener('click', firstFrame);
+    document.getElementById('previous').addEventListener('click', previousFrame);
+    playPauseButton.addEventListener('click', togglePlayPause);
+    document.getElementById('next').addEventListener('click', nextFrame);
+    document.getElementById('last').addEventListener('click', lastFrame);
+    loopButton.addEventListener('click', toggleLoop);
+    reverseButton.addEventListener('click', toggleReverse);
+
+    frameSlider.addEventListener('input', function () {
+        currentFrame = parseInt(this.value);
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+    });
+
+    fpsSlider.addEventListener('input', updateFPS);
+
+    updateDisplay();
+    updateFPS();
+
+    function updateModelAnimation(frame) {
+      model.applyFrame(animation.frames[frame]);
+      webgl.render(scene, currentCamera);
+    }
+  });
 }

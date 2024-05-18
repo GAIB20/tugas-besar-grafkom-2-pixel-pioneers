@@ -1,5 +1,3 @@
-import { ArticulatedModel } from "../../primitives/ArticulatedModel";
-
 var fish = {
   RBody: {
     children: {
@@ -100,6 +98,4 @@ var fish = {
   },
 };
 
-const model = ArticulatedModel.fromModel(fish);
-model.scale.mul(40);
-export default model;
+export default fish;
