@@ -16,7 +16,8 @@ import { Color } from "../primitives/Color";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-import model from "../models/articulated/minecraft";
+// import model from "../models/articulated/minecraft";
+import model from "../models/articulated/fish";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -45,6 +46,10 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   // Define mesh
   var mesh = new Mesh(geometry, material);
 
+  globalThis.app = {
+    model
+  }
+  
   scene.add(model);
 
   document

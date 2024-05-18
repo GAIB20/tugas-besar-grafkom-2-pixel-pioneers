@@ -48,18 +48,19 @@ export class ArticulatedModel extends Component {
   getTree() {
     function getComponentTree(children) {
       const components = {};
-      children.forEach((child) => {
+      children.forEach((child) =>
+         {
         if (child instanceof Rig || child instanceof Mesh) {
-          components[child.getName()] = {};
-          components[child.getName()].children = getComponentTree(
-            child.getChildren()
+          components[child.name] = {};
+          components[child.name].children = getComponentTree(
+            child.children
           );
-          components[child.getName()].component = child;
+          components[child.name].component = child;
         }
       });
       return components;
     }
-    return getComponentTree(this.getChildren());
+    return getComponentTree(this.children);
   }
 
   static getRigs(obj) {
