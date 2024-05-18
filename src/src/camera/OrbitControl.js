@@ -31,21 +31,21 @@ export class OrbitControl {
   }
 
   onMouseMove(event) {
-    const dx = event.movementX,
-      dy = event.movementY;
-    if (this.isMoving) {
-      this.center._rotation.x =
-        this.center._rotation.x - ((dy * (Math.PI / 180)) % Math.PI) * 2;
-      this.center._rotation.y =
-        this.center._rotation.y - ((dx * (Math.PI / 180)) % Math.PI) * 2;
-    } else if (this.isPanning) {
-      this.center._position.x -= dx;
-      this.center._position.y += dy;
-    }
+    // const dx = event.movementX,
+    //   dy = event.movementY;
+    // if (this.isMoving) {
+    //   this.center._rotation.x =
+    //     this.center._rotation.x - ((dy * (Math.PI / 180)) % Math.PI) * 2;
+    //   this.center._rotation.y =
+    //     this.center._rotation.y - ((dx * (Math.PI / 180)) % Math.PI) * 2;
+    // } else if (this.isPanning) {
+    //   this.center._position.x -= dx;
+    //   this.center._position.y += dy;
+    // }
   }
 
   onMouseWheel(event) {
-    this.camera.radiusDeg = this.camera._radius + event.deltaY;
+    // this.camera.radiusDeg = this.camera._radius + event.deltaY;
   }
 
   update() {

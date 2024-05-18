@@ -4,9 +4,6 @@ import { Camera } from "./Camera.js";
 export class PerspectiveCamera extends Camera {
   constructor(gl, fieldOfViewDeg, cameraAngleDeg, radius, zNear, zFar) {
     super(radius);
-    this._cameraAngleXRadians = this.degToRad(cameraAngleDeg);
-    this._cameraAngleYRadians = this.degToRad(cameraAngleDeg);
-    this._cameraAngleZRadians = this.degToRad(cameraAngleDeg);
     this.aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     this.fieldOfViewRadians = this.degToRad(fieldOfViewDeg);
     this.zNear = zNear;
@@ -19,14 +16,12 @@ export class PerspectiveCamera extends Camera {
   }
 
   setCameraAngleDeg(type, value) {
-    if (type == "X") {
-      this._cameraAngleXRadians = this.degToRad(value);
-    } else if (type == "Y") {
-      this._cameraAngleYRadians = this.degToRad(value);
-    } else if (type == "Z") {
-      this._cameraAngleZRadians = this.degToRad(value);
-    }
+    this.transform.setAngleDeg(type, value);
+    this.computeProjectionMatrix();
+  }
 
+  setCameraTranslate(type, value) {
+    this.transform.setTranslate(type, value);
     this.computeProjectionMatrix();
   }
 
@@ -38,35 +33,12 @@ export class PerspectiveCamera extends Camera {
       this.zFar
     );
 
-    this._localMatrix = Matrix4.zRotation(this._cameraAngleZRadians);
-    this._localMatrix = Matrix4.multiply(
-      this._localMatrix.data,
-      Matrix4.yRotation(this._cameraAngleYRadians).data
-    );
-    this._localMatrix = Matrix4.multiply(
-      this._localMatrix.data,
-      Matrix4.xRotation(this._cameraAngleXRadians).data
-    );
-
-    this._localMatrix = Matrix4.translate(
-      this._localMatrix,
-      0,
-      0,
-      this._radius * 1.5
-    );
-
-    var cameraPosition = [
-      this._localMatrix.data[12],
-      this._localMatrix.data[13],
-      this._localMatrix.data[14],
-    ];
-    var up = [0, 1, 0];
-    var fPosition = [0, 0, 0];
-    this._localMatrix = Matrix4.lookAt(cameraPosition, fPosition, up);
-    this._viewProjectionMatrix = Matrix4.inverse(this._localMatrix.data);
+    this._viewProjectionMatrix = Matrix4.inverse(this.transform.getLocalMatrix().data);
     this._viewProjectionMatrix = Matrix4.multiply(
       this._projectionMatrix.data,
       this._viewProjectionMatrix.data
     );
+
+    console.log(this._viewProjectionMatrix);
   }
 }

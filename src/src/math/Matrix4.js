@@ -235,7 +235,7 @@ export class Matrix4 extends Matrix {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
 
-    return new Matrix4([c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    return new Matrix4([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
   }
 
   static scaling(sx, sy, sz) {
