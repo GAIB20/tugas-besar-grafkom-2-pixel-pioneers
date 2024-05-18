@@ -1,13 +1,14 @@
 import { Matrix } from "../math/Matrix.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Component } from "../primitives/Component.js";
+import { Transform } from "../primitives/Transform.js";
 
 export class Camera extends Component {
   constructor(radius) {
     super();
     this._projectionMatrix = Matrix4.identity();
     this._viewProjectionMatrix = Matrix4.identity();
-    this._radius = radius;
+    this.transform = new Transform();
   }
 
   get viewProjectionMatrix() {
@@ -16,11 +17,6 @@ export class Camera extends Component {
 
   get projectionMatrix() {
     return this._projectionMatrix.data;
-  }
-
-  set radiusDeg(value) {
-    this._radius = value;
-    this.computeProjectionMatrix();
   }
 
   degToRad(d) {
