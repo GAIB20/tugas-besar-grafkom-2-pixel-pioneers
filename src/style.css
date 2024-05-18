@@ -207,6 +207,12 @@ p {
   margin: 0;
 }
 
+.value-display {
+  display: inline-block;
+  width: 50px; 
+  text-align: right; 
+}
+
 select {
   width: 200px; 
   padding: 3px 12px; 
