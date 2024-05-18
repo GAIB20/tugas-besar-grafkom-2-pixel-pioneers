@@ -135,16 +135,32 @@ export class Matrix4 extends Matrix {
     return Matrix4.multiply(m.data, Matrix4.translation(tx, ty, tz).data);
   }
 
-  static xRotate(m, angleInRadians) {
+  static xRotateOrigin(m, angleInRadians) {
     return Matrix4.multiply(m.data, Matrix4.xRotation(angleInRadians).data);
   }
 
-  static yRotate(m, angleInRadians) {
+  static yRotateOrigin(m, angleInRadians) {
     return Matrix4.multiply(m.data, Matrix4.yRotation(angleInRadians).data);
   }
 
-  static zRotate(m, angleInRadians) {
+  static zRotateOrigin(m, angleInRadians) {
     return Matrix4.multiply(m.data, Matrix4.zRotation(angleInRadians).data);
+  }
+
+  static rotate(m, x, y, z, angleX, angleY, angleZ) {
+    var res = Matrix4.translate(m, -x, -y, -z);
+    res = Matrix4.multiply(res.data, Matrix4.xRotation(angleX).data);
+    res = Matrix4.multiply(res.data, Matrix4.yRotation(angleY).data);
+    res = Matrix4.multiply(res.data, Matrix4.zRotation(angleZ).data);
+    res = Matrix4.translate(res, x, y, z);
+    return res;
+  }
+
+  static rotateOrigin(m, angleX, angleY, angleZ) {
+    var res = Matrix4.multiply(m.data, Matrix4.xRotation(angleX).data);
+    res = Matrix4.multiply(res.data, Matrix4.yRotation(angleY).data);
+    res = Matrix4.multiply(res.data, Matrix4.zRotation(angleZ).data);
+    return res;
   }
 
   static scale(m, sx, sy, sz) {

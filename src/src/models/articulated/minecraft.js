@@ -81,6 +81,4 @@ var minecraft = {
   },
 };
 
-const model = ArticulatedModel.fromModel(minecraft);
-model.scale.mul(40);
-export default model;
+export default minecraft;

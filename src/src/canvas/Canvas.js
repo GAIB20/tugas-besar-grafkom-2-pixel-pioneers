@@ -13,11 +13,12 @@ import { BufferGeometry } from "../geometry/BufferGeometry";
 import { BasicMaterial } from "../material/BasicMaterial";
 import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
+import { ArticulatedModel } from "../primitives/ArticulatedModel";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-import model from "../models/articulated/minecraft";
-// import model from "../models/articulated/fish";
+// import minecraft from "../models/articulated/minecraft";
+import fish from "../models/articulated/fish";
 // import animation from "../models/articulated/minecraftAnimation";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
@@ -33,18 +34,31 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var angleXValue = document.querySelector("#fullview-camera-anglex-value");
   var angleYValue = document.querySelector("#fullview-camera-angley-value");
   var angleZValue = document.querySelector("#fullview-camera-anglez-value");
-  var translateXSlider = document.querySelector("#fullview-camera-translatex-slider");
-  var translateYSlider = document.querySelector("#fullview-camera-translatey-slider");
-  var translateZSlider = document.querySelector("#fullview-camera-translatez-slider");
-  var translateXValue = document.querySelector("#fullview-camera-translatex-value");
-  var translateYValue = document.querySelector("#fullview-camera-translatey-value");
-  var translateZValue = document.querySelector("#fullview-camera-translatez-value");
+  var translateXSlider = document.querySelector(
+    "#fullview-camera-translatex-slider"
+  );
+  var translateYSlider = document.querySelector(
+    "#fullview-camera-translatey-slider"
+  );
+  var translateZSlider = document.querySelector(
+    "#fullview-camera-translatez-slider"
+  );
+  var translateXValue = document.querySelector(
+    "#fullview-camera-translatex-value"
+  );
+  var translateYValue = document.querySelector(
+    "#fullview-camera-translatey-value"
+  );
+  var translateZValue = document.querySelector(
+    "#fullview-camera-translatez-value"
+  );
   var angleContainer = document.querySelector("#fullview-camera-angle");
-  var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
+  var obliqueContainer = document.querySelector(
+    "#fullview-camera-oblique-angle"
+  );
   var radiusContainer = document.querySelector("#fullview-camera-radius");
   var translateContainer = document.querySelector("#fullview-camera-translate");
   var selectCamera = document.getElementById("fullview-camera-dropdown");
-  
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
@@ -59,47 +73,63 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var material = new PhongMaterial("Phong");
   var mesh = new Mesh(geometry, material);
 
+  const model = ArticulatedModel.fromModel(fish);
+  model.scale.mul(40);
+
   globalThis.app = {
-    model
-  }
-  
+    model,
+  };
+
   scene.add(model);
 
   angleXSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraAngleDeg("X", event.target.value);
-      angleXValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraAngleDeg("X", event.target.value);
+    angleXValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
+
+  console.log("pos", app.model.position)
+  console.log("rot", app.model.rotation)
+  console.log("sca", app.model.scale)
+  console.log("mod1", app.model)
+  // app.model = model.children.PBody
+
+  // scene.remove(model); // Menghapus semua objek dari scene
+  // app.model = model.children[0].children.find(child => child.name === "RTopHead");
+  // app.model.scale.mul(100)
+  // console.log("mod2", app.model)
+  // scene.add(app.model); // Menambahkan RTopHead ke scene
+  // webgl.render(scene, currentCamera); // Me-render ulang scene dengan kamera yang aktual
 
   angleYSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraAngleDeg("Y", event.target.value);
-      angleYValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraAngleDeg("Y", event.target.value);
+    angleYValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   angleZSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraAngleDeg("Z", event.target.value);
-      angleZValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraAngleDeg("Z", event.target.value);
+    angleZValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   translateXSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraTranslate("X", event.target.value);
-      translateXValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraTranslate("X", event.target.value);
+    translateXValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   translateYSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraTranslate("Y", event.target.value);
-      translateYValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraTranslate("Y", event.target.value);
+    translateYValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   translateZSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraTranslate("Z", event.target.value);
-      translateZValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraTranslate("Z", event.target.value);
+    translateZValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   radiusSlider.addEventListener("input", function (event) {
     currentCamera.radiusDeg = parseFloat(event.target.value);
@@ -109,7 +139,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   document
     .getElementById("full-view-add-camera")
     .addEventListener("click", function () {
-      
       var option = document.createElement("option");
       option.text = "Camera " + (selectCamera.options.length + 1);
       option.value = selectCamera.options.length + 1;
@@ -122,10 +151,10 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     });
 
   selectCamera.addEventListener("change", function () {
-      currentCameraIdx = this.value - 1;
-      currentCamera = setupCamera();
-      webgl.render(scene, currentCamera);
-    });
+    currentCameraIdx = this.value - 1;
+    currentCamera = setupCamera();
+    webgl.render(scene, currentCamera);
+  });
 
   document
     .getElementById("fullview-camera-type-dropdown")
@@ -220,26 +249,31 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     var type = currentCamera.type;
     if (type == "PerspectiveCamera") {
       document.getElementById("fullview-camera-type-dropdown").value = 3;
-      obliqueContainer.style.display = 'none';
-      radiusContainer.style.display = 'none';
-      translateContainer.style.display = 'block';
-      translateXValue.textContent = Math.round(currentCamera.transform.translateX)
-      translateYValue.textContent = Math.round(currentCamera.transform.translateY)
-      translateZValue.textContent = Math.round(currentCamera.transform.translateZ)
-      translateXSlider.value = Math.round(currentCamera.transform.translateX)
-      translateYSlider.value = Math.round(currentCamera.transform.translateY)
-      translateZSlider.value = Math.round(currentCamera.transform.translateZ)
-      
+      obliqueContainer.style.display = "none";
+      radiusContainer.style.display = "none";
+      translateContainer.style.display = "block";
+      translateXValue.textContent = Math.round(
+        currentCamera.transform.translateX
+      );
+      translateYValue.textContent = Math.round(
+        currentCamera.transform.translateY
+      );
+      translateZValue.textContent = Math.round(
+        currentCamera.transform.translateZ
+      );
+      translateXSlider.value = Math.round(currentCamera.transform.translateX);
+      translateYSlider.value = Math.round(currentCamera.transform.translateY);
+      translateZSlider.value = Math.round(currentCamera.transform.translateZ);
     } else if (type == "ObliqueCamera") {
       document.getElementById("fullview-camera-type-dropdown").value = 1;
-      obliqueContainer.style.display = 'block';
-      radiusContainer.style.display = 'block';
-      translateContainer.style.display = 'none';
+      obliqueContainer.style.display = "block";
+      radiusContainer.style.display = "block";
+      translateContainer.style.display = "none";
     } else {
       document.getElementById("fullview-camera-type-dropdown").value = 2;
-      obliqueContainer.style.display = 'none';
-      radiusContainer.style.display = 'block';
-      translateContainer.style.display = 'none';
+      obliqueContainer.style.display = "none";
+      radiusContainer.style.display = "block";
+      translateContainer.style.display = "none";
     }
 
     angleXValue.textContent = Math.round(currentCamera.transform.angleX);
@@ -369,11 +403,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     updateFPS();
 
     function updateModelAnimation(frame) {
-      // Logic to update model transformation based on the frame number
-      // This is where you'd update the model based on your animation logic
-      // For example:
-      // model.setRotation(frame * 6); // Just an example
-      console.log(animation.frames[frame]);
       model.applyFrame(animation.frames[frame]);
       webgl.render(scene, currentCamera);
     }
