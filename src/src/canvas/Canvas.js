@@ -19,6 +19,7 @@ import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
 // import minecraft from "../models/articulated/minecraft";
 import fish from "../models/articulated/fish";
+// import animation from "../models/articulated/minecraftAnimation";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -384,4 +385,126 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
 
     return currentCamera;
   }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const totalFrames = animation.frames.length;
+    let currentFrame = 1;
+    let isPlaying = false;
+    let isReversing = false;
+    let loop = false;
+    let fps = 30;
+    let playInterval;
+
+    const frameSlider = document.getElementById('frameSlider');
+    const frameDisplay = document.getElementById('frameDisplay');
+    const fpsSlider = document.getElementById('fpsSlider');
+    const fpsDisplay = document.getElementById('fpsDisplay');
+    const playPauseButton = document.getElementById('play-pause');
+    const reverseButton = document.getElementById('reverse');
+    const loopButton = document.getElementById('loop');
+
+    frameSlider.max = totalFrames;
+
+    function updateDisplay() {
+        frameSlider.value = currentFrame;
+        frameDisplay.textContent = `${currentFrame}/${totalFrames}`;
+    }
+
+    function updateFPS() {
+        fps = parseInt(fpsSlider.value);
+        fpsDisplay.textContent = `${fps} FPS`;
+        if (isPlaying) {
+            clearInterval(playInterval);
+            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
+        }
+    }
+
+    function play() {
+        if (!isPlaying) {
+            isPlaying = true;
+            playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
+        }
+    }
+
+    function pause() {
+        if (isPlaying) {
+            isPlaying = false;
+            playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+            clearInterval(playInterval);
+        }
+    }
+
+    function togglePlayPause() {
+        isPlaying ? pause() : play();
+    }
+
+    function nextFrame() {
+        currentFrame = (currentFrame % totalFrames) + 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+        if (currentFrame === 1 && !loop) {
+            pause();
+        }
+    }
+
+    function previousFrame() {
+        currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+        if (currentFrame === totalFrames && !loop) {
+            pause();
+        }
+    }
+
+    function firstFrame() {
+        currentFrame = 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+    }
+
+    function lastFrame() {
+        currentFrame = totalFrames;
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+    }
+
+    function toggleLoop() {
+        loop = !loop;
+        loopButton.classList.toggle('active');
+    }
+
+    function toggleReverse() {
+        isReversing = !isReversing;
+        reverseButton.classList.toggle('active');
+        if (isPlaying) {
+            clearInterval(playInterval);
+            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
+        }
+    }
+
+    document.getElementById('first').addEventListener('click', firstFrame);
+    document.getElementById('previous').addEventListener('click', previousFrame);
+    playPauseButton.addEventListener('click', togglePlayPause);
+    document.getElementById('next').addEventListener('click', nextFrame);
+    document.getElementById('last').addEventListener('click', lastFrame);
+    loopButton.addEventListener('click', toggleLoop);
+    reverseButton.addEventListener('click', toggleReverse);
+
+    frameSlider.addEventListener('input', function () {
+        currentFrame = parseInt(this.value);
+        updateDisplay();
+        updateModelAnimation(currentFrame);
+    });
+
+    fpsSlider.addEventListener('input', updateFPS);
+
+    updateDisplay();
+    updateFPS();
+
+    function updateModelAnimation(frame) {
+      model.applyFrame(animation.frames[frame]);
+      webgl.render(scene, currentCamera);
+    }
+  });
 }
