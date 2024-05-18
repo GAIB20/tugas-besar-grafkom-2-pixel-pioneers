@@ -32,78 +32,28 @@ export class Matrix4 extends Matrix {
     ]);
   }
 
-  static orthographic(left, right, bottom, top, near, far) {
-    const lr = 1 / (left - right);
-    const bt = 1 / (bottom - top);
-    const nf = 1 / (near - far);
+  static ortographic(left, right, bottom, top, near, far) {
+    console.log("ORTO", left, right, top, bottom);
+    const a = 1 / (right - left);
+    const b = 1 / (top - bottom);
+    const c = 1 / (near - far);
+    return new Matrix4([
+                      2 * a,                   0,                0, 0,
+                          0,               2 * b,                0, 0,
+                          0,                   0,            2 * c, 0,
+        (left + right) * -a, (bottom + top) * -b, (near + far) * c, 1,
+    ]);
+}
 
-    const out = Matrix4.identity();
-    const e = out.data;
-
-    e[0] = -2 * lr;
-    e[1] = 0;
-    e[2] = 0;
-    e[3] = 0;
-    e[4] = 0;
-    e[5] = -2 * bt;
-    e[6] = 0;
-    e[7] = 0;
-    e[8] = 0;
-    e[9] = 0;
-    e[10] = 2 * nf;
-    e[11] = 0;
-    e[12] = (left + right) * lr;
-    e[13] = (top + bottom) * bt;
-    e[14] = (far + near) * nf;
-    e[15] = 1;
-
-    return out;
-  }
-
-  static oblique(
-    left,
-    right,
-    bottom,
-    top,
-    near,
-    far,
-    angle,
-    scale = 0.5,
-    zoom = 1.0
-  ) {
-    angle *= Math.PI / 180;
-    const d = [
-      (right - left) / (2 * zoom),
-      (top - bottom) / (2 * zoom),
-      (right - left) / 2,
-      (top - bottom) / 2,
-    ];
-    const border = [
-      -(d[2] + d[0]) / 2,
-      (d[2] + d[0]) / 2,
-      -(d[3] + d[1]) / 2,
-      (d[3] + d[1]) / 2,
-    ];
-    return Matrix4.premul(
-      Matrix4.orthographic(...border, near, far),
-      new Matrix4([
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        -scale * Math.cos(angle),
-        scale * Math.sin(angle),
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-      ])
+  static oblique(left, right, bottom, top, near, far, angle, scale=0.5) {
+    return Matrix4.multiply(
+        Matrix4.ortographic(left, right, bottom, top, near, far).data,
+        new Matrix4([
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            -scale * Math.cos(angle), scale * Math.sin(angle), 1, 0,
+            0, 0, 0, 1,
+        ]).data,
     );
   }
 

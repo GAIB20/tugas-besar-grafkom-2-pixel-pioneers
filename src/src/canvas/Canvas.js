@@ -33,32 +33,14 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var angleXValue = document.querySelector("#fullview-camera-anglex-value");
   var angleYValue = document.querySelector("#fullview-camera-angley-value");
   var angleZValue = document.querySelector("#fullview-camera-anglez-value");
-  var translateXSlider = document.querySelector(
-    "#fullview-camera-translatex-slider"
-  );
-  var translateYSlider = document.querySelector(
-    "#fullview-camera-translatey-slider"
-  );
-  var translateZSlider = document.querySelector(
-    "#fullview-camera-translatez-slider"
-  );
-  var translateXValue = document.querySelector(
-    "#fullview-camera-translatex-value"
-  );
-  var translateYValue = document.querySelector(
-    "#fullview-camera-translatey-value"
-  );
-  var translateZValue = document.querySelector(
-    "#fullview-camera-translatez-value"
-  );
-  var angleContainer = document.querySelector("#fullview-camera-angle");
-  var obliqueContainer = document.querySelector(
-    "#fullview-camera-oblique-angle"
-  );
-  var radiusContainer = document.querySelector("#fullview-camera-radius");
-  var translateContainer = document.querySelector("#fullview-camera-translate");
+  var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
+  var obliqueSlider = document.querySelector("#fullview-camera-oblique-slider");
+  var obliqueValue = document.querySelector("#fullview-camera-oblique-value");
+  var radiusSlider = document.querySelector("#fullview-camera-radius-slider");
+  var radiusValue = document.querySelector("#fullview-camera-radius-value");
   var selectCamera = document.getElementById("fullview-camera-dropdown");
 
+  console.log("OBLIQUE", obliqueValue)
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
 
@@ -112,26 +94,15 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     webgl.render(scene, currentCamera);
   });
 
-  translateXSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("X", event.target.value);
-    translateXValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  translateYSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("Y", event.target.value);
-    translateYValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  translateZSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("Z", event.target.value);
-    translateZValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
   radiusSlider.addEventListener("input", function (event) {
-    currentCamera.radiusDeg = parseFloat(event.target.value);
+    currentCamera.setCameraTranslate("Z", event.target.value);
+    radiusValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
+
+  obliqueSlider.addEventListener("input", function (event) {
+    currentCamera.setObliqueAngleDeg(event.target.value);
+    obliqueValue.textContent = event.target.value;
     webgl.render(scene, currentCamera);
   });
 
@@ -249,35 +220,21 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     if (type == "PerspectiveCamera") {
       document.getElementById("fullview-camera-type-dropdown").value = 3;
       obliqueContainer.style.display = "none";
-      radiusContainer.style.display = "none";
-      translateContainer.style.display = "block";
-      translateXValue.textContent = Math.round(
-        currentCamera.transform.translateX
-      );
-      translateYValue.textContent = Math.round(
-        currentCamera.transform.translateY
-      );
-      translateZValue.textContent = Math.round(
-        currentCamera.transform.translateZ
-      );
-      translateXSlider.value = Math.round(currentCamera.transform.translateX);
-      translateYSlider.value = Math.round(currentCamera.transform.translateY);
-      translateZSlider.value = Math.round(currentCamera.transform.translateZ);
     } else if (type == "ObliqueCamera") {
       document.getElementById("fullview-camera-type-dropdown").value = 1;
-      obliqueContainer.style.display = "block";
-      radiusContainer.style.display = "block";
-      translateContainer.style.display = "none";
+      obliqueContainer.style.display = "flex";
+      obliqueValue.textContent = Math.round(currentCamera.theta * 180 / Math.PI);
+      obliqueSlider.value = Math.round(currentCamera.theta * 180 / Math.PI);
     } else {
       document.getElementById("fullview-camera-type-dropdown").value = 2;
       obliqueContainer.style.display = "none";
-      radiusContainer.style.display = "block";
-      translateContainer.style.display = "none";
     }
 
+    radiusValue.textContent = Math.round(currentCamera.transform.translateZ);
     angleXValue.textContent = Math.round(currentCamera.transform.angleX);
     angleYValue.textContent = Math.round(currentCamera.transform.angleY);
     angleZValue.textContent = Math.round(currentCamera.transform.angleZ);
+    radiusSlider.value = Math.round(currentCamera.transform.translateZ);
     angleXSlider.value = Math.round(currentCamera.transform.angleX);
     angleYSlider.value = Math.round(currentCamera.transform.angleY);
     angleZSlider.value = Math.round(currentCamera.transform.angleZ);
