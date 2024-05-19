@@ -35,15 +35,16 @@ export function setupFullView(element) {
             <div class="transformation-container" style="margin-top:2%" id="fullview-camera-radius">
                 <p class="prop-title">Radius</p>
                 <div class="slider-container-2">
+                    <p class="value-display" id="fullview-camera-radius-value">0</p>
                     <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-radius-slider">
-                    <p class="value-display">0</p>
+                    
                 </div>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="fullview-camera-oblique-angle">
                 <p class="prop-title">Oblique Angle</p>
-                <div class="slider-container-2">
-                    <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-radius-slider">
-                    <p class="value-display">0</p>
+                <div class="slider-container">
+                    <p class="value-display" id="fullview-camera-oblique-value">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-camera-oblique-slider">
                 </div>
             </div>
             <div id="fullview-camera-angle">
@@ -66,26 +67,6 @@ export function setupFullView(element) {
                     </div>
                 </div>
             <div/>
-            <div id="fullview-camera-translate">
-                <h4>Translate</h4>
-                <div class="transformation-container">
-                    <div class="slider-container">
-                        <p>X</p>
-                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-camera-translatex-slider">
-                        <p id="fullview-camera-translatex-value" class="value-display">0</p>
-                    </div>
-                    <div class="slider-container">
-                        <p>Y</p>
-                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-camera-translatey-slider">
-                        <p id="fullview-camera-translatey-value" class="value-display">0</p>
-                    </div>
-                    <div class="slider-container">
-                        <p>Z</p>
-                        <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-translatez-slider">
-                        <p id="fullview-camera-translatez-value" class="value-display">0</p>
-                    </div>
-                </div>
-            </div>
             <h3>Object</h3>
             <h4>Translation</h4>
             <div class="transformation-container">

@@ -15,16 +15,6 @@ export class PerspectiveCamera extends Camera {
     return "PerspectiveCamera";
   }
 
-  setCameraAngleDeg(type, value) {
-    this.transform.setAngleDeg(type, value);
-    this.computeProjectionMatrix();
-  }
-
-  setCameraTranslate(type, value) {
-    this.transform.setTranslate(type, value);
-    this.computeProjectionMatrix();
-  }
-
   computeProjectionMatrix() {
     this._projectionMatrix = Matrix4.perspective(
       this.fieldOfViewRadians,

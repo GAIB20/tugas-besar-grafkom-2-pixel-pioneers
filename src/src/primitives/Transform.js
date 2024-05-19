@@ -36,15 +36,13 @@ export class Transform {
 
   getLocalMatrix() {
     var localMatrix = Matrix4.identity();
-    localMatrix = Matrix4.translate(
-        localMatrix,
-        this.translateX,
-        this.translateY,
-        this.translateZ
-    );
-    
     localMatrix = Matrix4.rotateOrigin(localMatrix, this.angleX, this.angleY, this.angleZ);
-    
+    localMatrix = Matrix4.translate(
+      localMatrix,
+      this.translateX,
+      this.translateY,
+      this.translateZ
+    );
     return localMatrix
   }
 }
