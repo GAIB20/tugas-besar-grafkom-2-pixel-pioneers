@@ -93,15 +93,21 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(fish);
+  var comp = model
+
   model.scale.mul(40);
   // export default model
   globalThis.partviewApp = {
-    model
+    model,
+    currentCamera,
+    webgl,
+    scene,
+    comp
   }
 
   scene.add(model);
 
-    // Object TRS section
+  // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
   Math.radians = function (degrees) {
     return degrees * Math.PI / 180;
@@ -124,7 +130,7 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
       rotationValues[axis].textContent = angle;
-      partviewApp.model.rotation[axis] = angleRadian;
+      partviewApp.comp.rotation[axis] = angleRadian;
       webgl.render(scene, currentCamera);
     });
   });
@@ -145,7 +151,7 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     translationSliders[axis].addEventListener("input", function (event) {
       var translation = parseFloat(event.target.value);
       translationValues[axis].textContent = translation;
-      partviewApp.model.position[axis] = translation;
+      partviewApp.comp.position[axis] = translation;
       webgl.render(scene, currentCamera);
     });
   });
@@ -166,7 +172,7 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     scaleSliders[axis].addEventListener("input", function (event) {
       var scale = parseFloat(event.target.value);
       scaleValues[axis].textContent = scale;
-      partviewApp.model.scale[axis] = scale * 40;
+      partviewApp.comp.scale[axis] = scale * 40;
       webgl.render(scene, currentCamera);
     });
   });
@@ -364,4 +370,9 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
 
     return currentCamera;
   }
+}
+
+export function showTreeComponent(compName) {
+  partviewApp.comp = ArticulatedModel.findChildByNameRecursive(partviewApp.model, compName);
+  partviewApp.webgl.render(partviewApp.comp, partviewApp.currentCamera);
 }

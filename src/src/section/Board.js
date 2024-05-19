@@ -1,5 +1,6 @@
 import { setupFullView } from "./BoardFullView";
 import { setupPartView } from "./BoardPartView";
+import { showTreeComponent } from "../canvas/PartviewCanvas";
 
 export function setupBoard(element) {
     element.innerHTML = `
@@ -42,7 +43,6 @@ export function setupBoard(element) {
 
     let buttonsHTML
     if (app.model.getTree()) {
-        console.log("ap", app.model.getTree())
         buttonsHTML = createComponentButtons(app.model.getTree());
     }
 
@@ -51,7 +51,23 @@ export function setupBoard(element) {
         tbody.insertAdjacentHTML('beforeend', buttonHTML);
     });
 
-}
+// Menambahkan listener pada tombol komponen tree
+document.querySelectorAll("[id^=tree-]").forEach((button) => {
+    button.addEventListener("click", function () {
+      const compName = this.value;
+      const selectedButtons = document.querySelectorAll(".selected");
+  
+      // Menghapus kelas "selected" dari komponen sebelumnya
+      selectedButtons.forEach((selectedButton) => {
+        selectedButton.classList.remove("selected");
+      });
+  
+      // Menambahkan kelas "selected" pada komponen yang dipilih
+      this.classList.add("selected");
+  
+      showTreeComponent(compName);
+    });
+  });}
 
 function createComponentButtons(tree, depth = 0) {
     let buttons = {};
@@ -61,7 +77,7 @@ function createComponentButtons(tree, depth = 0) {
         buttons[compName] = `<tr>
                                 <td colspan="4">
                                     <div style="margin-left: ${depth * 20}px;">
-                                        <input type="submit" id="insp-compTree-${compName}" value="${compName}" class="">
+                                        <input type="submit" id="tree-${compName}" value="${compName}" class="">
                                     </div>
                                 </td>
                              </tr>`;

@@ -117,12 +117,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
 
   scene.add(model);
 
-  // scene.remove(model); // Menghapus semua objek dari scene
-  // app.model = model.children[0].children.find(child => child.name === "RTopHead");
-  // app.model.scale.mul(100)
-  // console.log("mod2", app.model)
-  // scene.add(app.model); // Menambahkan RTopHead ke scene
-  // webgl.render(scene, currentCamera); // Me-render ulang scene dengan kamera yang aktual
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
