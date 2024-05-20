@@ -18,6 +18,7 @@ import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
 // import minecraft from "../models/articulated/minecraft";
+import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
 // import animation from "../models/articulated/minecraftAnimation";
 
@@ -81,7 +82,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var translateContainer = document.querySelector("#fullview-camera-translate");
   var selectCamera = document.getElementById("fullview-camera-dropdown");
 
-  console.log("OBLIQUE", obliqueValue)
+
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
 
@@ -91,7 +92,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   // var currentCamera = new ObliqueCamera(gl, -10, 10, -10, 10, 0.1, 100);
 
   var scene = new Scene();
-  var geometry = new Geometry(pyramid, pyramidColor);
+  var geometry = new Geometry(bamboo, bambooColor);
   var material = new PhongMaterial("Phong");
   var mesh = new Mesh(geometry, material);
 
@@ -102,7 +103,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     model,
   };
 
-  scene.add(model);
+  scene.add(mesh);
 
 
   // Object TRS section
