@@ -53,6 +53,10 @@ export class Component {
     }
   }
 
+  set type(type) {
+    this._type = type;
+  }
+
   computeLocalMatrix() {
     this._localMatrix = Matrix.mul(
       Matrix.scale3d(this._scale),
@@ -124,6 +128,7 @@ export class Component {
     obj.position.set(...json.position);
     obj.rotation.set(...json.rotation);
     obj.scale.set(...json.scale);
+    obj.type = json.type;
 
     json.children.forEach((child) => {
       obj.add(DeserializePrimitive(child));

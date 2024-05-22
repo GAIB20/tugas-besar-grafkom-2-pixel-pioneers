@@ -13,8 +13,12 @@ export class Rig extends Component {
         return this._id;
     }
 
-    getType() {
+    get type() {
         return "Rig";
+    }
+
+    set type(type) {
+        this._type = type;
     }
 
     toJSON() {

@@ -5,6 +5,7 @@ import { PhongMaterial } from "../material/PhongMaterial.js";
 import { BasicMaterial } from "../material/BasicMaterial.js";
 import { BoxGeometry } from "../geometry/BoxGeometry.js";
 import { Color } from "../primitives/Color";
+import { DeserializeMaterial } from "../material/Deserialize";
 
 export class ArticulatedModel extends Component {
   _rigs = {};
@@ -53,7 +54,7 @@ export class ArticulatedModel extends Component {
 
   static getRigs(obj) {
     let rigs = {};
-    obj.getChildren().forEach((child) => {
+    obj.children.forEach((child) => {
       rigs = {
         ...rigs,
         ...this.getRigs(child),
@@ -67,6 +68,10 @@ export class ArticulatedModel extends Component {
       }
     });
     return rigs;
+  }
+
+  set type(type) {
+    this._type = type;
   }
 
   static fromModel(modelDefinition, model = null, parent = null) {
@@ -141,12 +146,12 @@ export class ArticulatedModel extends Component {
     });
 
     // Attach materials to mesh objects
-    const attachMaterial = (obj) => {
-      if (obj.type === "Mesh") {
-        obj.material = obj._materials[obj.name][0];
+    const attachMaterial = (component) => {
+      if (component instanceof Mesh) {
+        component.material = obj._materials[component.name][0];
       }
-      if (obj.children) {
-        obj.children.forEach(attachMaterial);
+      if (component.children) {
+        component.children.forEach(attachMaterial);
       }
     };
     attachMaterial(obj);

@@ -9,20 +9,31 @@ class Mesh extends Component {
     this.material = material;
   }
 
+  get type() { 
+    return "Mesh"; 
+  }
+
+  set type(type) {
+    this._type = type;
+  }
+
   toJSON() {
     return {
       ...super.toJSON(),
       geometry: this.geometry,
       material: this.material,
-      type: "Mesh",
+      // type: "Mesh",
     };
   }
 
   static fromJSON(json, obj = null) {
     if (!obj) obj = new Mesh();
     super.fromJSON(json, obj);
+    obj.type = json.type;
     obj.geometry = DeserializeGeometry(json.geometry);
-    obj.material = DeserializeMaterial(json.material);
+    if (json.material) {
+      obj.material = DeserializeMaterial(json.material);
+    }
     return obj;
   }
 }

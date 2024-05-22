@@ -17,6 +17,10 @@ export class Scene extends Component {
     this.backgroundColor = backgroundColor;
   }
 
+  set type(type) {
+    this._type = type;
+  }
+
   toJSON() {
     return {
       ...super.toJSON(),
