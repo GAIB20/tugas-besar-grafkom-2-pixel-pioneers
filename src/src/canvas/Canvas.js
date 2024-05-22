@@ -345,7 +345,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    const totalFrames = animation.frames.length;
+    let totalFrames = animation.frames.length;
     let currentFrame = 1;
     let isPlaying = false;
     let isReversing = false;
@@ -361,6 +361,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     const reverseButton = document.getElementById('reverse');
     const loopButton = document.getElementById('loop');
 
+    const currentFrameDisplay = document.getElementById('currentFrameDisplay');
     const addAfter = document.getElementById('addFrameAfter');
     const addEnd = document.getElementById('addFrameEnd');
     const delFrame = document.getElementById('deleteFrame');
@@ -375,6 +376,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     function updateDisplay() {
         frameSlider.value = currentFrame;
         frameDisplay.textContent = `${currentFrame}/${totalFrames}`;
+        currentFrameDisplay.textContent = `${currentFrame}`;
     }
 
     function updateFPS() {
@@ -409,7 +411,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     function nextFrame() {
         currentFrame = (currentFrame % totalFrames) + 1;
         updateDisplay();
-        updateModelAnimation(currentFrame);
+        updateModelAnimation(currentFrame - 1);
         if (currentFrame === 1 && !loop) {
             pause();
         }
@@ -418,7 +420,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     function previousFrame() {
         currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
         updateDisplay();
-        updateModelAnimation(currentFrame);
+        updateModelAnimation(currentFrame - 1);
         if (currentFrame === totalFrames && !loop) {
             pause();
         }
@@ -427,13 +429,13 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     function firstFrame() {
         currentFrame = 1;
         updateDisplay();
-        updateModelAnimation(currentFrame);
+        updateModelAnimation(currentFrame - 1);
     }
 
     function lastFrame() {
         currentFrame = totalFrames;
         updateDisplay();
-        updateModelAnimation(currentFrame);
+        updateModelAnimation(currentFrame - 1);
     }
 
     function toggleLoop() {
@@ -450,6 +452,73 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         }
     }
 
+    function addToNextFrame() {
+      animation.frames.splice(currentFrame, 0, animation.frames[currentFrame - 1]);
+      totalFrames++;
+      currentFrame++;
+      frameSlider.max = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+    }
+
+    function addToLastFrame() {
+      animation.frames.push(animation.frames[currentFrame - 1]);
+      totalFrames++;
+      currentFrame = totalFrames;
+      frameSlider.max = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+    }
+
+    function deleteFrame() {
+      animation.frames.splice(currentFrame - 1, 1);
+      totalFrames--;
+      currentFrame = currentFrame < totalFrames ? currentFrame : totalFrames;
+      frameSlider.max = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+    }
+
+    function moveNextFrame() {
+      if (currentFrame != totalFrames) {
+        animation.frames.splice(currentFrame - 1, 2, animation.frames[currentFrame], animation.frames[currentFrame - 1]);
+        currentFrame++;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function movePrevFrame() {
+      if (currentFrame != 1) {
+        animation.frames.splice(currentFrame - 2, 2, animation.frames[currentFrame - 1], animation.frames[currentFrame - 2]);
+        currentFrame--;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function moveFirstFrame () {
+      if (currentFrame != 1) {
+        let frame = animation.frames[currentFrame - 1];
+        animation.frames.splice(currentFrame - 1, 1);
+        animation.frames.unshift(frame);
+        currentFrame = 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function moveLastFrame () {
+      if (currentFrame != totalFrames) {
+        let frame = animation.frames[currentFrame - 1];
+        animation.frames.splice(currentFrame - 1, 1);
+        animation.frames.push(frame);
+        currentFrame = totalFrames;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
     document.getElementById('first').addEventListener('click', firstFrame);
     document.getElementById('previous').addEventListener('click', previousFrame);
     playPauseButton.addEventListener('click', togglePlayPause);
@@ -457,11 +526,18 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     document.getElementById('last').addEventListener('click', lastFrame);
     loopButton.addEventListener('click', toggleLoop);
     reverseButton.addEventListener('click', toggleReverse);
+    addAfter.addEventListener('click', addToNextFrame);
+    addEnd.addEventListener('click', addToLastFrame);
+    delFrame.addEventListener('click', deleteFrame);
+    moveToPrevFrame.addEventListener('click', movePrevFrame);
+    moveToNextFrame.addEventListener('click', moveNextFrame);
+    moveToFirstFrame.addEventListener('click', moveFirstFrame);
+    moveToLastFrame.addEventListener('click', moveLastFrame);
 
     frameSlider.addEventListener('input', function () {
         currentFrame = parseInt(this.value);
         updateDisplay();
-        updateModelAnimation(currentFrame);
+        updateModelAnimation(currentFrame - 1);
     });
 
     fpsSlider.addEventListener('input', updateFPS);
@@ -470,6 +546,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     updateFPS();
 
     function updateModelAnimation(frame) {
+      console.log('frame' + frame);
+      console.log(animation.frames[frame]);
       model.applyFrame(animation.frames[frame]);
       webgl.render(scene, currentCamera);
     }
