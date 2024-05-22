@@ -44,7 +44,40 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var radiusContainer = document.querySelector("#partview-camera-radius");
   var translateContainer = document.querySelector("#partview-camera-translate");
   var selectCamera = document.getElementById("partview-camera-dropdown");
-  
+
+  // Object inspector
+  var angleObjXSlider = document.querySelector("#partview-object-anglex-slider");
+  var angleObjYSlider = document.querySelector("#partview-object-angley-slider");
+  var angleObjZSlider = document.querySelector("#partview-object-anglez-slider");
+  var angleObjXValue = document.querySelector("#partview-object-anglex-value");
+  var angleObjYValue = document.querySelector("#partview-object-angley-value");
+  var angleObjZValue = document.querySelector("#partview-object-anglez-value");
+
+  var scaleObjXSlider = document.querySelector("#partview-object-scalex-slider");
+  var scaleObjYSlider = document.querySelector("#partview-object-scaley-slider");
+  var scaleObjZSlider = document.querySelector("#partview-object-scalez-slider");
+  var scaleObjXValue = document.querySelector("#partview-object-scalex-value");
+  var scaleObjYValue = document.querySelector("#partview-object-scaley-value");
+  var scaleObjZValue = document.querySelector("#partview-object-scalez-value");
+
+  var translateObjXSlider = document.querySelector(
+    "#partview-object-translatex-slider"
+  );
+  var translateObjYSlider = document.querySelector(
+    "#partview-object-translatey-slider"
+  );
+  var translateObjZSlider = document.querySelector(
+    "#partview-object-translatez-slider"
+  );
+  var translateObjXValue = document.querySelector(
+    "#partview-object-translatex-value"
+  );
+  var translateObjYValue = document.querySelector(
+    "#partview-object-translatey-value"
+  );
+  var translateObjZValue = document.querySelector(
+    "#partview-object-translatez-value"
+  );
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
@@ -60,49 +93,132 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(fish);
+  var comp = model
+
   model.scale.mul(40);
   // export default model
   globalThis.partviewApp = {
-    model
+    model,
+    currentCamera,
+    webgl,
+    scene,
+    comp
   }
-  
+
   scene.add(model);
 
-  angleXSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraAngleDeg("X", event.target.value);
-      angleXValue.textContent = event.target.value;
+  // Object TRS section
+  // Fungsi untuk mengubah derajat menjadi radian
+  Math.radians = function (degrees) {
+    return degrees * Math.PI / 180;
+  };
+
+  var rotationSliders = {
+    x: angleObjXSlider,
+    y: angleObjYSlider,
+    z: angleObjZSlider
+  };
+
+  var rotationValues = {
+    x: angleObjXValue,
+    y: angleObjYValue,
+    z: angleObjZValue
+  };
+
+  Object.keys(rotationSliders).forEach(function (axis) {
+    rotationSliders[axis].addEventListener("input", function (event) {
+      var angle = parseFloat(event.target.value);
+      var angleRadian = Math.radians(angle);
+      rotationValues[axis].textContent = angle;
+      partviewApp.comp.rotation[axis] = angleRadian;
       webgl.render(scene, currentCamera);
     });
+  });
+
+  var translationSliders = {
+    x: translateObjXSlider,
+    y: translateObjYSlider,
+    z: translateObjZSlider
+  };
+
+  var translationValues = {
+    x: translateObjXValue,
+    y: translateObjYValue,
+    z: translateObjZValue
+  };
+
+  Object.keys(translationSliders).forEach(function (axis) {
+    translationSliders[axis].addEventListener("input", function (event) {
+      var translation = parseFloat(event.target.value);
+      translationValues[axis].textContent = translation;
+      partviewApp.comp.position[axis] = translation;
+      webgl.render(scene, currentCamera);
+    });
+  });
+
+  var scaleSliders = {
+    x: scaleObjXSlider,
+    y: scaleObjYSlider,
+    z: scaleObjZSlider
+  };
+
+  var scaleValues = {
+    x: scaleObjXValue,
+    y: scaleObjYValue,
+    z: scaleObjZValue
+  };
+
+  Object.keys(scaleSliders).forEach(function (axis) {
+    scaleSliders[axis].addEventListener("input", function (event) {
+      var scale = parseFloat(event.target.value);
+      scaleValues[axis].textContent = scale;
+      partviewApp.comp.scale[axis] = scale * 40;
+      webgl.render(scene, currentCamera);
+    });
+  });
+
+  // Camera TRS section
+  angleXSlider.addEventListener("input", function (event) {
+    currentCamera.setCameraAngleDeg("X", event.target.value);
+    angleXValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
+
+  angleXSlider.addEventListener("input", function (event) {
+    currentCamera.setCameraAngleDeg("X", event.target.value);
+    angleXValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   angleYSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraAngleDeg("Y", event.target.value);
-      angleYValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraAngleDeg("Y", event.target.value);
+    angleYValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   angleZSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraAngleDeg("Z", event.target.value);
-      angleZValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraAngleDeg("Z", event.target.value);
+    angleZValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   translateXSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraTranslate("X", event.target.value);
-      translateXValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraTranslate("X", event.target.value);
+    translateXValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   translateYSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraTranslate("Y", event.target.value);
-      translateYValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraTranslate("Y", event.target.value);
+    translateYValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   translateZSlider.addEventListener("input", function (event) {
-      currentCamera.setCameraTranslate("Z", event.target.value);
-      translateZValue.textContent = event.target.value;
-      webgl.render(scene, currentCamera);
-    });
+    currentCamera.setCameraTranslate("Z", event.target.value);
+    translateZValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
 
   radiusSlider.addEventListener("input", function (event) {
     currentCamera.radiusDeg = parseFloat(event.target.value);
@@ -112,7 +228,7 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   document
     .getElementById("part-view-add-camera")
     .addEventListener("click", function () {
-      
+
       var option = document.createElement("option");
       option.text = "Camera " + (selectCamera.options.length + 1);
       option.value = selectCamera.options.length + 1;
@@ -125,10 +241,10 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     });
 
   selectCamera.addEventListener("change", function () {
-      currentCameraIdx = this.value - 1;
-      currentCamera = setupCamera();
-      webgl.render(scene, currentCamera);
-    });
+    currentCameraIdx = this.value - 1;
+    currentCamera = setupCamera();
+    webgl.render(scene, currentCamera);
+  });
 
   document
     .getElementById("partview-camera-type-dropdown")
@@ -232,7 +348,7 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
       translateXSlider.value = Math.round(currentCamera.transform.translateX)
       translateYSlider.value = Math.round(currentCamera.transform.translateY)
       translateZSlider.value = Math.round(currentCamera.transform.translateZ)
-      
+
     } else if (type == "ObliqueCamera") {
       document.getElementById("partview-camera-type-dropdown").value = 1;
       obliqueContainer.style.display = 'block';
@@ -254,4 +370,9 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
 
     return currentCamera;
   }
+}
+
+export function showTreeComponent(compName) {
+  partviewApp.comp = ArticulatedModel.findChildByNameRecursive(partviewApp.model, compName);
+  partviewApp.webgl.render(partviewApp.comp, partviewApp.currentCamera);
 }

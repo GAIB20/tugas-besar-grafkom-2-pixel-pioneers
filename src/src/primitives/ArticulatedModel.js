@@ -153,6 +153,22 @@ export class ArticulatedModel extends Component {
 
     return obj;
   }
+  
+  static findChildByNameRecursive(parent, name) {
+    if (parent.name === name) {
+      return parent;
+    }
+  
+    for (let i = 0; i < parent.children.length; i++) {
+      const child = parent.children[i];
+      const foundChild = this.findChildByNameRecursive(child, name); // Menggunakan this.findChildByNameRecursive
+      if (foundChild) {
+        return foundChild;
+      }
+    }
+
+    return null;
+  }
 
   setRigTransformations(rigId, transformations) {
     const rig = app.model._rigs[rigId.substring(1)];

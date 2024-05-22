@@ -5,7 +5,7 @@ export function setupPartView(element) {
     <canvas id="partview-canvas"></canvas>
     <div class="properties">
         <div class="properties-content"> 
-            <h2>partview Properties</h2>
+            <h2>Partview Properties</h2>
             <div class="transformation-container">
                 <h3>Camera</h3>
                 <div class="transformation-container">
@@ -90,54 +90,54 @@ export function setupPartView(element) {
             <div class="transformation-container">
                 <div class="slider-container">
                     <p>X</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="-50" max="50" value="0" class="slider" id="partview-object-translatex-slider">
+                    <p id="partview-object-translatex-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Y</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="-50" max="50" value="0" class="slider" id="partview-object-translatey-slider">
+                    <p id="partview-object-translatey-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Z</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="-50" max="50" value="0" class="slider" id="partview-object-translatez-slider">
+                    <p id="partview-object-translatez-value" class="value-display">0</p>
                 </div>
             </div>
             <h4>Angle</h4>
             <div class="transformation-container">
                 <div class="slider-container">
                     <p>X</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="partview-object-anglex-slider">
+                    <p id="partview-object-anglex-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Y</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="partview-object-angley-slider">
+                    <p id="partview-object-angley-value" class="value-display">0</p>
                 </div>
                 <div class="slider-container">
                     <p>Z</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="0" max="360" value="0" class="slider" id="partview-object-anglez-slider">
+                    <p id="partview-object-anglez-value" class="value-display">0</p>
                 </div>
             </div>
             <h4>Scale</h4>
             <div class="transformation-container">
                 <div class="slider-container">
                     <p>X</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="partview-object-scalex-slider">
+                    <p id="partview-object-scalex-value" class="value-display">1</p>
                 </div>
                 <div class="slider-container">
                     <p>Y</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="partview-object-scaley-slider">
+                    <p id="partview-object-scaley-value" class="value-display">1</p>
                 </div>
                 <div class="slider-container">
                     <p>Z</p>
-                    <input type="range" min="1" max="100" value="50" class="slider" id="mySlider">
-                    <p class="value-display">0</p>
+                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="partview-object-scalez-slider">
+                    <p id="partview-object-scalez-value" class="value-display">1</p>
                 </div>
             </div>
             <h4>Animation</h4>
