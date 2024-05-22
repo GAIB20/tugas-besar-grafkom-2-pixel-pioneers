@@ -124,6 +124,7 @@ export function setupFullView(element) {
             </div>
             <h4>Animation</h4>
             <div class="animation-container">
+                <h4>Player</h4>
                 <div class="slider-container-3">
                     <input type="range" min="1" max="60" value="1" class="slider" id="frameSlider">
                     <p class="value-display" id="frameDisplay">1/60</p>
@@ -144,7 +145,26 @@ export function setupFullView(element) {
                     </div>
                     <p class="value-display" id="fpsDisplay">30 FPS</p>
                 </div>
-        </div>
+                <h4>Editor</h4>
+                <p>Current Frame: <span id="currentFrameDisplay">1</span></p>
+                <div>
+                    <p>Add Frame</p>
+                    <button id="addFrameAfter">After Current</button>
+                    <button id="addFrameEnd">At End</button>
+                </div>
+                <p>Delete</p>
+                <button id="deleteFrame">Delete Current Frame</button>
+                <div>
+                    <p>Move Frame</p>
+                    <button id="moveToFirstFrame"><i class="fas fa-step-backward"></i></button>
+                    <button id="moveToPrevFrame"><i class="fas fa-backward"></i></button>
+                    <button id="moveToNextFrame"><i class="fas fa-forward"></i></button>
+                    <button id="moveToLastFrame"><i class="fas fa-step-forward"></i></button>
+                </div>
+                <p>Save Frame</p>
+                <button id="saveAnimation">Save Animation</button>
+            </div>
+         </div>
     </div>
 `;
 

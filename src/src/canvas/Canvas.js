@@ -17,10 +17,11 @@ import { ArticulatedModel } from "../primitives/ArticulatedModel";
 import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-// import minecraft from "../models/articulated/minecraft";
+import minecraft from "../models/articulated/minecraft";
 import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
-// import animation from "../models/articulated/minecraftAnimation";
+import cat from "../models/articulated/cat";
+import animation from "../models/articulated/minecraftAnimation";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -96,14 +97,14 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var material = new PhongMaterial("Phong");
   var mesh = new Mesh(geometry, material);
 
-  const model = ArticulatedModel.fromModel(fish);
+  const model = ArticulatedModel.fromModel(cat);
   model.scale.mul(40);
 
   globalThis.app = {
     model,
   };
 
-  scene.add(mesh);
+  scene.add(model);
 
 
   // Object TRS section
@@ -359,6 +360,15 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     const playPauseButton = document.getElementById('play-pause');
     const reverseButton = document.getElementById('reverse');
     const loopButton = document.getElementById('loop');
+
+    const addAfter = document.getElementById('addFrameAfter');
+    const addEnd = document.getElementById('addFrameEnd');
+    const delFrame = document.getElementById('deleteFrame');
+    const moveToFirstFrame = document.getElementById('moveToFirstFrame');
+    const moveToPrevFrame = document.getElementById('moveToPrevFrame');
+    const moveToNextFrame = document.getElementById('moveToNextFrame');
+    const moveToLastFrame = document.getElementById('moveToLastFrame');
+    const saveAnimation = document.getElementById('saveAnimation');
 
     frameSlider.max = totalFrames;
 
