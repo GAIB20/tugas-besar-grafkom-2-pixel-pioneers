@@ -519,6 +519,17 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       }
     }
 
+    function saveAnim() {
+      const animationJsString = convertAnimationToJsString(animation);
+      const dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent(animationJsString);
+      const downloadAnchorNode = document.createElement("a");
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "animation.js");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    }
+
     document.getElementById('first').addEventListener('click', firstFrame);
     document.getElementById('previous').addEventListener('click', previousFrame);
     playPauseButton.addEventListener('click', togglePlayPause);
@@ -533,6 +544,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     moveToNextFrame.addEventListener('click', moveNextFrame);
     moveToFirstFrame.addEventListener('click', moveFirstFrame);
     moveToLastFrame.addEventListener('click', moveLastFrame);
+    saveAnimation.addEventListener('click', saveAnim);
 
     frameSlider.addEventListener('input', function () {
         currentFrame = parseInt(this.value);
@@ -550,6 +562,13 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       console.log(animation.frames[frame]);
       model.applyFrame(animation.frames[frame]);
       webgl.render(scene, currentCamera);
+    }
+
+    function convertAnimationToJsString(animation) {
+      let jsString = "export default ";    
+      jsString += JSON.stringify(animation, null, 4).replace(/"([^"]+)":/g, '$1:');
+    
+      return jsString;
     }
   });
 }
