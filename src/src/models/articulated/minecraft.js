@@ -26,7 +26,7 @@ var minecraft = {
           position: [1, 1.3, -1],
         },
         children: {
-          PArmR: {
+          PArmL: {
             options: {
               position: [0.3, -1.5, 0],
               scale: [0.6, 3, 0.6],
@@ -40,7 +40,7 @@ var minecraft = {
           position: [-1, 1.3, 1],
         },
         children: {
-          PArmL: {
+          PArmR: {
             options: {
               position: [-0.3, -1.5, 0],
               scale: [0.6, 3, 0.6],

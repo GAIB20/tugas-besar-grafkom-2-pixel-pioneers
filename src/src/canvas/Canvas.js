@@ -5,7 +5,6 @@ import { WebGL } from "../primitives/WebGL";
 import { rpVertices, rpColors } from "../models/hollow/rectanglePipe";
 import { ObliqueCamera } from "../camera/ObliqueCamera";
 import { pyramid, pyramidColor } from "../models/hollow/pyramid";
-import { OrbitControl } from "../camera/OrbitControl";
 import { Component } from "../primitives/Component";
 import { Scene } from "../primitives/Scene";
 import { BoxGeometry } from "../geometry/BoxGeometry";
@@ -20,7 +19,10 @@ import "../primitives/Deserialize";
 import minecraft from "../models/articulated/minecraft";
 import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
-import animation from "../models/articulated/minecraftAnimation";
+import cat from "../models/articulated/cat";
+import { DirectionalLight } from "../light/DirectionalLight";
+import minecraftAnimation from "../models/animations/minecraftAnimation";
+import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -87,12 +89,11 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
 
   var webgl = new WebGL(gl);
   var currentCamera = setupCamera();
-  // var currentCamera = new OrthographicCamera(gl, -10, 10, -10, 10, 0.1, 100);
-  // var currentCamera = new ObliqueCamera(gl, -10, 10, -10, 10, 0.1, 100);
+  var animation = minecraftAnimation;
 
   var scene = new Scene();
-  var geometry = new Geometry(bamboo, bambooColor);
-  var material = new PhongMaterial("Phong");
+  var geometry = new Geometry(hollowCube, hollowCubeColor);
+  var material = new PhongMaterial("Phong")
   var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(minecraft);
@@ -102,9 +103,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     model,
   };
 
-  // scene.add(mesh);
+  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, mesh);
+  scene.add(light);
   scene.add(model);
-
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
@@ -301,18 +302,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     downloadAnchorNode.remove();
   });
 
-  // var orbitControl = new OrbitControl(currentCamera, canvas);
-
-  function render() {
-    // orbitControl.update();
-    webgl.render(scene, currentCamera);
-  }
-
-  // canvas.addEventListener("mousemove", render);
-  // canvas.addEventListener("mousedown", render);
-  // canvas.addEventListener("mouseup", render);
-  // canvas.addEventListener("wheel", render);
-
   webgl.render(scene, currentCamera);
 
   function setupCamera() {
@@ -344,8 +333,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    const totalFrames = animation.frames.length;
-    let currentFrame = 0;
+    let totalFrames = animation.frames.length;
+    let currentFrame = 1;
     let isPlaying = false;
     let isReversing = false;
     let loop = false;
@@ -361,11 +350,23 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     const reverseButton = document.getElementById('reverse');
     const loopButton = document.getElementById('loop');
 
+    const currentFrameDisplay = document.getElementById('currentFrameDisplay');
+    const addAfter = document.getElementById('addFrameAfter');
+    const addEnd = document.getElementById('addFrameEnd');
+    const delFrame = document.getElementById('deleteFrame');
+    const moveToFirstFrame = document.getElementById('moveToFirstFrame');
+    const moveToPrevFrame = document.getElementById('moveToPrevFrame');
+    const moveToNextFrame = document.getElementById('moveToNextFrame');
+    const moveToLastFrame = document.getElementById('moveToLastFrame');
+    const saveAnimation = document.getElementById('saveAnimation');
+    const loadAnimation = document.getElementById("loadAnimation");
+
     frameSlider.max = totalFrames;
 
     function updateDisplay() {
-      frameSlider.value = currentFrame + 1;
-      frameDisplay.textContent = `${currentFrame + 1}/${totalFrames}`;
+        frameSlider.value = currentFrame;
+        frameDisplay.textContent = `${currentFrame}/${totalFrames}`;
+        currentFrameDisplay.textContent = `${currentFrame}`;
     }
 
     function updateFPS() {
@@ -394,33 +395,33 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     }
 
     function nextFrame() {
-      currentFrame = ((currentFrame + 1) % totalFrames);
-      updateDisplay();
-      updateModelAnimation(currentFrame);
-      if (currentFrame === 0 && !loop) {
-        pause();
-      }
+        currentFrame = (currentFrame % totalFrames) + 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+        if (currentFrame === 1 && !loop) {
+            pause();
+        }
     }
 
     function previousFrame() {
-      currentFrame = (currentFrame - 1 + totalFrames) % totalFrames;
-      updateDisplay();
-      updateModelAnimation(currentFrame);
-      if (currentFrame === totalFrames && !loop) {
-        pause();
-      }
+        currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+        if (currentFrame === totalFrames && !loop) {
+            pause();
+        }
     }
 
     function firstFrame() {
-      currentFrame = 0;
-      updateDisplay();
-      updateModelAnimation(currentFrame);
+        currentFrame = 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
     }
 
     function lastFrame() {
-      currentFrame = totalFrames - 1;
-      updateDisplay();
-      updateModelAnimation(currentFrame);
+        currentFrame = totalFrames;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
     }
 
     function toggleLoop() {
@@ -528,7 +529,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     function animate(ts) {
       const frameTime = 1000 / fps;
 
-      console.log("call", ts)
       // if (!ts) ts = 0;
       if (!ts) ts = performance.now(); // Inisialisasi ts dengan waktu saat ini jika tidak ada nilai yang diteruskan
 
@@ -553,20 +553,20 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         // const elapsedFrames = Math.floor(performance.now() / frameTime);
         // const frameIndex1 = elapsedFrames % totalFrames;
         // const frameIndex2 = (frameIndex1 + 1) % totalFrames;
-        const frameIndex1 = currentFrame;
+        const frameIndex1 = currentFrame % totalFrames;
         const frameIndex2 = (currentFrame + 1) % totalFrames;
 
         // const t = (performance.now() % frameTime) / frameTime;
         const t = dt;
 
-        // console.log("t", t)
-        // console.log("fr1", frameIndex1)
-        // console.log("fr2", frameIndex2)
+        console.log("currentFrame", currentFrame)
+        console.log("fr1", frameIndex1)
+        console.log("fr2", frameIndex2)
 
         const frame1 = animation.frames[frameIndex1];
         const frame2 = animation.frames[frameIndex2];
-        // console.log("fram1", frame1)
-        // console.log("fram2", frame2)
+        console.log("fram1", frame1)
+        console.log("fram2", frame2)
 
         const easingFunction = easingFunctions['quadInOut'];
         let interpolatedFrame;
@@ -580,7 +580,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         // updateModelAnimation(currentFrame);
         lt = ts;
 
-        updateModelAnimation(interpolatedFrame);
+        updateModelAnimation(-1, interpolatedFrame);
 
         if (dt >= 1) {
           const sf = Math.floor(dt / 1);
@@ -593,20 +593,20 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
           // }
 
           if (isReversing) {
-            if (currentFrame === 0) {
-              currentFrame = totalFrames - 1;
+            if (currentFrame === 1) {
+              currentFrame = totalFrames;
             } else {
-              currentFrame = Math.max(0, currentFrame - sf);
-              if (currentFrame === 0) {
+              currentFrame = Math.max(1, currentFrame - sf);
+              if (currentFrame === 1) {
                 dt = 0.5;
               }
             }
           } else {
-            if (currentFrame === totalFrames - 1) {
-              currentFrame = 0;
+            if (currentFrame === totalFrames) {
+              currentFrame = 1;
             } else {
-              currentFrame = Math.min(currentFrame + sf, totalFrames - 1);
-              if (currentFrame === totalFrames - 1) {
+              currentFrame = Math.min(currentFrame + sf, totalFrames);
+              if (currentFrame === totalFrames) {
                 dt = 1;
               }          
             }
@@ -615,11 +615,11 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         }
 
         console.log("currentFrame", currentFrame)
-        if (!loop && ((currentFrame === 0 && !isReversing) || (currentFrame === totalFrames - 1 && isReversing))) {
+        if (!loop && ((currentFrame === 1 && isReversing) || (currentFrame === totalFrames && !isReversing))) {
           if (isReversing) {
-            currentFrame = totalFrames - 1
+            currentFrame = totalFrames
           } else {
-            currentFrame = 0
+            currentFrame = 1
           }
           console.log("pause")
           pause();
@@ -631,10 +631,83 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     }
     animate();
 
-    frameSlider.addEventListener('input', function (event) {
-      currentFrame = parseInt(event.target.value);
-      updateModelAnimation(currentFrame);
-    });
+    function addToNextFrame() {
+      animation.frames.splice(currentFrame, 0, animation.frames[currentFrame - 1]);
+      totalFrames++;
+      currentFrame++;
+      frameSlider.max = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+    }
+
+    function addToLastFrame() {
+      animation.frames.push(animation.frames[currentFrame - 1]);
+      totalFrames++;
+      currentFrame = totalFrames;
+      frameSlider.max = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+    }
+
+    function deleteFrame() {
+      animation.frames.splice(currentFrame - 1, 1);
+      totalFrames--;
+      currentFrame = currentFrame < totalFrames ? currentFrame : totalFrames;
+      frameSlider.max = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+    }
+
+    function moveNextFrame() {
+      if (currentFrame != totalFrames) {
+        animation.frames.splice(currentFrame - 1, 2, animation.frames[currentFrame], animation.frames[currentFrame - 1]);
+        currentFrame++;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function movePrevFrame() {
+      if (currentFrame != 1) {
+        animation.frames.splice(currentFrame - 2, 2, animation.frames[currentFrame - 1], animation.frames[currentFrame - 2]);
+        currentFrame--;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function moveFirstFrame () {
+      if (currentFrame != 1) {
+        let frame = animation.frames[currentFrame - 1];
+        animation.frames.splice(currentFrame - 1, 1);
+        animation.frames.unshift(frame);
+        currentFrame = 1;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function moveLastFrame () {
+      if (currentFrame != totalFrames) {
+        let frame = animation.frames[currentFrame - 1];
+        animation.frames.splice(currentFrame - 1, 1);
+        animation.frames.push(frame);
+        currentFrame = totalFrames;
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
+      }
+    }
+
+    function saveAnim() {
+      const animationJsString = convertAnimationToJsString(animation);
+      const dataStr = "data:text/javascript;charset=utf-8," + encodeURIComponent(animationJsString);
+      const downloadAnchorNode = document.createElement("a");
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "animation.js");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    }
 
     document.getElementById('first').addEventListener('click', firstFrame);
     document.getElementById('previous').addEventListener('click', previousFrame);
@@ -643,11 +716,56 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     document.getElementById('last').addEventListener('click', lastFrame);
     loopButton.addEventListener('click', toggleLoop);
     reverseButton.addEventListener('click', toggleReverse);
+    addAfter.addEventListener('click', addToNextFrame);
+    addEnd.addEventListener('click', addToLastFrame);
+    delFrame.addEventListener('click', deleteFrame);
+    moveToPrevFrame.addEventListener('click', movePrevFrame);
+    moveToNextFrame.addEventListener('click', moveNextFrame);
+    moveToFirstFrame.addEventListener('click', moveFirstFrame);
+    moveToLastFrame.addEventListener('click', moveLastFrame);
+    saveAnimation.addEventListener('click', saveAnim);
+    loadAnimation.addEventListener('click', function() {
+      document.getElementById('fileInput').click();
+    });
+
+    document
+      .getElementById("fileInput")
+      .addEventListener("change", async function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = async function (e) {
+            const scriptContent = e.target.result;
+            const blob = new Blob([scriptContent], {
+              type: "application/javascript",
+            });
+            const url = URL.createObjectURL(blob);
+            try {
+              const module = await import(url);
+              const anim = module.default;
+              animation = anim;
+              totalFrames = animation.frames.length;
+              updateDisplay();
+            } catch (error) {
+              console.error("Failed to load script content:", error);
+            } finally {
+              URL.revokeObjectURL(url);
+            }
+          };
+          reader.onerror = function (e) {
+            console.error("Failed to read file:", e);
+          };
+          reader.readAsText(file);
+        } else {
+          console.error("No file selected.");
+        }
+      });
+
 
     frameSlider.addEventListener('input', function () {
-      currentFrame = parseInt(this.value);
-      updateDisplay();
-      updateModelAnimation(currentFrame);
+        currentFrame = parseInt(this.value);
+        updateDisplay();
+        updateModelAnimation(currentFrame - 1);
     });
 
     fpsSlider.addEventListener('input', updateFPS);
@@ -658,10 +776,20 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     updateFPS();
     updateDisplay();
     updateModelAnimation(currentFrame);
-    function updateModelAnimation(frame) {
-      // model.applyFrame(animation.frames[frame]);
-      model.applyFrame(frame);
+    function updateModelAnimation(frameNum, frame=null) {
+      if (frameNum !== -1) {
+        model.applyFrame(animation.frames[frameNum]);
+      } else {
+        model.applyFrame(frame);
+      }
       webgl.render(scene, currentCamera);
+    }
+
+    function convertAnimationToJsString(animation) {
+      let jsString = "export default ";    
+      jsString += JSON.stringify(animation, null, 4).replace(/"([^"]+)":/g, '$1:');
+    
+      return jsString;
     }
   });
 }

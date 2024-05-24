@@ -14,21 +14,21 @@ var cat = {
           PHead: {
             options: {
               position: [0, 0, 0],
-              scale: [1,1,1],
+              scale: [1, 1, 1],
             },
           },
           PEarL: {
             options: {
               position: [-0.3, 0.5, 0.25],
-              scale: [0.3,0.3,0.3],
-              rotation:[1,0,0],
+              scale: [0.3, 0.3, 0.3],
+              rotation: [1, 0, 0],
             },
           },
           PEarR: {
             options: {
               position: [-0.3, 0.5, -0.25],
-              scale: [0.3,0.3,0.3],
-              rotation:[1,0,0],
+              scale: [0.3, 0.3, 0.3],
+              rotation: [1, 0, 0],
             },
           },
         },
@@ -91,16 +91,16 @@ var cat = {
       },
       RTail: {
         options: {
-          position: [1.25, 0.25, 0]
+          position: [1.25, 0.25, 0],
         },
         children: {
           PTail: {
             options: {
-              position: [0.75,0,0],
-              scale: [1.5,0.3,0.3],
-              rotation: [0,0,0.2]
+              position: [0.75, 0, 0],
+              scale: [1.5, 0.3, 0.3],
+              rotation: [0, 0, 0.2],
             },
-          }
+          },
         },
       },
     },
