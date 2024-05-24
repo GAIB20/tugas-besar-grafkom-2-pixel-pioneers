@@ -83,7 +83,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var radiusContainer = document.querySelector("#fullview-camera-radius");
   var translateContainer = document.querySelector("#fullview-camera-translate");
   var selectCamera = document.getElementById("fullview-camera-dropdown");
-
+  var resetViewButton = document.getElementById("reset-view");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
@@ -208,6 +208,32 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     obliqueValue.textContent = event.target.value;
     webgl.render(scene, currentCamera);
   });
+
+  resetViewButton.addEventListener("click", function (event) {
+    currentCamera.setCameraAngleDeg("X", 0);
+    angleXValue.textContent = 0;
+    angleXSlider.value = 0;
+
+    currentCamera.setCameraAngleDeg("Y", 0);
+    angleYValue.textContent = 0;
+    angleYSlider.value = 0;
+
+    currentCamera.setCameraAngleDeg("Z", 0);
+    angleZValue.textContent = 0;
+    angleZSlider.value = 0;
+
+    currentCamera.setCameraTranslate("Z", 300);
+    radiusValue.textContent = 300;
+    radiusSlider.value = 300;
+
+    if (currentCamera instanceof ObliqueCamera) {
+      currentCamera.setObliqueAngleDeg(30);
+      obliqueValue.textContent = 30;
+      obliqueSlider.value = 30;
+    }
+    
+    webgl.render(scene, currentCamera);
+  })
 
   document
     .getElementById("full-view-add-camera")

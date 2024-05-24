@@ -23,7 +23,6 @@ export function setupBoard(element) {
                 <button class="btn-purple" id="load-model">Choose File</button>
                 <input type="file" id="file-input" accept=".json" style="display: none;">
                 <button id="save-model" class="btn-purple">Save File</button>
-                <button class="btn-purple">Reset</button>
             </div>
         </div>
         <div id="partview" class="board-section">
