@@ -30,10 +30,11 @@ export class BasicMaterial extends ShaderMaterial {
     // Define fragment shader for basic material
     const fragment_shader = `
         precision highp float;
+        uniform vec4 u_lightColor;
         varying vec4 v_color;
 
         void main() {
-            gl_FragColor = v_color;
+            gl_FragColor = v_color * u_lightColor;
         }
         `;
 

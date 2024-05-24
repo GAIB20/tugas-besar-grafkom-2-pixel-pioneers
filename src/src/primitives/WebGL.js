@@ -1,3 +1,4 @@
+import { Light } from "../light/Light";
 import { ShaderMaterial } from "../material/ShaderMaterial";
 import { Mesh } from "./Mesh";
 import { SetterWebGLType, ShaderType } from "./Type";
@@ -190,14 +191,27 @@ export class WebGL {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
+
+    // Find lights
+    const lights = [];
+    const findLights = (component) => {
+      if (component instanceof Light) lights.push(component);
+      for (let key in component.children) {
+        findLights(component.children[key]);
+      }
+    }
+    findLights(scene);
+
     this.renderComponent(scene, {
       cameraPosition: currentCamera.worldPosition,
       viewMatrix: currentCamera.viewProjectionMatrix,
-    });
+    }, lights);
   }
 
-  renderComponent(component, uniforms) {
+  renderComponent(component, uniforms, lights) {
+    console.log(component, lights)
     if (!component.visible) return;
+    const light = lights[0];
     component.computeWorldMatrix(false, true);
     if (component instanceof Mesh && component.geometry.attributes.position) {
       const material = component.material;
@@ -207,6 +221,7 @@ export class WebGL {
       this.setUniforms({
         ...component.material.uniforms,
         ...uniforms,
+        ...light?.uniforms,
         worldMatrix: component.worldMatrix,
         useVertexColors: component.geometry.useVertexColors,
       });
@@ -216,9 +231,8 @@ export class WebGL {
         component.geometry.attributes.position.count
       );
     }
-
     for (let key in component.children) {
-      this.renderComponent(component.children[key], uniforms);
+      this.renderComponent(component.children[key], uniforms, lights);
     }
   }
 }

@@ -19,6 +19,7 @@ import "../primitives/Deserialize";
 // import minecraft from "../models/articulated/minecraft";
 import fish from "../models/articulated/fish";
 import { ArticulatedModel } from "../primitives/ArticulatedModel";
+import { DirectionalLight } from "../light/DirectionalLight";
 
 export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#partview-canvas");
@@ -93,9 +94,9 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(fish);
+  model.scale.mul(40);
   var comp = model
 
-  model.scale.mul(40);
   // export default model
   globalThis.partviewApp = {
     model,
@@ -104,7 +105,9 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     scene,
     comp
   }
-
+  
+  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, mesh);
+  scene.add(light);
   scene.add(model);
 
   // Object TRS section

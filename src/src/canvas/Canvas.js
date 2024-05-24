@@ -21,7 +21,9 @@ import minecraft from "../models/articulated/minecraft";
 import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
 import cat from "../models/articulated/cat";
-import animation from "../models/articulated/minecraftAnimation";
+import { DirectionalLight } from "../light/DirectionalLight";
+import animation from "../models/animations/minecraftAnimation";
+import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -93,19 +95,20 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   // var currentCamera = new ObliqueCamera(gl, -10, 10, -10, 10, 0.1, 100);
 
   var scene = new Scene();
-  var geometry = new Geometry(bamboo, bambooColor);
-  var material = new PhongMaterial("Phong");
+  var geometry = new Geometry(hollowCube, hollowCubeColor);
+  var material = new BasicMaterial("Basic");
   var mesh = new Mesh(geometry, material);
 
-  const model = ArticulatedModel.fromModel(cat);
+  const model = ArticulatedModel.fromModel(minecraft);
   model.scale.mul(40);
 
   globalThis.app = {
     model,
   };
 
+  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, mesh);
+  scene.add(light);
   scene.add(model);
-
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
@@ -301,18 +304,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   });
-
-  // var orbitControl = new OrbitControl(currentCamera, canvas);
-
-  function render() {
-    // orbitControl.update();
-    webgl.render(scene, currentCamera);
-  }
-
-  // canvas.addEventListener("mousemove", render);
-  // canvas.addEventListener("mousedown", render);
-  // canvas.addEventListener("mouseup", render);
-  // canvas.addEventListener("wheel", render);
 
   webgl.render(scene, currentCamera);
 
