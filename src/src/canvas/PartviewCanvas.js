@@ -106,7 +106,7 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, mesh);
   scene.add(light);
-  scene.add(model);
+  scene.add(mesh);
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian

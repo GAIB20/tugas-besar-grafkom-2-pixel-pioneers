@@ -1,5 +1,3 @@
-import { ArticulatedModel } from "../../primitives/ArticulatedModel";
-
 var minecraft = {
   RBody: {
     children: {

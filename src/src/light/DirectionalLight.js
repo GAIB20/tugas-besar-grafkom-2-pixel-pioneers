@@ -22,9 +22,9 @@ export class DirectionalLight extends Light {
     } else {
       this._direction
         .set(
-          this.target.worldPosition.x,
-          this.target.worldPosition.y,
-          this.target.worldPosition.z
+          this.worldPosition.x,
+          this.worldPosition.y,
+          this.worldPosition.z
         )
         .mul(-1)
         .normalize();

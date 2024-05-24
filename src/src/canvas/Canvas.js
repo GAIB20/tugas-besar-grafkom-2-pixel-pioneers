@@ -598,7 +598,6 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         }
       });
 
-
     frameSlider.addEventListener('input', function () {
         currentFrame = parseInt(this.value);
         updateDisplay();

@@ -84,7 +84,7 @@ export class ArticulatedModel extends Component {
         model.addRig(child);
       } else if (objName[0] == "P") {
         model._materials[objName] = [
-          new BasicMaterial("Basic" + objName[0], new Color(0, 0, 0, 0.7)),
+          new PhongMaterial("Phong" + objName[0], new Color(0, 0, 0, 0.5)),
         ];
         child = new Mesh(
           new BoxGeometry(1, 1, 1),

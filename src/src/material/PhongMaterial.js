@@ -7,59 +7,57 @@ export class PhongMaterial extends ShaderMaterial {
     ambient = new Color(1, 1, 1, 1),
     diffuse = new Color(1, 1, 1, 1),
     specular = new Color(1, 1, 1, 1),
-    shininess = 30
+    shininess = 1
   ) {
     // Define vertex shader for phong material
     const vertex_shader = `
         attribute vec4 position;
         attribute vec4 color;
         attribute vec3 normal;
+        varying vec3 v_normal, v_pos;
+        uniform bool u_useVertexColors;
+
+        uniform float u_shininess;
+        uniform vec3 u_lightDirection;
+        uniform vec3 u_cameraPosition;
+
+        uniform vec4 u_ambientColor;
+        uniform vec4 u_diffuseColor;
+        uniform vec4 u_specularColor;
+        varying vec4 v_color;
 
         uniform mat4 u_worldMatrix;
         uniform mat4 u_viewMatrix;
-        uniform vec2 u_resolution;
-        uniform bool u_useVertexColors;
-
-        varying vec4 v_color;
-        varying vec3 v_normal, v_pos;
 
         void main() {
-            gl_Position = u_viewMatrix * u_worldMatrix * position;
+          gl_Position = u_viewMatrix * u_worldMatrix * position;
+          v_pos = gl_Position.xyz / gl_Position.w;
+          v_normal = mat3(u_worldMatrix) * normal;
 
-            v_pos = gl_Position.xyz / gl_Position.w;
-            v_normal = mat3(u_worldMatrix) * normal;
-            v_color = mix(vec4(1,1,1,1), color, float(u_useVertexColors));
+          vec3 N = normalize(v_normal);
+          vec3 L = -normalize(u_lightDirection - v_pos);
+          vec3 H = normalize(L + normalize(u_cameraPosition));
+
+          float lambertian = max(dot(N, L), 0.0);
+          float specular = pow(max(dot(H, N), 0.0), u_shininess);
+
+          v_color = vec4(0.2 * u_ambientColor.rgb * u_ambientColor.a +
+            lambertian * u_diffuseColor.rgb * u_diffuseColor.a +
+            specular * u_specularColor.rgb *  u_specularColor.a, 1.0);
+          
+          if (u_useVertexColors) {
+            v_color = v_color * color;
+          }
         }
         `;
 
     // Define fragment shader for phong material
     const fragment_shader = `
         precision mediump float;
-
-        uniform float u_shininess;
-        uniform vec3 u_cameraPosition;
-        uniform vec4 u_ambientColor;
-        uniform vec4 u_diffuseColor;
-        uniform vec4 u_specularColor;
-
         varying vec4 v_color;
-        varying vec3 v_normal, v_pos;
 
         void main() {
-            vec3 N = normalize(v_normal);
-            vec3 H = normalize(normalize(u_cameraPosition));
-
-            float kDiff = max(dot(-N, H), 0.0); // Removed light position
-            vec3 diffuse = kDiff * u_diffuseColor.rgb;
-
-            float kSpec = pow(max(dot(N, H), 0.0), u_shininess);
-            vec3 specular = kSpec * u_specularColor.rgb;
-
-            gl_FragColor = v_color * vec4(
-                0.1 * u_ambientColor.a * u_ambientColor.rgb + 
-                u_diffuseColor.a * diffuse +
-                u_specularColor.a * specular
-            , 1.0);
+          gl_FragColor = v_color;
         }
         `;
 
