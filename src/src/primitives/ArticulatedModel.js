@@ -177,7 +177,7 @@ export class ArticulatedModel extends Component {
 
   setRigTransformations(rigId, transformations) {
     const rig = app.model._rigs[rigId.substring(1)];
-    console.log(app.model._rigs[rigId.substring(1)]);
+    // console.log(app.model._rigs[rigId.substring(1)]);
     if (!rig) {
         console.error(`Rig ${rigId} not found`);
         return;

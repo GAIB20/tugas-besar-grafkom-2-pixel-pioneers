@@ -141,7 +141,7 @@ export function setupFullView(element) {
                 <div class="fps-controller">
                     <p>Frames per Second</p>
                     <div class="slider-container-2">
-                        <input type="range" min="1" max="60" value="30" class="slider" id="fpsSlider">
+                        <input type="range" min="1" max="60" value="3" class="slider" id="fpsSlider">
                     </div>
                     <p class="value-display" id="fpsDisplay">30 FPS</p>
                 </div>

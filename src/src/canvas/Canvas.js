@@ -367,6 +367,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     let loop = false;
     let fps = 30;
     let playInterval;
+    let animationRequestId;
 
     const frameSlider = document.getElementById('frameSlider');
     const frameDisplay = document.getElementById('frameDisplay');
@@ -396,32 +397,28 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     }
 
     function updateFPS() {
-        fps = parseInt(fpsSlider.value);
-        fpsDisplay.textContent = `${fps} FPS`;
-        if (isPlaying) {
-            clearInterval(playInterval);
-            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
-        }
+      fps = parseInt(fpsSlider.value);
+      fpsDisplay.textContent = `${fps} FPS`;
     }
 
     function play() {
-        if (!isPlaying) {
-            isPlaying = true;
-            playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
-            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
-        }
+      if (!isPlaying) {
+        isPlaying = true;
+        playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+        animate();
+      }
     }
 
     function pause() {
-        if (isPlaying) {
-            isPlaying = false;
-            playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
-            clearInterval(playInterval);
-        }
+      if (isPlaying) {
+        isPlaying = false;
+        playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+        cancelAnimationFrame(animationRequestId);
+      }
     }
 
     function togglePlayPause() {
-        isPlaying ? pause() : play();
+      isPlaying ? pause() : play();
     }
 
     function nextFrame() {
@@ -455,18 +452,211 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     }
 
     function toggleLoop() {
-        loop = !loop;
-        loopButton.classList.toggle('active');
+      loop = !loop;
+      loopButton.classList.toggle('active');
     }
 
     function toggleReverse() {
-        isReversing = !isReversing;
-        reverseButton.classList.toggle('active');
-        if (isPlaying) {
-            clearInterval(playInterval);
-            playInterval = setInterval(isReversing ? previousFrame : nextFrame, 1000 / fps);
-        }
+      isReversing = !isReversing;
+      reverseButton.classList.toggle('active');
     }
+
+    function interpolateFrames(frame1, frame2, t, easing) {
+      const interpolatedFrame = {};
+
+      for (const key in frame1) {
+        if (Object.prototype.hasOwnProperty.call(frame1, key) && Object.prototype.hasOwnProperty.call(frame2, key)) {
+          const value1 = frame1[key];
+          const value2 = frame2[key];
+
+          interpolatedFrame[key] = {};
+
+          if (value1.position && value2.position) {
+            const interpolatedPosition = value1.position.map((val, index) => easing(t) * (value2.position[index] - val) + val);
+            interpolatedFrame[key].position = interpolatedPosition;
+          }
+
+          if (value1.rotation && value2.rotation) {
+            const interpolatedRotation = value1.rotation.map((val, index) => easing(t) * (value2.rotation[index] - val) + val);
+            interpolatedFrame[key].rotation = interpolatedRotation;
+          }
+        }
+      }
+
+      return interpolatedFrame;
+    }
+    const easingFunctions = {
+      // Sine
+      sineIn: (t) => 1 - Math.cos((t * Math.PI) / 2),
+      sineOut: (t) => Math.sin((t * Math.PI) / 2),
+      sineInOut: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
+
+      // Quad
+      quadIn: (t) => t * t,
+      quadOut: (t) => 1 - (1 - t) * (1 - t),
+      quadInOut: (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2),
+
+      // Cubic
+      cubicIn: (t) => t * t * t,
+      cubicOut: (t) => 1 - Math.pow(1 - t, 3),
+      cubicInOut: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+
+      // Quart
+      quartIn: (t) => t * t * t * t,
+      quartOut: (t) => 1 - Math.pow(1 - t, 4),
+      quartInOut: (t) => (t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2),
+
+      // Expo
+      expoIn: (t) => (t === 0 ? 0 : Math.pow(2, 10 * (t - 1))),
+      expoOut: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+      expoInOut: (t) => (t < 0.5 ? Math.pow(2, 10 * (2 * t - 1)) / 2 : (2 - Math.pow(2, -10 * (2 * t - 1))) / 2),
+
+      // Circ
+      circIn: (t) => 1 - Math.sqrt(1 - Math.pow(t, 2)),
+      circOut: (t) => Math.sqrt(1 - Math.pow(t - 1, 2)),
+      circInOut: (t) => (t < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2),
+
+      // Back
+      backIn: (t) => t * t * (2.70158 * t - 1.70158),
+      backOut: (t) => 1 - (1 - t) * (1 - t) * (2.70158 * (1 - t) + 1.70158),
+      backInOut: (t) => (t < 0.5 ? Math.pow(2 * t, 2) * (7.189819 * t - 2.5949095) / 2 : (Math.pow(2 * t - 2, 2) * (3.5949095 - 2.5949095 * (2 * t - 1)) + 2) / 2),
+
+      // Elastic
+      elasticIn: (t) => (t === 0 ? 0 : t === 1 ? 1 : -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * ((2 * Math.PI) / 3))),
+      elasticOut: (t) => (t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1),
+      elasticInOut: (t) =>
+        t === 0
+          ? 0
+          : t === 1
+            ? 1
+            : t < 0.5
+              ? -(Math.pow(2, 20 * t - 10) * Math.sin((20 * t - 11.125) * ((2 * Math.PI) / 4.5))) / 2
+              : (Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * ((2 * Math.PI) / 4.5))) / 2 + 1,
+
+      // Bounce
+      bounceIn: (t) => 1 - easingFunctions.bounceOut(1 - t),
+      bounceOut: (t) => {
+        const n1 = 7.5625;
+        const d1 = 2.75;
+        if (t < 1 / d1) {
+          return n1 * t * t;
+        } else if (t < 2 / d1) {
+          return n1 * (t -= 1.5 / d1) * t + 0.75;
+        } else if (t < 2.5 / d1) {
+          return n1 * (t -= 2.25 / d1) * t + 0.9375;
+        } else {
+          return n1 * (t -= 2.625 / d1) * t + 0.984375;
+        }
+      },
+      bounceInOut: (t) => (t < 0.5 ? easingFunctions.bounceIn(2 * t) / 2 : easingFunctions.bounceOut(2 * t - 1) / 2 + 0.5),
+    };
+
+    let dt = 0, lt = 0;
+
+    function animate(ts) {
+      const frameTime = 1000 / fps;
+
+      // if (!ts) ts = 0;
+      if (!ts) ts = performance.now(); // Inisialisasi ts dengan waktu saat ini jika tidak ada nilai yang diteruskan
+
+      // ts = performance.now();
+      if (isPlaying) {
+        dt += (ts - lt) / frameTime;
+
+        console.log("dt", dt)
+        console.log("ts", ts)
+        console.log("lt", lt)
+        console.log("frameTime", frameTime)
+
+        // animationRequestId = requestAnimationFrame(animate);
+        // let elapsedFrames = Math.floor(performance.now() / frameTime);
+        // if (isReversing) {
+        //   elapsedFrames = totalFrames - elapsedFrames % totalFrames;
+        //   currentFrame = elapsedFrames === 0 ? totalFrames - 1 : elapsedFrames - 1;
+        // } else {
+        //   currentFrame = (elapsedFrames % totalFrames);
+        // }
+
+        // const elapsedFrames = Math.floor(performance.now() / frameTime);
+        // const frameIndex1 = elapsedFrames % totalFrames;
+        // const frameIndex2 = (frameIndex1 + 1) % totalFrames;
+        const frameIndex1 = currentFrame % totalFrames;
+        const frameIndex2 = (currentFrame + 1) % totalFrames;
+
+        // const t = (performance.now() % frameTime) / frameTime;
+        const t = dt;
+
+        console.log("currentFrame", currentFrame)
+        console.log("fr1", frameIndex1)
+        console.log("fr2", frameIndex2)
+
+        const frame1 = animation.frames[frameIndex1];
+        const frame2 = animation.frames[frameIndex2];
+        console.log("fram1", frame1)
+        console.log("fram2", frame2)
+
+        const easingFunction = easingFunctions['quadInOut'];
+        let interpolatedFrame;
+        if (isReversing) {
+          interpolatedFrame = interpolateFrames(frame2, frame1, t, easingFunction);
+        } else {
+          interpolatedFrame = interpolateFrames(frame1, frame2, t, easingFunction);
+        }
+        // console.log("ifr", interpolatedFrame.RArmL)
+
+        // updateModelAnimation(currentFrame);
+        lt = ts;
+
+        updateModelAnimation(-1, interpolatedFrame);
+
+        if (dt >= 1) {
+          const sf = Math.floor(dt / 1);
+          // dt = 0;
+          dt = dt % 1;
+          // if (isReversing) {
+          //   currentFrame = (currentFrame - sf + totalFrames) % totalFrames;
+          // } else {
+          //   currentFrame = (currentFrame + sf) % totalFrames;
+          // }
+
+          if (isReversing) {
+            if (currentFrame === 1) {
+              currentFrame = totalFrames;
+            } else {
+              currentFrame = Math.max(1, currentFrame - sf);
+              if (currentFrame === 1) {
+                dt = 0.5;
+              }
+            }
+          } else {
+            if (currentFrame === totalFrames) {
+              currentFrame = 1;
+            } else {
+              currentFrame = Math.min(currentFrame + sf, totalFrames);
+              if (currentFrame === totalFrames) {
+                dt = 1;
+              }          
+            }
+          }
+                
+        }
+
+        console.log("currentFrame", currentFrame)
+        if (!loop && ((currentFrame === 1 && isReversing) || (currentFrame === totalFrames && !isReversing))) {
+          if (isReversing) {
+            currentFrame = totalFrames
+          } else {
+            currentFrame = 1
+          }
+          console.log("pause")
+          pause();
+        }
+        updateDisplay();
+
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
 
     function addToNextFrame() {
       animation.frames.splice(currentFrame, 0, animation.frames[currentFrame - 1]);
@@ -605,14 +795,19 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     });
 
     fpsSlider.addEventListener('input', updateFPS);
+    playPauseButton.addEventListener('click', togglePlayPause);
+    reverseButton.addEventListener('click', toggleReverse);
+    loopButton.addEventListener('click', toggleLoop);
 
-    updateDisplay();
     updateFPS();
-
-    function updateModelAnimation(frame) {
-      console.log('frame' + frame);
-      console.log(animation.frames[frame]);
-      model.applyFrame(animation.frames[frame]);
+    updateDisplay();
+    updateModelAnimation(currentFrame);
+    function updateModelAnimation(frameNum, frame=null) {
+      if (frameNum !== -1) {
+        model.applyFrame(animation.frames[frameNum]);
+      } else {
+        model.applyFrame(frame);
+      }
       webgl.render(scene, currentCamera);
     }
 
