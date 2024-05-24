@@ -5,7 +5,6 @@ import { WebGL } from "../primitives/WebGL";
 import { rpVertices, rpColors } from "../models/hollow/rectanglePipe";
 import { ObliqueCamera } from "../camera/ObliqueCamera";
 import { pyramid, pyramidColor } from "../models/hollow/pyramid";
-import { OrbitControl } from "../camera/OrbitControl";
 import { Component } from "../primitives/Component";
 import { Scene } from "../primitives/Scene";
 import { BoxGeometry } from "../geometry/BoxGeometry";
@@ -22,7 +21,7 @@ import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
 import cat from "../models/articulated/cat";
 import { DirectionalLight } from "../light/DirectionalLight";
-import animation from "../models/animations/minecraftAnimation";
+import minecraftAnimation from "../models/animations/minecraftAnimation";
 import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
@@ -91,12 +90,11 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
 
   var webgl = new WebGL(gl);
   var currentCamera = setupCamera();
-  // var currentCamera = new OrthographicCamera(gl, -10, 10, -10, 10, 0.1, 100);
-  // var currentCamera = new ObliqueCamera(gl, -10, 10, -10, 10, 0.1, 100);
+  var animation = minecraftAnimation;
 
   var scene = new Scene();
   var geometry = new Geometry(hollowCube, hollowCubeColor);
-  var material = new BasicMaterial("Basic");
+  var material = new PhongMaterial("Phong")
   var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(minecraft);
@@ -361,6 +359,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     const moveToNextFrame = document.getElementById('moveToNextFrame');
     const moveToLastFrame = document.getElementById('moveToLastFrame');
     const saveAnimation = document.getElementById('saveAnimation');
+    const loadAnimation = document.getElementById("loadAnimation");
 
     frameSlider.max = totalFrames;
 
@@ -536,6 +535,43 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     moveToFirstFrame.addEventListener('click', moveFirstFrame);
     moveToLastFrame.addEventListener('click', moveLastFrame);
     saveAnimation.addEventListener('click', saveAnim);
+    loadAnimation.addEventListener('click', function() {
+      document.getElementById('fileInput').click();
+    });
+
+    document
+      .getElementById("fileInput")
+      .addEventListener("change", async function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = async function (e) {
+            const scriptContent = e.target.result;
+            const blob = new Blob([scriptContent], {
+              type: "application/javascript",
+            });
+            const url = URL.createObjectURL(blob);
+            try {
+              const module = await import(url);
+              const anim = module.default;
+              animation = anim;
+              totalFrames = animation.frames.length;
+              updateDisplay();
+            } catch (error) {
+              console.error("Failed to load script content:", error);
+            } finally {
+              URL.revokeObjectURL(url);
+            }
+          };
+          reader.onerror = function (e) {
+            console.error("Failed to read file:", e);
+          };
+          reader.readAsText(file);
+        } else {
+          console.error("No file selected.");
+        }
+      });
+
 
     frameSlider.addEventListener('input', function () {
         currentFrame = parseInt(this.value);

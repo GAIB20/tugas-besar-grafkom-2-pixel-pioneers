@@ -209,7 +209,6 @@ export class WebGL {
   }
 
   renderComponent(component, uniforms, lights) {
-    console.log(component, lights)
     if (!component.visible) return;
     const light = lights[0];
     component.computeWorldMatrix(false, true);

@@ -5,7 +5,6 @@ import { WebGL } from "../primitives/WebGL";
 import { rpVertices, rpColors } from "../models/hollow/rectanglePipe";
 import { ObliqueCamera } from "../camera/ObliqueCamera";
 import { pyramid, pyramidColor } from "../models/hollow/pyramid";
-import { OrbitControl } from "../camera/OrbitControl";
 import { Component } from "../primitives/Component";
 import { Scene } from "../primitives/Scene";
 import { BoxGeometry } from "../geometry/BoxGeometry";
@@ -322,18 +321,6 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   });
-
-  // var orbitControl = new OrbitControl(currentCamera, canvas);
-
-  function render() {
-    // orbitControl.update();
-    webgl.render(scene, currentCamera);
-  }
-
-  // canvas.addEventListener("mousemove", render);
-  // canvas.addEventListener("mousedown", render);
-  // canvas.addEventListener("mouseup", render);
-  // canvas.addEventListener("wheel", render);
 
   webgl.render(scene, currentCamera);
 
