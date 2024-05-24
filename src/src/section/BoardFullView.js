@@ -37,7 +37,6 @@ export function setupFullView(element) {
                 <div class="slider-container-2">
                     <p class="value-display" id="fullview-camera-radius-value">0</p>
                     <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-radius-slider">
-                    
                 </div>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="fullview-camera-oblique-angle">
@@ -67,6 +66,7 @@ export function setupFullView(element) {
                     </div>
                 </div>
             <div/>
+            <button class="btn-purple" id="reset-view" style="width: 100%; margin-top: 1.5rem;">Reset View</button>
             <h3>Object</h3>
             <h4>Translation</h4>
             <div class="transformation-container">

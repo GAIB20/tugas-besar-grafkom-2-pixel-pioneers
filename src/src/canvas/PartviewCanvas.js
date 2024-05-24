@@ -33,17 +33,10 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
   var angleXValue = document.querySelector("#partview-camera-anglex-value");
   var angleYValue = document.querySelector("#partview-camera-angley-value");
   var angleZValue = document.querySelector("#partview-camera-anglez-value");
-  var translateXSlider = document.querySelector("#partview-camera-translatex-slider");
-  var translateYSlider = document.querySelector("#partview-camera-translatey-slider");
-  var translateZSlider = document.querySelector("#partview-camera-translatez-slider");
-  var translateXValue = document.querySelector("#partview-camera-translatex-value");
-  var translateYValue = document.querySelector("#partview-camera-translatey-value");
-  var translateZValue = document.querySelector("#partview-camera-translatez-value");
-  var angleContainer = document.querySelector("#partview-camera-angle");
-  var obliqueContainer = document.querySelector("#partview-camera-oblique-angle");
-  var radiusContainer = document.querySelector("#partview-camera-radius");
-  var translateContainer = document.querySelector("#partview-camera-translate");
-  var selectCamera = document.getElementById("partview-camera-dropdown");
+  var obliqueValue = document.querySelector("#partview-camera-oblique-value");
+  var obliqueSlider = document.querySelector("#partview-camera-oblique-slider");
+  var radiusValue = document.querySelector("#partview-camera-radius-value");
+  var radiusSlider = document.querySelector("#partview-camera-radius-slider");
 
   // Object inspector
   var angleObjXSlider = document.querySelector("#partview-object-anglex-slider");
@@ -79,13 +72,19 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     "#partview-object-translatez-value"
   );
 
+  var angleContainer = document.querySelector("#partview-camera-angle");
+  var obliqueContainer = document.querySelector(
+    "#partview-camera-oblique-angle"
+  );
+  var radiusContainer = document.querySelector("#partview-camera-radius");
+  var selectCamera = document.getElementById("partview-camera-dropdown");
+  var resetViewButton = document.getElementById("reset-part-view");
+
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
 
   var webgl = new WebGL(gl);
   var currentCamera = setupCamera();
-  // var currentCamera = new OrthographicCamera(gl, -10, 10, -10, 10, 0.1, 100);
-  // var currentCamera = new ObliqueCamera(gl, -10, 10, -10, 10, 0.1, 100);
 
   var scene = new Scene();
   var geometry = new Geometry(pyramid, pyramidColor);
@@ -204,26 +203,41 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     webgl.render(scene, currentCamera);
   });
 
-  translateXSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("X", event.target.value);
-    translateXValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  translateYSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("Y", event.target.value);
-    translateYValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  translateZSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("Z", event.target.value);
-    translateZValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
   radiusSlider.addEventListener("input", function (event) {
-    currentCamera.radiusDeg = parseFloat(event.target.value);
+    currentCamera.setCameraTranslate("Z", event.target.value);
+    radiusValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
+
+  obliqueSlider.addEventListener("input", function (event) {
+    currentCamera.setObliqueAngleDeg(event.target.value);
+    obliqueValue.textContent = event.target.value;
+    webgl.render(scene, currentCamera);
+  });
+
+  resetViewButton.addEventListener("click", function (event) {
+    currentCamera.setCameraAngleDeg("X", 0);
+    angleXValue.textContent = 0;
+    angleXSlider.value = 0;
+
+    currentCamera.setCameraAngleDeg("Y", 0);
+    angleYValue.textContent = 0;
+    angleYSlider.value = 0;
+
+    currentCamera.setCameraAngleDeg("Z", 0);
+    angleZValue.textContent = 0;
+    angleZSlider.value = 0;
+
+    currentCamera.setCameraTranslate("Z", 300);
+    radiusValue.textContent = 300;
+    radiusSlider.value = 300;
+
+    if (currentCamera instanceof ObliqueCamera) {
+      currentCamera.setObliqueAngleDeg(30);
+      obliqueValue.textContent = 30;
+      obliqueSlider.value = 30;
+    }
+
     webgl.render(scene, currentCamera);
   });
 
@@ -330,34 +344,26 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     if (type == "PerspectiveCamera") {
       document.getElementById("partview-camera-type-dropdown").value = 3;
       obliqueContainer.style.display = 'none';
-      radiusContainer.style.display = 'none';
-      translateContainer.style.display = 'block';
-      translateXValue.textContent = Math.round(currentCamera.transform.translateX)
-      translateYValue.textContent = Math.round(currentCamera.transform.translateY)
-      translateZValue.textContent = Math.round(currentCamera.transform.translateZ)
-      translateXSlider.value = Math.round(currentCamera.transform.translateX)
-      translateYSlider.value = Math.round(currentCamera.transform.translateY)
-      translateZSlider.value = Math.round(currentCamera.transform.translateZ)
-
     } else if (type == "ObliqueCamera") {
       document.getElementById("partview-camera-type-dropdown").value = 1;
-      obliqueContainer.style.display = 'block';
-      radiusContainer.style.display = 'block';
-      translateContainer.style.display = 'none';
+      obliqueContainer.style.display = 'flex';
+      obliqueValue.textContent = Math.round(
+        (currentCamera.theta * 180) / Math.PI
+      );
+      obliqueSlider.value = Math.round((currentCamera.theta * 180) / Math.PI);
     } else {
       document.getElementById("partview-camera-type-dropdown").value = 2;
       obliqueContainer.style.display = 'none';
-      radiusContainer.style.display = 'block';
-      translateContainer.style.display = 'none';
     }
 
+    radiusValue.textContent = Math.round(currentCamera.transform.translateZ);
     angleXValue.textContent = Math.round(currentCamera.transform.angleX);
     angleYValue.textContent = Math.round(currentCamera.transform.angleY);
     angleZValue.textContent = Math.round(currentCamera.transform.angleZ);
+    radiusSlider.value = Math.round(currentCamera.transform.translateZ);
     angleXSlider.value = Math.round(currentCamera.transform.angleX);
     angleYSlider.value = Math.round(currentCamera.transform.angleY);
     angleZSlider.value = Math.round(currentCamera.transform.angleZ);
-
     return currentCamera;
   }
 }
