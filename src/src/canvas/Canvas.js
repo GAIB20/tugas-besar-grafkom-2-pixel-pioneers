@@ -338,7 +338,7 @@ export function setupCanvas() {
             break;
           }
         }
-        app.webgl.render(app.scene, app.currentCamera);
+        render()
         setupSceneGraph();
       };
     }
@@ -380,7 +380,6 @@ export function setupCanvas() {
     var angleXSliderToSet = mode == 1 ? angleXSlider : angleXSlider2;
     var angleYSliderToSet = mode == 1 ? angleYSlider : angleYSlider2;
 
-    console.log(camerasArr);
     currentCameraToSet = camerasArr[currentCameraIdxToSet];
     var type = currentCameraToSet.type;
     if (type == "PerspectiveCamera") {
@@ -855,7 +854,7 @@ export function setupCanvas() {
       } else {
         model.applyFrame(frame);
       }
-      webgl.render(app.scene, app.currentCamera);
+      render();
     }
 
     function convertAnimationToJsString(animation) {
@@ -885,22 +884,22 @@ export function selectComponent(compName) {
   // Event handler functions
   function handleShininessChange(e) {
     app.comp.material.shininess = Number(e.target.value);
-    app.webgl.render(app.scene, app.currentCamera);
+    render()
   }
 
   function handleAmbientChange(e) {
     app.comp.material.ambient = e.target.value;
-    app.webgl.render(app.scene, app.currentCamera);
+    render()
   }
 
   function handleDiffuseChange(e) {
     app.comp.material.diffuse = e.target.value;
-    app.webgl.render(app.scene, app.currentCamera);
+    render()
   }
 
   function handleSpecularChange(e) {
     app.comp.material.specular = e.target.value;
-    app.webgl.render(app.scene, app.currentCamera);
+    render()
   }
 
   app.comp = ArticulatedModel.findChildByNameRecursive(app.model, compName);
