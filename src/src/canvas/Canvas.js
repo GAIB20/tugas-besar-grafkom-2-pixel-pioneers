@@ -24,6 +24,7 @@ import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
 import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
+import { setupSceneGraph } from "../section/Board";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -79,20 +80,23 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var animation = minecraftAnimation;
 
   var scene = new Scene();
-  var geometry = new Geometry(hollowCube, hollowCubeColor);
-  var material = new PhongMaterial("Phong")
-  var mesh = new Mesh(geometry, material);
+  // var geometry = new Geometry(hollowCube, hollowCubeColor);
+  // var material = new PhongMaterial("Phong")
+  // var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(minecraft);
   model.scale.mul(40);
 
   globalThis.app = {
     model,
+    scene,
+    currentCamera,
+    webgl
   };
 
-  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, mesh);
-  scene.add(light);
-  scene.add(model);
+  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
+  app.scene.add(light);
+  app.scene.add(model);
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
@@ -117,8 +121,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
       rotationValues[axis].textContent = angle;
-      app.model.rotation[axis] = angleRadian;
-      webgl.render(scene, currentCamera);
+      app.comp.rotation[axis] = angleRadian;
+      webgl.render(app.scene, app.currentCamera);
     });
   });
 
@@ -138,8 +142,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     translationSliders[axis].addEventListener("input", function (event) {
       var translation = parseFloat(event.target.value);
       translationValues[axis].textContent = translation;
-      app.model.position[axis] = translation;
-      webgl.render(scene, currentCamera);
+      app.comp.position[axis] = translation;
+      webgl.render(app.scene, app.currentCamera);
     });
   });
 
@@ -159,12 +163,12 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     scaleSliders[axis].addEventListener("input", function (event) {
       var scale = parseFloat(event.target.value);
       scaleValues[axis].textContent = scale;
-      app.model.scale[axis] = scale * 40;
-      webgl.render(scene, currentCamera);
+      app.comp.scale[axis] = scale;
+      webgl.render(app.scene, app.currentCamera);
     });
   });
 
-  var orbitControlLeft = new OrbitControl(webgl, canvas, currentCamera, scene, angleXSlider, angleYSlider, angleXValue, angleYValue, obliqueSlider, obliqueValue, radiusSlider, radiusValue, resetViewButton);
+  var orbitControlLeft = new OrbitControl(webgl, canvas, app.currentCamera, scene, angleXSlider, angleYSlider, angleXValue, angleYValue, obliqueSlider, obliqueValue, radiusSlider, radiusValue, resetViewButton);
 
   addCameraButton1
     .addEventListener("click", function () {
@@ -175,17 +179,16 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       selectCamera.selectedIndex = selectCamera.options.length - 1;
       cameras.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000));
       currentCameraIdx = selectCamera.options.length - 1;
-      currentCamera = setupCamera();
-      orbitControlLeft.changeCamera(currentCamera);
-      webgl.render(scene, currentCamera);
+      app.currentCamera = setupCamera();
+      orbitControlLeft.changeCamera(app.currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
 
   selectCamera.addEventListener("change", function () {
     currentCameraIdx = this.value - 1;
-    currentCamera = setupCamera();
-    console.log(currentCamera);
-    orbitControlLeft.changeCamera(currentCamera);
-    webgl.render(scene, currentCamera);
+    app.currentCamera = setupCamera();
+    orbitControlLeft.changeCamera(app.currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   cameraDropdown1
@@ -220,10 +223,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
           2000
         );
       }
-      currentCamera = setupCamera();
-      console.log(currentCamera);
-      orbitControlLeft.changeCamera(currentCamera);
-      webgl.render(scene, currentCamera);
+      app.currentCamera = setupCamera();
+      orbitControlLeft.changeCamera(app.currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
 
   const fileInput = document.getElementById("file-input");
@@ -243,15 +245,22 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       reader.onload = function (event) {
         const jsonModel = JSON.parse(event.target.result);
         const read = window.DeserializePrimitive(jsonModel);
-        scene = read;
-        webgl.render(scene, currentCamera);
+        app.scene = read;
+        for (let child of app.scene.children) {
+          if (child.type == "ArticulatedModel") {
+            app.model = child;
+            break;
+          }
+        }
+        app.webgl.render(app.scene, app.currentCamera);
+        setupSceneGraph();
       };
     }
   });
 
   const saveModelButton = document.getElementById("save-model");
   saveModelButton.addEventListener("click", function () {
-    const sceneJSON = scene.toJSON();
+    const sceneJSON = app.scene.toJSON();
     const dataStr =
       "data:text/json;charset=utf-8," +
       encodeURIComponent(JSON.stringify(sceneJSON));
@@ -263,7 +272,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     downloadAnchorNode.remove();
   });
 
-  webgl.render(scene, currentCamera);
+  webgl.render(app.scene, app.currentCamera);
 
   function setupCamera() {
     currentCamera = cameras[currentCameraIdx];
@@ -740,7 +749,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       } else {
         model.applyFrame(frame);
       }
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     }
 
     function convertAnimationToJsString(animation) {
@@ -750,4 +759,60 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       return jsString;
     }
   });
+}
+
+export function selectComponent(compName) {
+  const materialName = document.getElementById("material-name");
+  const materialAmbient = document.getElementById("material-ambient");
+  const materialDiffuse = document.getElementById("material-diffuse");
+  const materialSpecular = document.getElementById("material-specular");
+  const materialShininess = document.getElementById("material-shininess");
+
+  // Function to remove existing event listeners
+  function removeEventListeners() {
+    materialShininess.removeEventListener("change", handleShininessChange);
+    materialAmbient.removeEventListener("change", handleAmbientChange);
+    materialDiffuse.removeEventListener("change", handleDiffuseChange);
+    materialSpecular.removeEventListener("change", handleSpecularChange);
+  }
+
+  // Event handler functions
+  function handleShininessChange(e) {
+    app.comp.material.shininess = Number(e.target.value);
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  function handleAmbientChange(e) {
+    app.comp.material.ambient = e.target.value;
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  function handleDiffuseChange(e) {
+    app.comp.material.diffuse = e.target.value;
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  function handleSpecularChange(e) {
+    app.comp.material.specular = e.target.value;
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  app.comp = ArticulatedModel.findChildByNameRecursive(app.model, compName);
+
+  if (compName.startsWith("P") && app.comp && app.comp.material) {
+    materialName.value = app.comp.material.name;
+    materialShininess.value = app.comp.material.shininess;
+    materialAmbient.value = app.comp.material.ambient.hex;
+    materialDiffuse.value = app.comp.material.diffuse.hex;
+    materialSpecular.value = app.comp.material.specular.hex;
+
+    // Remove existing event listeners
+    removeEventListeners();
+
+    // Add new event listeners
+    materialShininess.addEventListener("change", handleShininessChange);
+    materialAmbient.addEventListener("change", handleAmbientChange);
+    materialDiffuse.addEventListener("change", handleDiffuseChange);
+    materialSpecular.addEventListener("change", handleSpecularChange);
+  }
 }

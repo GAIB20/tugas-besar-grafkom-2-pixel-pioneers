@@ -1,6 +1,6 @@
+import { selectComponent } from "../canvas/Canvas";
 import { setupFullView } from "./BoardFullView";
 import { setupPartView } from "./BoardPartView";
-import { showTreeComponent } from "../canvas/PartviewCanvas";
 
 export function setupBoard(element) {
     element.innerHTML = `
@@ -40,33 +40,53 @@ export function setupBoard(element) {
         setupPartView(partviewElement);
     }
 
-    let buttonsHTML
-    if (app.model.getTree()) {
-        buttonsHTML = createComponentButtons(app.model.getTree());
-    }
+    setupSceneGraph();
+}
 
-    const tbody = document.querySelector('tbody');
-    Object.values(buttonsHTML).forEach(buttonHTML => {
-        tbody.insertAdjacentHTML('beforeend', buttonHTML);
-    });
+export const setupSceneGraph = () => {
+  let buttonsHTML;
+  if (app.model.getTree()) {
+    buttonsHTML = createComponentButtons(app.model.getTree());
+  }
 
-// Menambahkan listener pada tombol komponen tree
-document.querySelectorAll("[id^=tree-]").forEach((button) => {
+  const tbody = document.querySelector("tbody");
+  tbody.innerHTML = "";
+  Object.values(buttonsHTML).forEach((buttonHTML) => {
+    tbody.insertAdjacentHTML("beforeend", buttonHTML);
+  });
+
+  const componentController = document.getElementById("component-controller");
+  const materialController = document.getElementById("material-controller");
+
+  // Menambahkan listener pada tombol komponen tree
+  document.querySelectorAll("[id^=tree-]").forEach((button) => {
     button.addEventListener("click", function () {
       const compName = this.value;
       const selectedButtons = document.querySelectorAll(".selected");
-  
+
       // Menghapus kelas "selected" dari komponen sebelumnya
       selectedButtons.forEach((selectedButton) => {
         selectedButton.classList.remove("selected");
       });
-  
+
       // Menambahkan kelas "selected" pada komponen yang dipilih
       this.classList.add("selected");
-  
-      showTreeComponent(compName);
+
+      if (compName.startsWith("P")) {
+        componentController.style.display = "none";
+        materialController.style.display = "flex";
+      } else if (compName.startsWith("R")) {
+        componentController.style.display = "flex";
+        materialController.style.display = "none";
+      } else {
+        componentController.style.display = "flex";
+        materialController.style.display = "flex";
+      }
+
+      selectComponent(compName);
     });
-  });}
+  });
+};
 
 function createComponentButtons(tree, depth = 0) {
     let buttons = {};

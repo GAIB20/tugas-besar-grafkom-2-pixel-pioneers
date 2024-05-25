@@ -248,3 +248,19 @@ select {
 option {
   padding: 10px; 
 }
+
+#component-controller {
+  display: none;
+  flex-direction: column;
+}
+
+#material-controller {
+  display: none;
+  flex-direction: column;
+}
+
+.material-container {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}

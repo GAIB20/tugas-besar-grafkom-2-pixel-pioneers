@@ -299,43 +299,6 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
       webgl.render(scene, currentCamera);
     });
 
-  const fileInput = document.getElementById("file-input");
-  const loadModelButton = document.getElementById("load-model");
-
-  loadModelButton.addEventListener("click", function () {
-    fileInput.click(); // Trigger file selection
-  });
-
-  // Load Model Button Event Listener
-  fileInput.addEventListener("change", function () {
-    const file = fileInput.files[0];
-    if (file) {
-      document.getElementById("fileNameDisplay").textContent = `${file.name}`;
-      const reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-      reader.onload = function (event) {
-        const jsonModel = JSON.parse(event.target.result);
-        const read = window.DeserializePrimitive(jsonModel);
-        scene = read;
-        webgl.render(scene, currentCamera);
-      };
-    }
-  });
-
-  const saveModelButton = document.getElementById("save-model");
-  saveModelButton.addEventListener("click", function () {
-    const sceneJSON = scene.toJSON();
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(sceneJSON));
-    const downloadAnchorNode = document.createElement("a");
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "scene.json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  });
-
   webgl.render(scene, currentCamera);
 
   function setupCamera() {
@@ -366,9 +329,4 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     angleZSlider.value = Math.round(currentCamera.transform.angleZ);
     return currentCamera;
   }
-}
-
-export function showTreeComponent(compName) {
-  partviewApp.comp = ArticulatedModel.findChildByNameRecursive(partviewApp.model, compName);
-  partviewApp.webgl.render(partviewApp.comp, partviewApp.currentCamera);
 }

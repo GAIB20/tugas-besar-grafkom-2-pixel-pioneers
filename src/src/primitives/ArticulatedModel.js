@@ -13,16 +13,16 @@ export class ArticulatedModel extends Component {
 
   addRig(...rigs) {
     rigs.forEach((rig) => {
-      if (rig.getId() in this._rigs) {
-        throw new Error(`Rig with id ${rig.getId()} already exists in model.`);
+      if (rig.id in this._rigs) {
+        throw new Error(`Rig with id ${rig.id} already exists in model.`);
       }
-      this._rigs[rig.getId()] = rig;
+      this._rigs[rig.id] = rig;
     });
     return this;
   }
 
   removeRig(rig) {
-    delete this._rigs[rig.getId()];
+    delete this._rigs[rig.id];
   }
 
   get type() {
@@ -60,11 +60,11 @@ export class ArticulatedModel extends Component {
         ...this.getRigs(child),
       };
       if (child instanceof Rig) {
-        if (child.getId() in rigs)
+        if (child.id in rigs)
           throw new Error(
-            `Rig with id ${child.getId()} already exists in model.`
+            `Rig with id ${child.id} already exists in model.`
           );
-        rigs[child.getId()] = child;
+        rigs[child.id] = child;
       }
     });
     return rigs;
@@ -141,17 +141,21 @@ export class ArticulatedModel extends Component {
     });
 
     // Restore materials
-    Object.entries(json.materials).forEach(([matName, mats]) => {
-      obj._materials[matName] = mats.map(DeserializeMaterial);
+    Object.keys(json.materials).forEach((name) => {
+      obj._materials[name] = json.materials[name].map((material) =>
+        DeserializeMaterial(material)
+      );
     });
 
     // Attach materials to mesh objects
     const attachMaterial = (component) => {
-      if (component instanceof Mesh) {
+      if (component.type === "Mesh") {
         component.material = obj._materials[component.name][0];
       }
       if (component.children) {
-        component.children.forEach(attachMaterial);
+        component.children.forEach((child) => {
+          attachMaterial(child);
+        });
       }
     };
     attachMaterial(obj);
@@ -177,7 +181,6 @@ export class ArticulatedModel extends Component {
 
   setRigTransformations(rigId, transformations) {
     const rig = app.model._rigs[rigId.substring(1)];
-    // console.log(app.model._rigs[rigId.substring(1)]);
     if (!rig) {
         console.error(`Rig ${rigId} not found`);
         return;
@@ -192,7 +195,6 @@ export class ArticulatedModel extends Component {
 
   applyFrame(frame) {
     Object.keys(frame).forEach((rigId) => {
-      console.log(rigId);
       this.setRigTransformations(rigId, frame[rigId]);
     });
   }

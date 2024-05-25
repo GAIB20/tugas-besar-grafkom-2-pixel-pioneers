@@ -33,7 +33,6 @@ export class Matrix4 extends Matrix {
   }
 
   static ortographic(left, right, bottom, top, near, far) {
-    console.log("ORTO", left, right, top, bottom);
     const a = 1 / (right - left);
     const b = 1 / (top - bottom);
     const c = 1 / (near - far);
