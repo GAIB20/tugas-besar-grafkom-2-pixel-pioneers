@@ -23,6 +23,7 @@ import cat from "../models/articulated/cat";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
 import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
+import { setupSceneGraph } from "../section/Board";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -108,8 +109,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   };
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
-  scene.add(light);
-  scene.add(model);
+  app.scene.add(light);
+  app.scene.add(model);
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
@@ -135,7 +136,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       var angleRadian = Math.radians(angle);
       rotationValues[axis].textContent = angle;
       app.comp.rotation[axis] = angleRadian;
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
   });
 
@@ -156,7 +157,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       var translation = parseFloat(event.target.value);
       translationValues[axis].textContent = translation;
       app.comp.position[axis] = translation;
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
   });
 
@@ -177,7 +178,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       var scale = parseFloat(event.target.value);
       scaleValues[axis].textContent = scale;
       app.comp.scale[axis] = scale;
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
   });
 
@@ -185,31 +186,31 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   angleXSlider.addEventListener("input", function (event) {
     currentCamera.setCameraAngleDeg("X", event.target.value);
     angleXValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   angleYSlider.addEventListener("input", function (event) {
     currentCamera.setCameraAngleDeg("Y", event.target.value);
     angleYValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   angleZSlider.addEventListener("input", function (event) {
     currentCamera.setCameraAngleDeg("Z", event.target.value);
     angleZValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   radiusSlider.addEventListener("input", function (event) {
     currentCamera.setCameraTranslate("Z", event.target.value);
     radiusValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   obliqueSlider.addEventListener("input", function (event) {
     currentCamera.setObliqueAngleDeg(event.target.value);
     obliqueValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   resetViewButton.addEventListener("click", function (event) {
@@ -235,7 +236,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       obliqueSlider.value = 30;
     }
     
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   })
 
   document
@@ -249,13 +250,13 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       cameras.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000));
       currentCameraIdx = selectCamera.options.length - 1;
       currentCamera = setupCamera();
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
 
   selectCamera.addEventListener("change", function () {
     currentCameraIdx = this.value - 1;
     currentCamera = setupCamera();
-    webgl.render(scene, currentCamera);
+    webgl.render(app.scene, app.currentCamera);
   });
 
   document
@@ -292,7 +293,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         );
       }
       currentCamera = setupCamera();
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     });
 
   const fileInput = document.getElementById("file-input");
@@ -312,15 +313,22 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       reader.onload = function (event) {
         const jsonModel = JSON.parse(event.target.result);
         const read = window.DeserializePrimitive(jsonModel);
-        scene = read;
-        webgl.render(scene, currentCamera);
+        app.scene = read;
+        for (let child of app.scene.children) {
+          if (child.type == "ArticulatedModel") {
+            app.model = child;
+            break;
+          }
+        }
+        app.webgl.render(app.scene, app.currentCamera);
+        setupSceneGraph();
       };
     }
   });
 
   const saveModelButton = document.getElementById("save-model");
   saveModelButton.addEventListener("click", function () {
-    const sceneJSON = scene.toJSON();
+    const sceneJSON = app.scene.toJSON();
     const dataStr =
       "data:text/json;charset=utf-8," +
       encodeURIComponent(JSON.stringify(sceneJSON));
@@ -332,7 +340,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     downloadAnchorNode.remove();
   });
 
-  webgl.render(scene, currentCamera);
+  webgl.render(app.scene, app.currentCamera);
 
   function setupCamera() {
     currentCamera = cameras[currentCameraIdx];
@@ -811,7 +819,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       } else {
         model.applyFrame(frame);
       }
-      webgl.render(scene, currentCamera);
+      webgl.render(app.scene, app.currentCamera);
     }
 
     function convertAnimationToJsString(animation) {

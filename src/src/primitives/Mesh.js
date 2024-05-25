@@ -22,7 +22,7 @@ class Mesh extends Component {
       ...super.toJSON(),
       geometry: this.geometry,
       material: this.material,
-      // type: "Mesh",
+      type: "Mesh",
     };
   }
 
