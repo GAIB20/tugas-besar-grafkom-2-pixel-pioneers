@@ -34,7 +34,7 @@ export function setupProperties(element) {
                 <p class="prop-title">Radius</p>
                 <div class="slider-container-2">
                     <p class="value-display" id="fullview-camera-radius-value">0</p>
-                    <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-radius-slider">
+                    <input type="range" min="0" max="500" value="200" class="slider" id="fullview-camera-radius-slider">
                 </div>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="fullview-camera-oblique-angle">
@@ -89,7 +89,7 @@ export function setupProperties(element) {
                 <p class="prop-title">Radius</p>
                 <div class="slider-container-2">
                     <p class="value-display" id="camera-2-radius-value">0</p>
-                    <input type="range" min="0" max="400" value="200" class="slider" id="camera-2-radius-slider">
+                    <input type="range" min="0" max="500" value="200" class="slider" id="camera-2-radius-slider">
                 </div>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="camera-2-oblique-angle">

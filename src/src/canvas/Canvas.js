@@ -20,8 +20,10 @@ import minecraft from "../models/articulated/minecraft";
 import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
 import cat from "../models/articulated/cat";
+import obj from "../models/articulated/obj";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
+import objAnimation from "../models/animations/objAnimation";
 import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
 import { setupSceneGraph } from "../section/Board";
@@ -122,7 +124,7 @@ export function setupCanvas() {
   var webgl2 = new WebGL(gl2);
   var currentCamera = setupCamera(1);
   var currentCamera2 = setupCamera(2);
-  var animation = minecraftAnimation;
+  var animation = objAnimation;
   let currentFrame = 1;
 
   var scene = new Scene();
@@ -130,7 +132,7 @@ export function setupCanvas() {
   // var material = new PhongMaterial("Phong")
   // var mesh = new Mesh(geometry, material);
 
-  const model = ArticulatedModel.fromModel(minecraft);
+  const model = ArticulatedModel.fromModel(obj);
   model.scale.mul(40);
 
   globalThis.app = {
