@@ -49,20 +49,15 @@ export function setupFullView(element) {
             <div id="fullview-camera-angle">
                 <h4>Angle</h4>
                 <div class="transformation-container">
-                    <div class="slider-container">
+                    <div class="slider-container-3">
                         <p>X</p>
                         <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-camera-anglex-slider">
                         <p id="fullview-camera-anglex-value" class="value-display">0</p>
                     </div>
-                    <div class="slider-container">
+                    <div class="slider-container-3">
                         <p>Y</p>
                         <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-camera-angley-slider">
                         <p id="fullview-camera-angley-value" class="value-display">0</p>
-                    </div>
-                    <div class="slider-container">
-                        <p>Z</p>
-                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-camera-anglez-slider">
-                        <p id="fullview-camera-anglez-value" class="value-display">0</p>
                     </div>
                 </div>
             <div/>
