@@ -198,27 +198,27 @@ export class WebGL {
     const faceInfos = [
       {
         target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-        url: "./textures/pos-x.jpg",
+        url: "./textures/environment/pos-x.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-        url: "./textures/neg-x.jpg",
+        url: "./textures/environment/neg-x.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-        url: "./textures/pos-y.jpg",
+        url: "./textures/environment/pos-y.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        url: "./textures/neg-y.jpg",
+        url: "./textures/environment/neg-y.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-        url: "./textures/pos-z.jpg",
+        url: "./textures/environment/pos-z.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-        url: "./textures/neg-z.jpg",
+        url: "./textures/environment/neg-z.jpg",
       },
     ];
 
