@@ -87,6 +87,28 @@ export function setupCanvas() {
   var translateObjYValue = document.querySelector("#fullview-object-translatey-value");
   var translateObjZValue = document.querySelector("#fullview-object-translatez-value");
 
+  // Whole Object Transformation
+  var angleObjectXSlider = document.querySelector("#partview-object-anglex-slider");
+  var angleObjectYSlider = document.querySelector("#partview-object-angley-slider");
+  var angleObjectZSlider = document.querySelector("#partview-object-anglez-slider");
+  var angleObjectXValue = document.querySelector("#partview-object-anglex-value");
+  var angleObjectYValue = document.querySelector("#partview-object-angley-value");
+  var angleObjectZValue = document.querySelector("#partview-object-anglez-value");
+
+  var scaleXSlider = document.querySelector("#partview-object-scalex-slider");
+  var scaleYSlider = document.querySelector("#partview-object-scaley-slider");
+  var scaleZSlider = document.querySelector("#partview-object-scalez-slider");
+  var scaleXValue = document.querySelector("#partview-object-scalex-value");
+  var scaleYValue = document.querySelector("#partview-object-scaley-value");
+  var scaleZValue = document.querySelector("#partview-object-scalez-value");
+
+  var translateXSlider = document.querySelector("#partview-object-translatex-slider");
+  var translateYSlider = document.querySelector("#partview-object-translatey-slider");
+  var translateZSlider = document.querySelector("#partview-object-translatez-slider");
+  var translateXValue = document.querySelector("#partview-object-translatex-value");
+  var translateYValue = document.querySelector("#partview-object-translatey-value");
+  var translateZValue = document.querySelector("#partview-object-translatez-value");
+
   var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
   var obliqueContainer2 = document.querySelector("#camera-2-oblique-angle");
   
@@ -208,6 +230,83 @@ export function setupCanvas() {
         animation.frames[currentFrame - 1][app.comp.name].scale = [1, 1, 1];
       }
       animation.frames[currentFrame - 1][app.comp.name].scale[axisMapping[axis]] = scale;
+      render();
+    });
+  });
+
+  var rotationObjectSliders = {
+    x: angleObjectXSlider,
+    y: angleObjectYSlider,
+    z: angleObjectZSlider
+  };
+
+  var rotationObjectValues = {
+    x: angleObjectXValue,
+    y: angleObjectYValue,
+    z: angleObjectZValue
+  };
+
+  Object.keys(rotationObjectSliders).forEach(function (axis) {
+    rotationObjectSliders[axis].addEventListener("input", function (event) {
+      var angle = parseFloat(event.target.value);
+      var angleRadian = Math.radians(angle);
+      rotationObjectValues[axis].textContent = angle;
+      app.model.children[0].rotation[axis] = angleRadian;
+      if (!animation.frames[currentFrame - 1][app.model.children[0].name].rotation) {
+        animation.frames[currentFrame - 1][app.model.children[0].name].rotation = [0, 0, 0];
+      }
+      animation.frames[currentFrame - 1][app.model.children[0].name].rotation[axisMapping[axis]] = angleRadian;
+      render();
+    });
+  });
+
+  var translationObjectSliders = {
+    x: translateXSlider,
+    y: translateYSlider,
+    z: translateZSlider
+  };
+
+  var translationObjectValues = {
+    x: translateXValue,
+    y: translateYValue,
+    z: translateZValue
+  };
+
+  Object.keys(translationObjectSliders).forEach(function (axis) {
+    translationObjectSliders[axis].addEventListener("input", function (event) {
+      var translation = parseFloat(event.target.value);
+      translationObjectValues[axis].textContent = translation;
+      app.model.children[0].position[axis] = translation;
+      if (!animation.frames[currentFrame - 1][app.model.children[0].name].position) {
+        animation.frames[currentFrame - 1][app.model.children[0].name].position = [0, 0, 0];
+      }
+      animation.frames[currentFrame - 1][app.model.children[0].name].position[axisMapping[axis]] = translation;
+      console.log(animation.frames[currentFrame - 1]);
+      render();
+    });
+  });
+
+  var scaleObjectSliders = {
+    x: scaleXSlider,
+    y: scaleYSlider,
+    z: scaleZSlider
+  };
+
+  var scaleObjectValues = {
+    x: scaleXValue,
+    y: scaleYValue,
+    z: scaleZValue
+  };
+
+  Object.keys(scaleObjectSliders).forEach(function (axis) {
+    scaleObjectSliders[axis].addEventListener("input", function (event) {
+      var scale = parseFloat(event.target.value);
+      scaleObjectValues[axis].textContent = scale;
+      app.model.children[0].scale[axis] = scale;
+      if (!animation.frames[currentFrame - 1][app.model.children[0].name].scale) {
+        animation.frames[currentFrame - 1][app.model.children[0].name].scale = [1, 1, 1];
+      }
+      animation.frames[currentFrame - 1][app.model.children[0].name].scale[axisMapping[axis]] = scale;
       render();
     });
   });
