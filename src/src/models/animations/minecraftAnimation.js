@@ -15,7 +15,7 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
+        position: [-1.1, 1.3, 1],
         rotation: [0, 0, 0],
       },
       RLegL: {
@@ -32,23 +32,21 @@ export default {
         position: [0, 0, -1],
         rotation: [0, 0, 0],
       },
-      RHead: {
-        position: [0, 0, 0],
-        rotation: [0, 0, 0],
-      },
       RArmL: {
-        position: [-1.5, 1.3, -1],
+        position: [1, -0.5, 0],
+        rotation: [-2, 0, 0],
       },
       RArmR: {
-        position: [1.5, 1.3, 1],
+        position: [-1.1, -0.2, 0.5],
+        rotation: [1.8, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
-        rotation: [0, 0, 0],
+        position: [-0.5, -1.8, -0.1],
+        rotation: [-1.2, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
-        rotation: [0, 0, 0],
+        position: [0.5, -2, 0.5],
+        rotation: [1.2, 0, 0],
       },
     },
     {
@@ -65,7 +63,7 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
+        position: [-1.1, 1.3, 1],
         rotation: [0, 0, 0],
       },
       RLegL: {
@@ -87,18 +85,20 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, 1.3, -1],
+        position: [1, -0.5, 0],
+        rotation: [-2, 0, 0],
       },
       RArmR: {
-        position: [1.5, 1.3, 1],
+        position: [-1.1, -0.2, 0.5],
+        rotation: [1.8, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
-        rotation: [0, 0, 0],
+        position: [-0.5, -1.8, -0.1],
+        rotation: [-1.2, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
-        rotation: [0, 0, 0],
+        position: [0.5, -2, 0.5],
+        rotation: [1.2, 0, 0],
       },
     },
     {
@@ -115,7 +115,7 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
+        position: [-1.1, 1.3, 1],
         rotation: [0, 0, 0],
       },
       RLegL: {
@@ -137,18 +137,20 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, 1.3, -1],
+        position: [1, -0.5, 0],
+        rotation: [-2, 0, 0],
       },
       RArmR: {
-        position: [1.5, 1.3, 1],
+        position: [-1.1, -0.2, 0.5],
+        rotation: [1.8, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
-        rotation: [0, 0, 0],
+        position: [-0.5, -1.8, -0.1],
+        rotation: [-1.2, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
-        rotation: [0, 0, 0],
+        position: [0.5, -2, 0.5],
+        rotation: [1.2, 0, 0],
       },
     },
     {
@@ -161,17 +163,19 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, 1.3, -1],
+        position: [1, 1.3, -1],
+        rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [1.5, 1.3, 1],
+        position: [-1.1, 1.3, 1],
+        rotation: [0, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
+        position: [-0.5, -1.5, -0.5],
         rotation: [0, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
+        position: [0.5, -1, 1],
         rotation: [0, 0, 0],
       },
     },
@@ -185,20 +189,20 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [1, 1.3, -1],
-        rotation: [0, 0, 0],
+        position: [1, -0.5, 0],
+        rotation: [-2, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
-        rotation: [0, 0, 0],
+        position: [-1.1, -0.2, 0.5],
+        rotation: [1.8, 0, 0],
       },
       RLegL: {
-        position: [-0.5, -1.5, -0.5],
-        rotation: [0, 0, 0],
+        position: [-0.5, -1.8, -0.1],
+        rotation: [-1.2, 0, 0],
       },
       RLegR: {
-        position: [0.5, -1, 1],
-        rotation: [0, 0, 0],
+        position: [0.5, -2, 0.5],
+        rotation: [1.2, 0, 0],
       },
     },
     {
@@ -211,17 +215,19 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, 1.3, -1],
+        position: [1, 1.3, -1],
+        rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [1.5, 1.3, 1],
+        position: [-1.1, 1.3, 1],
+        rotation: [0, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
+        position: [-0.5, -1.5, -0.5],
         rotation: [0, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
+        position: [0.5, -1, 1],
         rotation: [0, 0, 0],
       },
     },
@@ -235,20 +241,20 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [1, 1.3, -1],
-        rotation: [0, 0, 0],
+        position: [1, -0.5, 0],
+        rotation: [-2, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
-        rotation: [0, 0, 0],
+        position: [-1.1, -0.2, 0.5],
+        rotation: [1.8, 0, 0],
       },
       RLegL: {
-        position: [-0.5, -1.5, -0.5],
-        rotation: [0, 0, 0],
+        position: [-0.5, -1.8, -0.1],
+        rotation: [-1.2, 0, 0],
       },
       RLegR: {
-        position: [0.5, -1, 1],
-        rotation: [0, 0, 0],
+        position: [0.5, -2, 0.5],
+        rotation: [1.2, 0, 0],
       },
     },
     {
@@ -261,17 +267,19 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, 1.3, -1],
+        position: [1, 1.3, -1],
+        rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [1.5, 1.3, 1],
+        position: [-1.1, 1.3, 1],
+        rotation: [0, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
+        position: [-0.5, -1.5, -0.5],
         rotation: [0, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
+        position: [0.5, -1, 1],
         rotation: [0, 0, 0],
       },
     },
