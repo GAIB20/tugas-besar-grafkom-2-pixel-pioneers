@@ -147,7 +147,7 @@ export function setupCanvas() {
       var angleRadian = Math.radians(angle);
       rotationValues[axis].textContent = angle;
       app.comp.rotation[axis] = angleRadian;
-      webgl.render(app.scene, app.currentCamera);
+      render();
     });
   });
 
@@ -168,7 +168,7 @@ export function setupCanvas() {
       var translation = parseFloat(event.target.value);
       translationValues[axis].textContent = translation;
       app.comp.position[axis] = translation;
-      webgl.render(app.scene, app.currentCamera);
+      render();
     });
   });
 
@@ -189,7 +189,7 @@ export function setupCanvas() {
       var scale = parseFloat(event.target.value);
       scaleValues[axis].textContent = scale;
       app.comp.scale[axis] = scale;
-      webgl.render(app.scene, app.currentCamera);
+      render();
     });
   });
 
@@ -208,7 +208,7 @@ export function setupCanvas() {
       currentCameraIdx = selectCamera.options.length - 1;
       app.currentCamera = setupCamera(1);
       orbitControl1.changeCamera(app.currentCamera);
-      webgl.render(app.scene, app.currentCamera);
+      render();
     });
 
   addCameraButton2
@@ -230,14 +230,14 @@ export function setupCanvas() {
     currentCameraIdx = this.value - 1;
     app.currentCamera = setupCamera(1);
     orbitControl1.changeCamera(app.currentCamera);
-    webgl.render(app.scene, app.currentCamera);
+    render();
   });
 
   selectCamera2.addEventListener("change", function () {
     currentCamera2Idx = this.value - 1;
     app.currentCamera2 = setupCamera(2);
     orbitControl2.changeCamera(app.currentCamera2);
-    webgl2.render(app.scene, app.currentCamera2);
+    render();
   });
 
   cameraDropdown1
@@ -274,7 +274,7 @@ export function setupCanvas() {
       }
       app.currentCamera = setupCamera(1);
       orbitControl1.changeCamera(app.currentCamera);
-      webgl.render(app.scene, app.currentCamera);
+      render();
     });
 
     cameraDropdown2
