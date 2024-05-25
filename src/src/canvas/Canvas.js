@@ -272,7 +272,13 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     downloadAnchorNode.remove();
   });
 
-  webgl.render(app.scene, app.currentCamera);
+  function render() {
+    webgl.render(app.scene, app.currentCamera);
+
+    requestAnimationFrame(render)
+  }
+
+  requestAnimationFrame(render);
 
   function setupCamera() {
     currentCamera = cameras[currentCameraIdx];

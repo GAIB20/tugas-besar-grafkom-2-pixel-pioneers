@@ -1,4 +1,5 @@
 import { Light } from "../light/Light";
+import { PhongMaterial } from "../material/PhongMaterial";
 import { ShaderMaterial } from "../material/ShaderMaterial";
 import { Mesh } from "./Mesh";
 import { SetterWebGLType, ShaderType } from "./Type";
@@ -89,12 +90,15 @@ export class WebGL {
     function createUniformSetter(info) {
       const loc = gl.getUniformLocation(program, info.name);
       const isArray = info.size > 1 && info.name.substr(-3) === "[0]";
-      const type = SetterWebGLType[info.type];
+      let type = SetterWebGLType[info.type];
       return (v) => {
         if (typeof v === "object" && "toArray" in v) v = v.toArray();
         if (isArray) {
           gl[`uniform${type}v`](loc, v);
         } else {
+          if (!type) {
+            type = "1i";
+          }
           if (type.substr(0, 6) === "Matrix") {
             gl[`uniform${type}`](loc, false, v);
           } else {
@@ -192,6 +196,77 @@ export class WebGL {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
 
+    // Create a texture.
+    var texture = this.gl.createTexture();
+    this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, texture);
+
+    const faceInfos = [
+      {
+        target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+        url: "../textures/pos-x.jpg",
+      },
+      {
+        target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+        url: "../textures/pos-x.jpg",
+      },
+      {
+        target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+        url: "../textures/pos-x.jpg",
+      },
+      {
+        target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        url: "../textures/pos-x.jpg",
+      },
+      {
+        target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+        url: "../textures/pos-x.jpg",
+      },
+      {
+        target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        url: "../textures/pos-x.jpg",
+      },
+    ];
+
+    faceInfos.forEach((faceInfo) => {
+      const { target, url } = faceInfo;
+
+      // Upload the canvas to the cubemap face.
+      const level = 0;
+      const internalFormat = this.gl.RGBA;
+      const width = 512;
+      const height = 512;
+      const format = this.gl.RGBA;
+      const type = this.gl.UNSIGNED_BYTE;
+
+      // setup each face so it's immediately renderable
+      this.gl.texImage2D(
+        target,
+        level,
+        internalFormat,
+        width,
+        height,
+        0,
+        format,
+        type,
+        null
+      );
+
+      // Asynchronously load an image
+      const image = new Image();
+      image.src = url;
+      image.addEventListener("load", () => {
+        this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, texture);
+        this.gl.texImage2D(target, level, internalFormat, format, type, image);
+        this.gl.generateMipmap(this.gl.TEXTURE_CUBE_MAP);
+      });
+    });
+    this.gl.generateMipmap(this.gl.TEXTURE_CUBE_MAP);
+    this.gl.texParameteri(
+      this.gl.TEXTURE_CUBE_MAP,
+      this.gl.TEXTURE_MIN_FILTER,
+      this.gl.LINEAR_MIPMAP_LINEAR
+    );
+
     // Find lights
     const lights = [];
     const findLights = (component) => {
@@ -199,13 +274,17 @@ export class WebGL {
       for (let key in component.children) {
         findLights(component.children[key]);
       }
-    }
+    };
     findLights(scene);
 
-    this.renderComponent(scene, {
-      cameraPosition: currentCamera.worldPosition,
-      viewMatrix: currentCamera.viewProjectionMatrix,
-    }, lights);
+    this.renderComponent(
+      scene,
+      {
+        cameraPosition: currentCamera.worldPosition,
+        viewMatrix: currentCamera.viewProjectionMatrix,
+      },
+      lights
+    );
   }
 
   renderComponent(component, uniforms, lights) {
@@ -223,6 +302,7 @@ export class WebGL {
         ...light?.uniforms,
         worldMatrix: component.worldMatrix,
         useVertexColors: component.geometry.useVertexColors,
+        useEnvironmentMapping: false,
       });
       this.gl.drawArrays(
         this.gl.TRIANGLES,

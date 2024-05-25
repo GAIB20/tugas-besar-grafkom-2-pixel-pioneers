@@ -14,7 +14,7 @@ export class PhongMaterial extends ShaderMaterial {
         attribute vec4 position;
         attribute vec4 color;
         attribute vec3 normal;
-        varying vec3 v_normal, v_pos;
+        varying vec3 v_normal, v_pos, v_direction;
         uniform bool u_useVertexColors;
 
         uniform float u_shininess;
@@ -37,6 +37,7 @@ export class PhongMaterial extends ShaderMaterial {
           vec3 N = normalize(v_normal);
           vec3 L = -normalize(u_lightDirection - v_pos);
           vec3 H = normalize(L + normalize(u_cameraPosition));
+          v_direction = reflect(normalize(v_pos - u_cameraPosition), N);
 
           float lambertian = max(dot(N, L), 0.0);
           float specular = pow(max(dot(H, N), 0.0), u_shininess);
@@ -56,8 +57,19 @@ export class PhongMaterial extends ShaderMaterial {
         precision mediump float;
         varying vec4 v_color;
 
+        // Passed in from the vertex shader.
+        varying vec3 v_direction;
+        
+        // The texture.
+        uniform samplerCube u_texture;
+        uniform bool u_useEnvironmentMapping;
+
         void main() {
-          gl_FragColor = v_color;
+          if (u_useEnvironmentMapping) {
+            gl_FragColor = textureCube(u_texture, v_direction);
+          } else {
+            gl_FragColor = v_color;
+          }
         }
         `;
 
