@@ -67,59 +67,84 @@ export function setupFullView(element) {
                 </div>
             <div/>
             <button class="btn-purple" id="reset-view" style="width: 100%; margin-top: 1.5rem;">Reset View</button>
-            <h3>Object</h3>
-            <h4>Translation</h4>
-            <div class="transformation-container">
-                <div class="slider-container">
-                    <p>X</p>
-                    <input type="range" min="-50" max="50" value="0" class="slider" id="fullview-object-translatex-slider">
-                    <p id="fullview-object-translatex-value" class="value-display">0</p>
+            <div id="material-controller">
+                <h3>Component Material</h3>
+                <div class="material-container">
+                    <h4>Name</h4>
+                    <input type="text" disabled id="material-name"/>
                 </div>
-                <div class="slider-container">
-                    <p>Y</p>
-                    <input type="range" min="-50" max="50" value="0" class="slider" id="fullview-object-translatey-slider">
-                    <p id="fullview-object-translatey-value" class="value-display">0</p>
+                <div class="material-container">
+                    <h4>Ambient Color</h4>
+                    <input type="color" id="material-ambient"/>
                 </div>
-                <div class="slider-container">
-                    <p>Z</p>
-                    <input type="range" min="-50" max="50" value="0" class="slider" id="fullview-object-translatez-slider">
-                    <p id="fullview-object-translatez-value" class="value-display">0</p>
+                <div class="material-container">
+                    <h4>Diffuse Color</h4>
+                    <input type="color" id="material-diffuse"/>
                 </div>
-            </div>
-            <h4>Angle</h4>
-            <div class="transformation-container">
-                <div class="slider-container">
-                    <p>X</p>
-                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglex-slider">
-                    <p id="fullview-object-anglex-value" class="value-display">0</p>
+                <div class="material-container">
+                    <h4>Specular Color</h4>
+                    <input type="color" id="material-specular"/>
                 </div>
-                <div class="slider-container">
-                    <p>Y</p>
-                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-angley-slider">
-                    <p id="fullview-object-angley-value" class="value-display">0</p>
-                </div>
-                <div class="slider-container">
-                    <p>Z</p>
-                    <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglez-slider">
-                    <p id="fullview-object-anglez-value" class="value-display">0</p>
+                <div class="material-container">
+                    <h4>Shininess</h4>
+                    <input type="number" id="material-shininess"/>
                 </div>
             </div>
-            <h4>Scale</h4>
-            <div class="transformation-container">
-                <div class="slider-container">
-                    <p>X</p>
-                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="fullview-object-scalex-slider">
-                    <p id="fullview-object-scalex-value" class="value-display">1</p>
+            <div id="component-controller">
+                <h3>Component Controller</h3>
+                <h4>Translation</h4>
+                <div class="transformation-container">
+                    <div class="slider-container">
+                        <p>X</p>
+                        <input type="range" min="-10" max="10" value="0" class="slider" id="fullview-object-translatex-slider">
+                        <p id="fullview-object-translatex-value" class="value-display">0</p>
+                    </div>
+                    <div class="slider-container">
+                        <p>Y</p>
+                        <input type="range" min="-10" max="10" value="0" class="slider" id="fullview-object-translatey-slider">
+                        <p id="fullview-object-translatey-value" class="value-display">0</p>
+                    </div>
+                    <div class="slider-container">
+                        <p>Z</p>
+                        <input type="range" min="-10" max="10" value="0" class="slider" id="fullview-object-translatez-slider">
+                        <p id="fullview-object-translatez-value" class="value-display">0</p>
+                    </div>
                 </div>
-                <div class="slider-container">
-                    <p>Y</p>
-                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="fullview-object-scaley-slider">
-                    <p id="fullview-object-scaley-value" class="value-display">1</p>
+                <h4>Angle</h4>
+                <div class="transformation-container">
+                    <div class="slider-container">
+                        <p>X</p>
+                        <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglex-slider">
+                        <p id="fullview-object-anglex-value" class="value-display">0</p>
+                    </div>
+                    <div class="slider-container">
+                        <p>Y</p>
+                        <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-angley-slider">
+                        <p id="fullview-object-angley-value" class="value-display">0</p>
+                    </div>
+                    <div class="slider-container">
+                        <p>Z</p>
+                        <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglez-slider">
+                        <p id="fullview-object-anglez-value" class="value-display">0</p>
+                    </div>
                 </div>
-                <div class="slider-container">
-                    <p>Z</p>
-                    <input type="range" min="1" max="4" value="1" step="0.1" class="slider" id="fullview-object-scalez-slider">
-                    <p id="fullview-object-scalez-value" class="value-display">1</p>
+                <h4>Scale</h4>
+                <div class="transformation-container">
+                    <div class="slider-container">
+                        <p>X</p>
+                        <input type="range" min="1" max="10" value="1" step="0.5" class="slider" id="fullview-object-scalex-slider">
+                        <p id="fullview-object-scalex-value" class="value-display">1</p>
+                    </div>
+                    <div class="slider-container">
+                        <p>Y</p>
+                        <input type="range" min="1" max="10" value="1" step="0.5" class="slider" id="fullview-object-scaley-slider">
+                        <p id="fullview-object-scaley-value" class="value-display">1</p>
+                    </div>
+                    <div class="slider-container">
+                        <p>Z</p>
+                        <input type="range" min="1" max="10" value="1" step="0.5" class="slider" id="fullview-object-scalez-slider">
+                        <p id="fullview-object-scalez-value" class="value-display">1</p>
+                    </div>
                 </div>
             </div>
             <h4>Animation</h4>

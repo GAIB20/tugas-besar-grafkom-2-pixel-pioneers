@@ -367,8 +367,3 @@ export function setupCanvasPartView(element, angleSlider, radiusSlider) {
     return currentCamera;
   }
 }
-
-export function showTreeComponent(compName) {
-  partviewApp.comp = ArticulatedModel.findChildByNameRecursive(partviewApp.model, compName);
-  partviewApp.webgl.render(partviewApp.comp, partviewApp.currentCamera);
-}

@@ -93,18 +93,21 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var animation = minecraftAnimation;
 
   var scene = new Scene();
-  var geometry = new Geometry(hollowCube, hollowCubeColor);
-  var material = new PhongMaterial("Phong")
-  var mesh = new Mesh(geometry, material);
+  // var geometry = new Geometry(hollowCube, hollowCubeColor);
+  // var material = new PhongMaterial("Phong")
+  // var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(minecraft);
   model.scale.mul(40);
 
   globalThis.app = {
     model,
+    scene,
+    currentCamera,
+    webgl
   };
 
-  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, mesh);
+  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
   scene.add(light);
   scene.add(model);
 
@@ -131,7 +134,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
       rotationValues[axis].textContent = angle;
-      app.model.rotation[axis] = angleRadian;
+      app.comp.rotation[axis] = angleRadian;
       webgl.render(scene, currentCamera);
     });
   });
@@ -152,7 +155,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     translationSliders[axis].addEventListener("input", function (event) {
       var translation = parseFloat(event.target.value);
       translationValues[axis].textContent = translation;
-      app.model.position[axis] = translation;
+      app.comp.position[axis] = translation;
       webgl.render(scene, currentCamera);
     });
   });
@@ -173,7 +176,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     scaleSliders[axis].addEventListener("input", function (event) {
       var scale = parseFloat(event.target.value);
       scaleValues[axis].textContent = scale;
-      app.model.scale[axis] = scale * 40;
+      app.comp.scale[axis] = scale;
       webgl.render(scene, currentCamera);
     });
   });
@@ -818,4 +821,60 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       return jsString;
     }
   });
+}
+
+export function selectComponent(compName) {
+  const materialName = document.getElementById("material-name");
+  const materialAmbient = document.getElementById("material-ambient");
+  const materialDiffuse = document.getElementById("material-diffuse");
+  const materialSpecular = document.getElementById("material-specular");
+  const materialShininess = document.getElementById("material-shininess");
+
+  // Function to remove existing event listeners
+  function removeEventListeners() {
+    materialShininess.removeEventListener("change", handleShininessChange);
+    materialAmbient.removeEventListener("change", handleAmbientChange);
+    materialDiffuse.removeEventListener("change", handleDiffuseChange);
+    materialSpecular.removeEventListener("change", handleSpecularChange);
+  }
+
+  // Event handler functions
+  function handleShininessChange(e) {
+    app.comp.material.shininess = Number(e.target.value);
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  function handleAmbientChange(e) {
+    app.comp.material.ambient = e.target.value;
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  function handleDiffuseChange(e) {
+    app.comp.material.diffuse = e.target.value;
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  function handleSpecularChange(e) {
+    app.comp.material.specular = e.target.value;
+    app.webgl.render(app.scene, app.currentCamera);
+  }
+
+  app.comp = ArticulatedModel.findChildByNameRecursive(app.model, compName);
+
+  if (compName.startsWith("P") && app.comp && app.comp.material) {
+    materialName.value = app.comp.material.name;
+    materialShininess.value = app.comp.material.shininess;
+    materialAmbient.value = app.comp.material.ambient.hex;
+    materialDiffuse.value = app.comp.material.diffuse.hex;
+    materialSpecular.value = app.comp.material.specular.hex;
+
+    // Remove existing event listeners
+    removeEventListeners();
+
+    // Add new event listeners
+    materialShininess.addEventListener("change", handleShininessChange);
+    materialAmbient.addEventListener("change", handleAmbientChange);
+    materialDiffuse.addEventListener("change", handleDiffuseChange);
+    materialSpecular.addEventListener("change", handleSpecularChange);
+  }
 }

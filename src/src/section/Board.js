@@ -1,6 +1,6 @@
+import { selectComponent } from "../canvas/Canvas";
 import { setupFullView } from "./BoardFullView";
 import { setupPartView } from "./BoardPartView";
-import { showTreeComponent } from "../canvas/PartviewCanvas";
 
 export function setupBoard(element) {
     element.innerHTML = `
@@ -50,6 +50,9 @@ export function setupBoard(element) {
         tbody.insertAdjacentHTML('beforeend', buttonHTML);
     });
 
+const componentController = document.getElementById("component-controller");
+const materialController = document.getElementById("material-controller");
+
 // Menambahkan listener pada tombol komponen tree
 document.querySelectorAll("[id^=tree-]").forEach((button) => {
     button.addEventListener("click", function () {
@@ -63,8 +66,19 @@ document.querySelectorAll("[id^=tree-]").forEach((button) => {
   
       // Menambahkan kelas "selected" pada komponen yang dipilih
       this.classList.add("selected");
-  
-      showTreeComponent(compName);
+
+      if(compName.startsWith("P")){
+        componentController.style.display = "none";
+        materialController.style.display = "flex";
+      } else if(compName.startsWith("R")){
+        componentController.style.display = "flex";
+        materialController.style.display = "none";
+      } else {
+        componentController.style.display = "flex";
+        materialController.style.display = "flex";
+      }
+
+      selectComponent(compName);
     });
   });}
 

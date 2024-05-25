@@ -86,6 +86,22 @@ export class PhongMaterial extends ShaderMaterial {
     return this.uniforms["shininess"];
   }
 
+  set ambient(value) {
+    this._uniforms["ambientColor"].setHex(value);
+  }
+
+  set diffuse(value) {
+    this._uniforms["diffuseColor"].setHex(value);
+  }
+
+  set specular(value) {
+    this._uniforms["specularColor"].setHex(value);
+  }
+
+  set shininess(value) {
+    this._uniforms["shininess"] = value;
+  }
+
   toJSON() {
     const data = super.toJSON();
     return {

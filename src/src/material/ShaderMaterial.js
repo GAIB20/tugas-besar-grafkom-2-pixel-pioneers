@@ -15,6 +15,10 @@ export class ShaderMaterial {
     this._uniforms = uniforms;
   }
 
+  get name() {
+    return this._name;
+  }
+
   get vertexShader() {
     return this._vertexShader;
   }
@@ -25,6 +29,10 @@ export class ShaderMaterial {
 
   get uniforms() {
     return this._uniforms;
+  }
+
+  set name(value) {
+    this._name = value;
   }
 
   set uniforms(value) {
