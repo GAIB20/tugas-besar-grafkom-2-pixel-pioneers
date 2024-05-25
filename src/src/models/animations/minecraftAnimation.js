@@ -15,7 +15,7 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
+        position: [-1.1, 1.3, 1],
         rotation: [0, 0, 0],
       },
       RLegL: {
@@ -63,7 +63,7 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
+        position: [-1.1, 1.3, 1],
         rotation: [0, 0, 0],
       },
       RLegL: {
@@ -115,7 +115,7 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [-1, 1.3, 1],
+        position: [-1.1, 1.3, 1],
         rotation: [0, 0, 0],
       },
       RLegL: {
@@ -163,17 +163,19 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, -0.5, -1],
+        position: [1, 1.3, -1],
+        rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [1.5, -0.5, 1],
+        position: [-1.1, 1.3, 1],
+        rotation: [0, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
+        position: [-0.5, -1.5, -0.5],
         rotation: [0, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
+        position: [0.5, -1, 1],
         rotation: [0, 0, 0],
       },
     },
@@ -213,17 +215,19 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, -0.5, -1],
+        position: [1, 1.3, -1],
+        rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [1.5, -0.5, 1],
+        position: [-1.1, 1.3, 1],
+        rotation: [0, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
+        position: [-0.5, -1.5, -0.5],
         rotation: [0, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
+        position: [0.5, -1, 1],
         rotation: [0, 0, 0],
       },
     },
@@ -263,17 +267,19 @@ export default {
         rotation: [0, 0, 0],
       },
       RArmL: {
-        position: [-1.5, -0.5, -1],
+        position: [1, 1.3, -1],
+        rotation: [0, 0, 0],
       },
       RArmR: {
-        position: [1.5, -0.5, 1],
+        position: [-1.1, 1.3, 1],
+        rotation: [0, 0, 0],
       },
       RLegL: {
-        position: [0.5, -1.5, -0.5],
+        position: [-0.5, -1.5, -0.5],
         rotation: [0, 0, 0],
       },
       RLegR: {
-        position: [-0.5, -1, 1],
+        position: [0.5, -1, 1],
         rotation: [0, 0, 0],
       },
     },
