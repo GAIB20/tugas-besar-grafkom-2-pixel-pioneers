@@ -190,12 +190,7 @@ export class WebGL {
     }
   }
 
-  render(scene, currentCamera) {
-    this.resizeCanvasToDisplaySize();
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-    this.gl.enable(this.gl.CULL_FACE);
-    this.gl.enable(this.gl.DEPTH_TEST);
-
+  loadEnvironmentMapping() {
     // Create a texture.
     var texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, texture);
@@ -203,27 +198,27 @@ export class WebGL {
     const faceInfos = [
       {
         target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-        url: "../textures/pos-x.jpg",
+        url: "./textures/environment/pos-x.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-        url: "../textures/pos-x.jpg",
+        url: "./textures/environment/neg-x.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-        url: "../textures/pos-x.jpg",
+        url: "./textures/environment/pos-y.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-        url: "../textures/pos-x.jpg",
+        url: "./textures/environment/neg-y.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-        url: "../textures/pos-x.jpg",
+        url: "./textures/environment/pos-z.jpg",
       },
       {
         target: this.gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-        url: "../textures/pos-x.jpg",
+        url: "./textures/environment/neg-z.jpg",
       },
     ];
 
@@ -266,6 +261,13 @@ export class WebGL {
       this.gl.TEXTURE_MIN_FILTER,
       this.gl.LINEAR_MIPMAP_LINEAR
     );
+  }
+
+  render(scene, currentCamera) {
+    this.resizeCanvasToDisplaySize();
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    this.gl.enable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.DEPTH_TEST);
 
     // Find lights
     const lights = [];
@@ -282,6 +284,7 @@ export class WebGL {
       {
         cameraPosition: currentCamera.worldPosition,
         viewMatrix: currentCamera.viewProjectionMatrix,
+        useEnvironmentMapping: app.environmentMapping,
       },
       lights
     );
@@ -302,7 +305,6 @@ export class WebGL {
         ...light?.uniforms,
         worldMatrix: component.worldMatrix,
         useVertexColors: component.geometry.useVertexColors,
-        useEnvironmentMapping: false,
       });
       this.gl.drawArrays(
         this.gl.TRIANGLES,

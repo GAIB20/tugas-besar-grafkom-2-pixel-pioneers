@@ -114,11 +114,13 @@ export function setupCanvas() {
   var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
   var obliqueContainer2 = document.querySelector("#camera-2-oblique-angle");
   
+  var mappingSelect = document.getElementById("mapping");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var cameras2 = [new PerspectiveCamera(gl2, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
   var currentCamera2Idx = 0;
+  var environmentMapping = false;
 
   var webgl = new WebGL(gl);
   var webgl2 = new WebGL(gl2);
@@ -128,9 +130,9 @@ export function setupCanvas() {
   let currentFrame = 1;
 
   var scene = new Scene();
-  // var geometry = new Geometry(hollowCube, hollowCubeColor);
-  // var material = new PhongMaterial("Phong")
-  // var mesh = new Mesh(geometry, material);
+  var geometry = new Geometry(hollowCube, hollowCubeColor);
+  var material = new PhongMaterial("Phong")
+  var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(obj);
   model.scale.mul(40);
@@ -141,7 +143,8 @@ export function setupCanvas() {
     currentCamera,
     currentCamera2,
     webgl,
-    webgl2
+    webgl2,
+    environmentMapping: environmentMapping,
   };
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
@@ -182,7 +185,6 @@ export function setupCanvas() {
         animation.frames[currentFrame - 1][app.comp.name].rotation = [0, 0, 0];
       }
       animation.frames[currentFrame - 1][app.comp.name].rotation[axisMapping[axis]] = angleRadian;
-      render();
     });
   });
 
@@ -207,7 +209,6 @@ export function setupCanvas() {
         animation.frames[currentFrame - 1][app.comp.name].position = [0, 0, 0];
       }
       animation.frames[currentFrame - 1][app.comp.name].position[axisMapping[axis]] = translation;
-      render();
     });
   });
 
@@ -232,7 +233,6 @@ export function setupCanvas() {
         animation.frames[currentFrame - 1][app.comp.name].scale = [1, 1, 1];
       }
       animation.frames[currentFrame - 1][app.comp.name].scale[axisMapping[axis]] = scale;
-      render();
     });
   });
 
@@ -258,7 +258,6 @@ export function setupCanvas() {
         animation.frames[currentFrame - 1][app.model.children[0].name].rotation = [0, 0, 0];
       }
       animation.frames[currentFrame - 1][app.model.children[0].name].rotation[axisMapping[axis]] = angleRadian;
-      render();
     });
   });
 
@@ -284,7 +283,6 @@ export function setupCanvas() {
       }
       animation.frames[currentFrame - 1][app.model.children[0].name].position[axisMapping[axis]] = translation;
       console.log(animation.frames[currentFrame - 1]);
-      render();
     });
   });
 
@@ -309,7 +307,6 @@ export function setupCanvas() {
         animation.frames[currentFrame - 1][app.model.children[0].name].scale = [1, 1, 1];
       }
       animation.frames[currentFrame - 1][app.model.children[0].name].scale[axisMapping[axis]] = scale;
-      render();
     });
   });
 
@@ -328,7 +325,6 @@ export function setupCanvas() {
       currentCameraIdx = selectCamera.options.length - 1;
       app.currentCamera = setupCamera(1);
       orbitControl1.changeCamera(app.currentCamera);
-      render();
     });
 
   addCameraButton2
@@ -343,22 +339,27 @@ export function setupCanvas() {
       currentCamera2Idx = selectCamera2.options.length - 1;
       app.currentCamera2 = setupCamera(2);
       orbitControl2.changeCamera(app.currentCamera2);
-      webgl2.render(app.scene, app.currentCamera2);
     });
 
   selectCamera.addEventListener("change", function () {
     currentCameraIdx = this.value - 1;
     app.currentCamera = setupCamera(1);
     orbitControl1.changeCamera(app.currentCamera);
-    render();
   });
 
   selectCamera2.addEventListener("change", function () {
     currentCamera2Idx = this.value - 1;
     app.currentCamera2 = setupCamera(2);
     orbitControl2.changeCamera(app.currentCamera2);
-    render();
   });
+
+  mappingSelect.addEventListener("change", function (e) {
+    if(e.target.value === "environment") {
+      app.environmentMapping = true;
+    } else {
+      app.environmentMapping = false;
+    }
+  })
 
   cameraDropdown1
     .addEventListener("change", function () {
@@ -394,7 +395,6 @@ export function setupCanvas() {
       }
       app.currentCamera = setupCamera(1);
       orbitControl1.changeCamera(app.currentCamera);
-      render();
     });
 
     cameraDropdown2
@@ -431,7 +431,6 @@ export function setupCanvas() {
       }
       app.currentCamera2 = setupCamera(2);
       orbitControl2.changeCamera(app.currentCamera2);
-      webgl2.render(app.scene, app.currentCamera2);
     });
 
   const fileInput = document.getElementById("file-input");
@@ -458,7 +457,6 @@ export function setupCanvas() {
             break;
           }
         }
-        render()
         setupSceneGraph();
       };
     }
@@ -481,9 +479,12 @@ export function setupCanvas() {
   function render() {
     app.webgl.render(app.scene, app.currentCamera);
     app.webgl2.render(app.scene, app.currentCamera2);
+    requestAnimationFrame(render);
   }
   
-  render();
+  app.webgl.loadEnvironmentMapping();
+  app.webgl2.loadEnvironmentMapping();
+  requestAnimationFrame(render);
 
   function setupCamera(mode) {
     var currentCameraToSet = mode == 1 ? currentCamera : currentCamera2;
@@ -966,14 +967,12 @@ export function setupCanvas() {
 
     updateFPS();
     updateDisplay();
-    // updateModelAnimation(currentFrame);
     function updateModelAnimation(frameNum, frame=null) {
       if (frameNum !== -1) {
         model.applyFrame(animation.frames[frameNum]);
       } else {
         model.applyFrame(frame);
       }
-      render();
     }
 
     function convertAnimationToJsString(animation) {
@@ -1002,23 +1001,19 @@ export function selectComponent(compName) {
 
   // Event handler functions
   function handleShininessChange(e) {
-    app.comp.material.shininess = Number(e.target.value);
-    render()
+    app.comp.material.shininess = Number(e.target.value);    
   }
 
   function handleAmbientChange(e) {
     app.comp.material.ambient = e.target.value;
-    render()
   }
 
   function handleDiffuseChange(e) {
     app.comp.material.diffuse = e.target.value;
-    render()
   }
 
   function handleSpecularChange(e) {
     app.comp.material.specular = e.target.value;
-    render()
   }
 
   app.comp = ArticulatedModel.findChildByNameRecursive(app.model, compName);

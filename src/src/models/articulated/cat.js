@@ -1,5 +1,8 @@
 var cat = {
   RBody: {
+    options: {
+      position: [1,0,0]
+    },
     children: {
       PBody: {
         options: {
@@ -8,7 +11,7 @@ var cat = {
       },
       RHead: {
         options: {
-          position: [-1.5, 1, 0],
+          position: [-1.5, 0.8, 0],
         },
         children: {
           PHead: {
@@ -21,14 +24,14 @@ var cat = {
             options: {
               position: [-0.3, 0.5, 0.25],
               scale: [0.3, 0.3, 0.3],
-              rotation: [1, 0, 0],
+              rotation: [0.785, 0, 0],
             },
           },
           PEarR: {
             options: {
               position: [-0.3, 0.5, -0.25],
               scale: [0.3, 0.3, 0.3],
-              rotation: [1, 0, 0],
+              rotation: [0.785, 0, 0],
             },
           },
         },
@@ -92,13 +95,13 @@ var cat = {
       RTail: {
         options: {
           position: [1.25, 0.25, 0],
+          rotation: [0, 0, 0.2],
         },
         children: {
           PTail: {
             options: {
               position: [0.75, 0, 0],
               scale: [1.5, 0.3, 0.3],
-              rotation: [0, 0, 0.2],
             },
           },
         },
