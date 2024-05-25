@@ -107,9 +107,9 @@ export class Matrix4 extends Matrix {
   }
 
   static rotateOrigin(m, angleX, angleY, angleZ) {
-    var res = Matrix4.multiply(m.data, Matrix4.xRotation(angleX).data);
+    var res = Matrix4.multiply(m.data, Matrix4.zRotation(angleZ).data);
     res = Matrix4.multiply(res.data, Matrix4.yRotation(angleY).data);
-    res = Matrix4.multiply(res.data, Matrix4.zRotation(angleZ).data);
+    res = Matrix4.multiply(res.data, Matrix4.xRotation(angleX).data);
     return res;
   }
 

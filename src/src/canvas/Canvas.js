@@ -23,6 +23,7 @@ import cat from "../models/articulated/cat";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
 import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
+import { OrbitControl } from "../camera/OrbitControl";
 
 export function setupCanvas(element, angleSlider, radiusSlider) {
   var canvas = document.querySelector("#fullview-canvas");
@@ -41,6 +42,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var obliqueSlider = document.querySelector("#fullview-camera-oblique-slider");
   var radiusValue = document.querySelector("#fullview-camera-radius-value");
   var radiusSlider = document.querySelector("#fullview-camera-radius-slider");
+  var addCameraButton1 = document.querySelector("#full-view-add-camera");
+  var cameraDropdown1 = document.getElementById("fullview-camera-type-dropdown")
 
   // Object inspector
   var angleObjXSlider = document.querySelector("#fullview-object-anglex-slider");
@@ -57,31 +60,14 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var scaleObjYValue = document.querySelector("#fullview-object-scaley-value");
   var scaleObjZValue = document.querySelector("#fullview-object-scalez-value");
 
-  var translateObjXSlider = document.querySelector(
-    "#fullview-object-translatex-slider"
-  );
-  var translateObjYSlider = document.querySelector(
-    "#fullview-object-translatey-slider"
-  );
-  var translateObjZSlider = document.querySelector(
-    "#fullview-object-translatez-slider"
-  );
-  var translateObjXValue = document.querySelector(
-    "#fullview-object-translatex-value"
-  );
-  var translateObjYValue = document.querySelector(
-    "#fullview-object-translatey-value"
-  );
-  var translateObjZValue = document.querySelector(
-    "#fullview-object-translatez-value"
-  );
+  var translateObjXSlider = document.querySelector("#fullview-object-translatex-slider");
+  var translateObjYSlider = document.querySelector("#fullview-object-translatey-slider");
+  var translateObjZSlider = document.querySelector("#fullview-object-translatez-slider");
+  var translateObjXValue = document.querySelector("#fullview-object-translatex-value");
+  var translateObjYValue = document.querySelector("#fullview-object-translatey-value");
+  var translateObjZValue = document.querySelector("#fullview-object-translatez-value");
 
-  var angleContainer = document.querySelector("#fullview-camera-angle");
-  var obliqueContainer = document.querySelector(
-    "#fullview-camera-oblique-angle"
-  );
-  var radiusContainer = document.querySelector("#fullview-camera-radius");
-  var translateContainer = document.querySelector("#fullview-camera-translate");
+  var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
   var selectCamera = document.getElementById("fullview-camera-dropdown");
   var resetViewButton = document.getElementById("reset-view");
 
@@ -178,65 +164,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     });
   });
 
-  // Camera TRS section
-  angleXSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraAngleDeg("X", event.target.value);
-    angleXValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
+  var orbitControlLeft = new OrbitControl(webgl, canvas, currentCamera, scene, angleXSlider, angleYSlider, angleXValue, angleYValue, obliqueSlider, obliqueValue, radiusSlider, radiusValue, resetViewButton);
 
-  angleYSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraAngleDeg("Y", event.target.value);
-    angleYValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  angleZSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraAngleDeg("Z", event.target.value);
-    angleZValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  radiusSlider.addEventListener("input", function (event) {
-    currentCamera.setCameraTranslate("Z", event.target.value);
-    radiusValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  obliqueSlider.addEventListener("input", function (event) {
-    currentCamera.setObliqueAngleDeg(event.target.value);
-    obliqueValue.textContent = event.target.value;
-    webgl.render(scene, currentCamera);
-  });
-
-  resetViewButton.addEventListener("click", function (event) {
-    currentCamera.setCameraAngleDeg("X", 0);
-    angleXValue.textContent = 0;
-    angleXSlider.value = 0;
-
-    currentCamera.setCameraAngleDeg("Y", 0);
-    angleYValue.textContent = 0;
-    angleYSlider.value = 0;
-
-    currentCamera.setCameraAngleDeg("Z", 0);
-    angleZValue.textContent = 0;
-    angleZSlider.value = 0;
-
-    currentCamera.setCameraTranslate("Z", 300);
-    radiusValue.textContent = 300;
-    radiusSlider.value = 300;
-
-    if (currentCamera instanceof ObliqueCamera) {
-      currentCamera.setObliqueAngleDeg(30);
-      obliqueValue.textContent = 30;
-      obliqueSlider.value = 30;
-    }
-    
-    webgl.render(scene, currentCamera);
-  })
-
-  document
-    .getElementById("full-view-add-camera")
+  addCameraButton1
     .addEventListener("click", function () {
       var option = document.createElement("option");
       option.text = "Camera " + (selectCamera.options.length + 1);
@@ -246,17 +176,19 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       cameras.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000));
       currentCameraIdx = selectCamera.options.length - 1;
       currentCamera = setupCamera();
+      orbitControlLeft.changeCamera(currentCamera);
       webgl.render(scene, currentCamera);
     });
 
   selectCamera.addEventListener("change", function () {
     currentCameraIdx = this.value - 1;
     currentCamera = setupCamera();
+    console.log(currentCamera);
+    orbitControlLeft.changeCamera(currentCamera);
     webgl.render(scene, currentCamera);
   });
 
-  document
-    .getElementById("fullview-camera-type-dropdown")
+  cameraDropdown1
     .addEventListener("change", function () {
       if (this.value == 2) {
         cameras[currentCameraIdx] = new OrthographicCamera(
@@ -289,6 +221,8 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
         );
       }
       currentCamera = setupCamera();
+      console.log(currentCamera);
+      orbitControlLeft.changeCamera(currentCamera);
       webgl.render(scene, currentCamera);
     });
 
@@ -340,21 +274,19 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     } else if (type == "ObliqueCamera") {
       document.getElementById("fullview-camera-type-dropdown").value = 1;
       obliqueContainer.style.display = "flex";
-      obliqueValue.textContent = Math.round(currentCamera.theta * 180 / Math.PI);
-      obliqueSlider.value = Math.round(currentCamera.theta * 180 / Math.PI);
+      obliqueValue.textContent = parseInt(currentCamera.theta * 180 / Math.PI);
+      obliqueSlider.value = parseInt(currentCamera.theta * 180 / Math.PI);
     } else {
       document.getElementById("fullview-camera-type-dropdown").value = 2;
       obliqueContainer.style.display = "none";
     }
 
-    radiusValue.textContent = Math.round(currentCamera.transform.translateZ);
-    angleXValue.textContent = Math.round(currentCamera.transform.angleX);
-    angleYValue.textContent = Math.round(currentCamera.transform.angleY);
-    angleZValue.textContent = Math.round(currentCamera.transform.angleZ);
-    radiusSlider.value = Math.round(currentCamera.transform.translateZ);
-    angleXSlider.value = Math.round(currentCamera.transform.angleX);
-    angleYSlider.value = Math.round(currentCamera.transform.angleY);
-    angleZSlider.value = Math.round(currentCamera.transform.angleZ);
+    radiusValue.textContent = parseInt(currentCamera.transform.translateZ);
+    angleXValue.textContent = parseInt(currentCamera.transform.angleX * 180 / Math.PI);
+    angleYValue.textContent = parseInt(currentCamera.transform.angleY * 180 / Math.PI);
+    radiusSlider.value = parseInt(currentCamera.transform.translateZ);
+    angleXSlider.value = parseInt(currentCamera.transform.angleX * 180 / Math.PI);
+    angleYSlider.value = parseInt(currentCamera.transform.angleY * 180 / Math.PI);
 
     return currentCamera;
   }

@@ -1257,16 +1257,6 @@ export const bamboo = new Float32Array([
     -2, 2, -40,
     2, 2, 40,
 
-    
-
-  
-  
-
-
-
-
-
-
   ]);
   
   export const bambooColor = new Uint8Array([
