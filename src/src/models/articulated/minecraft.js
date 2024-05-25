@@ -54,7 +54,7 @@ var minecraft = {
         children: {
           PLegL: {
             options: {
-              position: [0, -0.8, 0.1],
+              position: [0, -2, -0.4],
               scale: [1, 2, 0.6],
               rotation: [0.5, 0, 0],
             },
