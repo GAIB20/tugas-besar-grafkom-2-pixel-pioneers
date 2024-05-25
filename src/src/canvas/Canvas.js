@@ -101,6 +101,7 @@ export function setupCanvas() {
   var currentCamera = setupCamera(1);
   var currentCamera2 = setupCamera(2);
   var animation = minecraftAnimation;
+  let currentFrame = 1;
 
   var scene = new Scene();
   // var geometry = new Geometry(hollowCube, hollowCubeColor);
@@ -141,12 +142,22 @@ export function setupCanvas() {
     z: angleObjZValue
   };
 
+  const axisMapping = {
+    x: 0,
+    y: 1,
+    z: 2
+  };
+
   Object.keys(rotationSliders).forEach(function (axis) {
     rotationSliders[axis].addEventListener("input", function (event) {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
       rotationValues[axis].textContent = angle;
       app.comp.rotation[axis] = angleRadian;
+      if (!animation.frames[currentFrame - 1][app.comp.name].rotation) {
+        animation.frames[currentFrame - 1][app.comp.name].rotation = [0, 0, 0];
+      }
+      animation.frames[currentFrame - 1][app.comp.name].rotation[axisMapping[axis]] = angleRadian;
       render();
     });
   });
@@ -168,6 +179,10 @@ export function setupCanvas() {
       var translation = parseFloat(event.target.value);
       translationValues[axis].textContent = translation;
       app.comp.position[axis] = translation;
+      if (!animation.frames[currentFrame - 1][app.comp.name].position) {
+        animation.frames[currentFrame - 1][app.comp.name].position = [0, 0, 0];
+      }
+      animation.frames[currentFrame - 1][app.comp.name].position[axisMapping[axis]] = translation;
       render();
     });
   });
@@ -189,6 +204,10 @@ export function setupCanvas() {
       var scale = parseFloat(event.target.value);
       scaleValues[axis].textContent = scale;
       app.comp.scale[axis] = scale;
+      if (!animation.frames[currentFrame - 1][app.comp.name].scale) {
+        animation.frames[currentFrame - 1][app.comp.name].scale = [1, 1, 1];
+      }
+      animation.frames[currentFrame - 1][app.comp.name].scale[axisMapping[axis]] = scale;
       render();
     });
   });
@@ -407,7 +426,6 @@ export function setupCanvas() {
 
   document.addEventListener('DOMContentLoaded', function () {
     let totalFrames = animation.frames.length;
-    let currentFrame = 1;
     let isPlaying = false;
     let isReversing = false;
     let loop = false;
