@@ -22,14 +22,6 @@ export function setupProperties(element) {
                     <option value="3">Perspective (1-point)</option>
                 </select>
             </div>
-            <div class="transformation-container" style="margin-top:2%">
-                <p class="prop-title">Mapping</p>
-                <select id="myDropdown" name="options">
-                    <option value="option1">Texture</option>
-                    <option value="option2">Environment</option>
-                    <option value="option3">Bump</option>
-                </select>
-            </div>
             <div class="transformation-container" style="margin-top:2%" id="fullview-camera-radius">
                 <p class="prop-title">Radius</p>
                 <div class="slider-container-2">
@@ -75,14 +67,6 @@ export function setupProperties(element) {
                     <option value="1">Oblique</option>
                     <option value="2">Orthographic</option>
                     <option value="3">Perspective (1-point)</option>
-                </select>
-            </div>
-            <div class="transformation-container" style="margin-top:2%">
-                <p class="prop-title">Mapping</p>
-                <select id="myDropdown" name="options">
-                    <option value="option1">Texture</option>
-                    <option value="option2">Environment</option>
-                    <option value="option3">Bump</option>
                 </select>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="partview-camera-radius">
@@ -195,7 +179,14 @@ export function setupProperties(element) {
                     </div>
                 </div>
             </div>
-            <h4>Animation</h4>
+            <div class="transformation-container" style="margin-top:2%">
+                <h3 class="prop-title">Mapping</h3>
+                <select id="mapping" name="options">
+                    <option value="texture">Texture</option>
+                    <option value="environment">Environment</option>
+                </select>
+            </div>
+            <h3>Animation</h3>
             <div class="animation-container">
                 <h4>Player</h4>
                 <div class="slider-container-3">
