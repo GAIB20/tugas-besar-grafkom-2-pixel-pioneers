@@ -26,25 +26,44 @@ import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
 import { setupSceneGraph } from "../section/Board";
 
-export function setupCanvas(element, angleSlider, radiusSlider) {
+export function setupCanvas() {
   var canvas = document.querySelector("#fullview-canvas");
+  var canvas2 = document.querySelector("#canvas-2");
   var gl = canvas.getContext("webgl");
-  if (!gl) {
+  var gl2 = canvas2.getContext("webgl");
+  if (!gl || !gl2) {
     return;
   }
 
   var angleXSlider = document.querySelector("#fullview-camera-anglex-slider");
   var angleYSlider = document.querySelector("#fullview-camera-angley-slider");
-  var angleZSlider = document.querySelector("#fullview-camera-anglez-slider");
+  var angleXSlider2 = document.querySelector("#camera-2-anglex-slider");
+  var angleYSlider2 = document.querySelector("#camera-2-angley-slider");
+ 
   var angleXValue = document.querySelector("#fullview-camera-anglex-value");
   var angleYValue = document.querySelector("#fullview-camera-angley-value");
-  var angleZValue = document.querySelector("#fullview-camera-anglez-value");
+  var angleXValue2 = document.querySelector("#camera-2-anglex-value");
+  var angleYValue2 = document.querySelector("#camera-2-angley-value");
+  
   var obliqueValue = document.querySelector("#fullview-camera-oblique-value");
   var obliqueSlider = document.querySelector("#fullview-camera-oblique-slider");
+  var obliqueValue2 = document.querySelector("#camera-2-oblique-value");
+  var obliqueSlider2 = document.querySelector("#camera-2-oblique-slider");
+
   var radiusValue = document.querySelector("#fullview-camera-radius-value");
   var radiusSlider = document.querySelector("#fullview-camera-radius-slider");
+  var radiusValue2 = document.querySelector("#camera-2-radius-value");
+  var radiusSlider2 = document.querySelector("#camera-2-radius-slider");
+
   var addCameraButton1 = document.querySelector("#full-view-add-camera");
+  var addCameraButton2 = document.querySelector("#add-camera-2");
   var cameraDropdown1 = document.getElementById("fullview-camera-type-dropdown")
+  var cameraDropdown2 = document.getElementById("camera-2-type-dropdown")
+
+  var resetViewButton = document.getElementById("reset-view");
+  var resetViewButton2 = document.getElementById("reset-camera-2-view");
+  var selectCamera = document.getElementById("fullview-camera-dropdown");
+  var selectCamera2 = document.getElementById("camera-2-dropdown");
 
   // Object inspector
   var angleObjXSlider = document.querySelector("#fullview-object-anglex-slider");
@@ -69,14 +88,18 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
   var translateObjZValue = document.querySelector("#fullview-object-translatez-value");
 
   var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
-  var selectCamera = document.getElementById("fullview-camera-dropdown");
-  var resetViewButton = document.getElementById("reset-view");
+  var obliqueContainer2 = document.querySelector("#camera-2-oblique-angle");
+  
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
+  var cameras2 = [new PerspectiveCamera(gl2, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
+  var currentCamera2Idx = 0;
 
   var webgl = new WebGL(gl);
-  var currentCamera = setupCamera();
+  var webgl2 = new WebGL(gl2);
+  var currentCamera = setupCamera(1);
+  var currentCamera2 = setupCamera(2);
   var animation = minecraftAnimation;
 
   var scene = new Scene();
@@ -91,7 +114,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     model,
     scene,
     currentCamera,
-    webgl
+    currentCamera2,
+    webgl,
+    webgl2
   };
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
@@ -168,7 +193,9 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     });
   });
 
-  var orbitControlLeft = new OrbitControl(webgl, canvas, app.currentCamera, scene, angleXSlider, angleYSlider, angleXValue, angleYValue, obliqueSlider, obliqueValue, radiusSlider, radiusValue, resetViewButton);
+  var orbitControl1 = new OrbitControl(webgl, canvas, app.currentCamera, scene, angleXSlider, angleYSlider, angleXValue, angleYValue, obliqueSlider, obliqueValue, radiusSlider, radiusValue, resetViewButton);
+  var orbitControl2 = new OrbitControl(webgl2, canvas2, app.currentCamera2, scene, angleXSlider2, angleYSlider2, angleXValue2, angleYValue2, obliqueSlider2, obliqueValue2, radiusSlider2, radiusValue2, resetViewButton2);
+
 
   addCameraButton1
     .addEventListener("click", function () {
@@ -179,16 +206,38 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
       selectCamera.selectedIndex = selectCamera.options.length - 1;
       cameras.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000));
       currentCameraIdx = selectCamera.options.length - 1;
-      app.currentCamera = setupCamera();
-      orbitControlLeft.changeCamera(app.currentCamera);
+      app.currentCamera = setupCamera(1);
+      orbitControl1.changeCamera(app.currentCamera);
       webgl.render(app.scene, app.currentCamera);
+    });
+
+  addCameraButton2
+    .addEventListener("click", function () {
+      console.log("MASUKK");
+      var option = document.createElement("option");
+      option.text = "Camera " + (selectCamera2.options.length + 1);
+      option.value = selectCamera2.options.length + 1;
+      selectCamera2.add(option);
+      selectCamera2.selectedIndex = selectCamera2.options.length - 1;
+      cameras2.push(new PerspectiveCamera(gl, 60, 0, 200, 1, 2000));
+      currentCamera2Idx = selectCamera2.options.length - 1;
+      app.currentCamera2 = setupCamera(2);
+      orbitControl2.changeCamera(app.currentCamera2);
+      webgl2.render(app.scene, app.currentCamera2);
     });
 
   selectCamera.addEventListener("change", function () {
     currentCameraIdx = this.value - 1;
-    app.currentCamera = setupCamera();
-    orbitControlLeft.changeCamera(app.currentCamera);
+    app.currentCamera = setupCamera(1);
+    orbitControl1.changeCamera(app.currentCamera);
     webgl.render(app.scene, app.currentCamera);
+  });
+
+  selectCamera2.addEventListener("change", function () {
+    currentCamera2Idx = this.value - 1;
+    app.currentCamera2 = setupCamera(2);
+    orbitControl2.changeCamera(app.currentCamera2);
+    webgl2.render(app.scene, app.currentCamera2);
   });
 
   cameraDropdown1
@@ -223,9 +272,46 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
           2000
         );
       }
-      app.currentCamera = setupCamera();
-      orbitControlLeft.changeCamera(app.currentCamera);
+      app.currentCamera = setupCamera(1);
+      orbitControl1.changeCamera(app.currentCamera);
       webgl.render(app.scene, app.currentCamera);
+    });
+
+    cameraDropdown2
+    .addEventListener("change", function () {
+      if (this.value == 2) {
+        cameras2[currentCamera2Idx] = new OrthographicCamera(
+          gl2,
+          -10,
+          10,
+          -10,
+          10,
+          0.1,
+          100
+        );
+      } else if (this.value == 1) {
+        cameras2[currentCamera2Idx] = new ObliqueCamera(
+          gl2,
+          -10,
+          10,
+          -10,
+          10,
+          0.1,
+          100
+        );
+      } else if (this.value == 3) {
+        cameras2[currentCamera2Idx] = new PerspectiveCamera(
+          gl2,
+          60,
+          0,
+          200,
+          1,
+          2000
+        );
+      }
+      app.currentCamera2 = setupCamera(2);
+      orbitControl2.changeCamera(app.currentCamera2);
+      webgl2.render(app.scene, app.currentCamera2);
     });
 
   const fileInput = document.getElementById("file-input");
@@ -271,33 +357,53 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   });
+  
+  function render() {
+    app.webgl.render(app.scene, app.currentCamera);
+    app.webgl2.render(app.scene, app.currentCamera2);
+  }
+  
+  render();
 
-  webgl.render(app.scene, app.currentCamera);
+  function setupCamera(mode) {
+    var currentCameraToSet = mode == 1 ? currentCamera : currentCamera2;
+    var camerasArr = mode == 1 ? cameras : cameras2;
+    var currentCameraIdxToSet = mode == 1 ? currentCameraIdx : currentCamera2Idx;
+    var obliqueContainerToSet = mode == 1 ? obliqueContainer : obliqueContainer2;
+    var cameraTypeDropdown = mode == 1 ? cameraDropdown1 : cameraDropdown2;
+    var obliqueValueToSet = mode == 1 ? obliqueValue : obliqueValue2;
+    var radiusXValueToSet = mode == 1 ? radiusValue : radiusValue2;
+    var angleXValueToSet = mode == 1 ? angleXValue : angleXValue2;
+    var angleYValueToSet = mode == 1 ? angleYValue : angleYValue2;
+    var obliqueSliderToSet = mode == 1 ? obliqueSlider : obliqueSlider2;
+    var radiusXSliderToSet = mode == 1 ? radiusSlider : radiusSlider2;
+    var angleXSliderToSet = mode == 1 ? angleXSlider : angleXSlider2;
+    var angleYSliderToSet = mode == 1 ? angleYSlider : angleYSlider2;
 
-  function setupCamera() {
-    currentCamera = cameras[currentCameraIdx];
-    var type = currentCamera.type;
+    console.log(camerasArr);
+    currentCameraToSet = camerasArr[currentCameraIdxToSet];
+    var type = currentCameraToSet.type;
     if (type == "PerspectiveCamera") {
-      document.getElementById("fullview-camera-type-dropdown").value = 3;
-      obliqueContainer.style.display = "none";
+      cameraTypeDropdown.value = 3;
+      obliqueContainerToSet.style.display = "none";
     } else if (type == "ObliqueCamera") {
-      document.getElementById("fullview-camera-type-dropdown").value = 1;
-      obliqueContainer.style.display = "flex";
-      obliqueValue.textContent = parseInt(currentCamera.theta * 180 / Math.PI);
-      obliqueSlider.value = parseInt(currentCamera.theta * 180 / Math.PI);
+      cameraTypeDropdown.value = 1;
+      obliqueContainerToSet.style.display = "flex";
+      obliqueValueToSet.textContent = parseInt(currentCameraToSet.theta * 180 / Math.PI);
+      obliqueSliderToSet.value = parseInt(currentCameraToSet.theta * 180 / Math.PI);
     } else {
-      document.getElementById("fullview-camera-type-dropdown").value = 2;
-      obliqueContainer.style.display = "none";
+      cameraTypeDropdown.value = 2;
+      obliqueContainerToSet.style.display = "none";
     }
 
-    radiusValue.textContent = parseInt(currentCamera.transform.translateZ);
-    angleXValue.textContent = parseInt(currentCamera.transform.angleX * 180 / Math.PI);
-    angleYValue.textContent = parseInt(currentCamera.transform.angleY * 180 / Math.PI);
-    radiusSlider.value = parseInt(currentCamera.transform.translateZ);
-    angleXSlider.value = parseInt(currentCamera.transform.angleX * 180 / Math.PI);
-    angleYSlider.value = parseInt(currentCamera.transform.angleY * 180 / Math.PI);
+    radiusXValueToSet.textContent = parseInt(currentCameraToSet.transform.translateZ);
+    angleXValueToSet.textContent = parseInt(currentCameraToSet.transform.angleX * 180 / Math.PI);
+    angleYValueToSet.textContent = parseInt(currentCameraToSet.transform.angleY * 180 / Math.PI);
+    radiusXSliderToSet.value = parseInt(currentCameraToSet.transform.translateZ);
+    angleXSliderToSet.value = parseInt(currentCameraToSet.transform.angleX * 180 / Math.PI);
+    angleYSliderToSet.value = parseInt(currentCameraToSet.transform.angleY * 180 / Math.PI);
 
-    return currentCamera;
+    return currentCameraToSet;
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -742,7 +848,7 @@ export function setupCanvas(element, angleSlider, radiusSlider) {
 
     updateFPS();
     updateDisplay();
-    updateModelAnimation(currentFrame);
+    // updateModelAnimation(currentFrame);
     function updateModelAnimation(frameNum, frame=null) {
       if (frameNum !== -1) {
         model.applyFrame(animation.frames[frameNum]);

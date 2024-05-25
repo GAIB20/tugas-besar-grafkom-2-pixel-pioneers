@@ -1,12 +1,9 @@
 import { selectComponent } from "../canvas/Canvas";
-import { setupFullView } from "./BoardFullView";
-import { setupPartView } from "./BoardPartView";
+import { setupProperties } from "./Properties";
 
 export function setupBoard(element) {
     element.innerHTML = `
-        <div id="fullview" class="board-section">
-        </div>
-        <div class="middle-tray">
+      <div class="middle-tray">
             <div class="hierarchy" style="overflow: auto;">
                 <table style="width: 100%;">
                     <thead>
@@ -25,19 +22,18 @@ export function setupBoard(element) {
                 <button id="save-model" class="btn-purple">Save File</button>
             </div>
         </div>
+        <div id="fullview" class="board-canvas">
+          <canvas id="fullview-canvas"></canvas>
+          <canvas id="canvas-2"></canvas>
+        </div>
         <div id="partview" class="board-section">
         </div>
     `;
 
-    const fullviewElement = document.querySelector('#fullview');
     const partviewElement = document.querySelector('#partview');
 
-    if (fullviewElement) {
-        setupFullView(fullviewElement);
-    }
-
     if (partviewElement) {
-        setupPartView(partviewElement);
+        setupProperties(partviewElement);
     }
 
     setupSceneGraph();

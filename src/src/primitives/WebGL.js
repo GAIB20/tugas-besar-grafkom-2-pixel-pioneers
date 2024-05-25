@@ -133,7 +133,7 @@ export class WebGL {
     function createAttributeSetter(info) {
       const loc = gl.getAttribLocation(program, info.name);
       return (value) => {
-        value._buffer = value._buffer || gl.createBuffer();
+        value._buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, value._buffer);
         gl.bufferData(gl.ARRAY_BUFFER, value.data, gl.STATIC_DRAW);
         gl.enableVertexAttribArray(loc);
