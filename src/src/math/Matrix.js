@@ -76,29 +76,37 @@ export class Matrix {
     return m;
   }
 
-  static rotation3d(v) {
-    const m = Matrix.identity();
-    const { x, y, z } = v;
+  static rotation3d(vector) {
+    const matrix = Matrix.identity();
+    const { x: angleX, y: angleY, z: angleZ } = vector;
 
-    // Rotation around x-axis
-    m.data[5] = Math.cos(x);
-    m.data[6] = -Math.sin(x);
-    m.data[9] = Math.sin(x);
-    m.data[10] = Math.cos(x);
+    const cosX = Math.cos(angleX);
+    const cosY = Math.cos(angleY);
+    const cosZ = Math.cos(angleZ);
+    const sinX = Math.sin(angleX);
+    const sinY = Math.sin(angleY);
+    const sinZ = Math.sin(angleZ);
 
-    // Rotation around y-axis
-    m.data[0] = Math.cos(y);
-    m.data[2] = Math.sin(y);
-    m.data[8] = -Math.sin(y);
-    m.data[10] = Math.cos(y);
+    matrix.data = [
+      cosY * cosZ,
+      cosY * sinZ,
+      -sinY,
+      0,
+      sinX * sinY * cosZ - cosX * sinZ,
+      sinX * sinY * sinZ + cosX * cosZ,
+      sinX * cosY,
+      0,
+      cosX * sinY * cosZ + sinX * sinZ,
+      cosX * sinY * sinZ - sinX * cosZ,
+      cosX * cosY,
+      0,
+      0,
+      0,
+      0,
+      1,
+    ];
 
-    // Rotation around z-axis
-    m.data[0] = Math.cos(z);
-    m.data[1] = -Math.sin(z);
-    m.data[4] = Math.sin(z);
-    m.data[5] = Math.cos(z);
-
-    return m;
+    return matrix;
   }
 
   static scale3d(v) {

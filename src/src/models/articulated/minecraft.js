@@ -26,7 +26,7 @@ var minecraft = {
         children: {
           PArmL: {
             options: {
-              position: [0.3, -1.5, 0],
+              position: [0.3, -1.2, 0],
               scale: [0.6, 3, 0.6],
               rotation: [-2, 0, 0],
             },
@@ -40,23 +40,23 @@ var minecraft = {
         children: {
           PArmR: {
             options: {
-              position: [-0.3, -1.5, 0],
+              position: [-0.2, -1.2, 0],
               scale: [0.6, 3, 0.6],
-              rotation: [1.5, 0, 0],
+              rotation: [2.2, 0, 0],
             },
           },
         },
       },
       RLegL: {
         options: {
-          position: [-0.5, -1.5, -0.5],
+          position: [-0.5, 0, 0],
         },
         children: {
           PLegL: {
             options: {
-              position: [0, -1, 0],
+              position: [0, -0.8, 0.1],
               scale: [1, 2, 0.6],
-              rotation: [-0.5, 0, 0],
+              rotation: [0.5, 0, 0],
             },
           },
         },
@@ -68,9 +68,9 @@ var minecraft = {
         children: {
           PLegR: {
             options: {
-              position: [0, -1, 0],
+              position: [0, -1.1, -0.4],
               scale: [1, 2, 0.6],
-              rotation: [1.5, 0, 0],
+              rotation: [-0.5, 0, 0],
             },
           },
         },
