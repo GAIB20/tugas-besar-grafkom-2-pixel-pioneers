@@ -20,9 +20,11 @@ import minecraft from "../models/articulated/minecraft";
 import { bamboo, bambooColor } from "../models/hollow/bamboo"
 import fish from "../models/articulated/fish";
 import cat from "../models/articulated/cat";
+import obj from "../models/articulated/obj";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
-import {hollowCube, hollowCubeColor} from "../models/hollow/hollowCube"
+import objAnimation from "../models/animations/objAnimation";
+import { hollowCube, hollowCubeColor } from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
 import { setupSceneGraph } from "../section/Board";
 
@@ -39,12 +41,12 @@ export function setupCanvas() {
   var angleYSlider = document.querySelector("#fullview-camera-angley-slider");
   var angleXSlider2 = document.querySelector("#camera-2-anglex-slider");
   var angleYSlider2 = document.querySelector("#camera-2-angley-slider");
- 
+
   var angleXValue = document.querySelector("#fullview-camera-anglex-value");
   var angleYValue = document.querySelector("#fullview-camera-angley-value");
   var angleXValue2 = document.querySelector("#camera-2-anglex-value");
   var angleYValue2 = document.querySelector("#camera-2-angley-value");
-  
+
   var obliqueValue = document.querySelector("#fullview-camera-oblique-value");
   var obliqueSlider = document.querySelector("#fullview-camera-oblique-slider");
   var obliqueValue2 = document.querySelector("#camera-2-oblique-value");
@@ -111,7 +113,7 @@ export function setupCanvas() {
 
   var obliqueContainer = document.querySelector("#fullview-camera-oblique-angle");
   var obliqueContainer2 = document.querySelector("#camera-2-oblique-angle");
-  
+
   var mappingSelect = document.getElementById("mapping");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
@@ -124,7 +126,7 @@ export function setupCanvas() {
   var webgl2 = new WebGL(gl2);
   var currentCamera = setupCamera(1);
   var currentCamera2 = setupCamera(2);
-  var animation = minecraftAnimation;
+  var animation = objAnimation;
   let currentFrame = 1;
 
   var scene = new Scene();
@@ -132,7 +134,7 @@ export function setupCanvas() {
   var material = new PhongMaterial("Phong")
   var mesh = new Mesh(geometry, material);
 
-  const model = ArticulatedModel.fromModel(minecraft);
+  const model = ArticulatedModel.fromModel(obj);
   model.scale.mul(40);
 
   globalThis.app = {
@@ -352,7 +354,7 @@ export function setupCanvas() {
   });
 
   mappingSelect.addEventListener("change", function (e) {
-    if(e.target.value === "environment") {
+    if (e.target.value === "environment") {
       app.environmentMapping = true;
     } else {
       app.environmentMapping = false;
@@ -395,7 +397,7 @@ export function setupCanvas() {
       orbitControl1.changeCamera(app.currentCamera);
     });
 
-    cameraDropdown2
+  cameraDropdown2
     .addEventListener("change", function () {
       if (this.value == 2) {
         cameras2[currentCamera2Idx] = new OrthographicCamera(
@@ -473,13 +475,13 @@ export function setupCanvas() {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   });
-  
+
   function render() {
     app.webgl.render(app.scene, app.currentCamera);
     app.webgl2.render(app.scene, app.currentCamera2);
     requestAnimationFrame(render);
   }
-  
+
   app.webgl.loadEnvironmentMapping();
   app.webgl2.loadEnvironmentMapping();
 
@@ -555,13 +557,18 @@ export function setupCanvas() {
     const moveToLastFrame = document.getElementById('moveToLastFrame');
     const saveAnimation = document.getElementById('saveAnimation');
     const loadAnimation = document.getElementById("loadAnimation");
+    // Get the easing function select element
+    const easingFunctionSelect = document.getElementById("easingFunction");
+
+    // Variable to store the selected easing function
+    let selectedEasingFunction = easingFunctionSelect.value;
 
     frameSlider.max = totalFrames;
 
     function updateDisplay() {
-        frameSlider.value = currentFrame;
-        frameDisplay.textContent = `${currentFrame}/${totalFrames}`;
-        currentFrameDisplay.textContent = `${currentFrame}`;
+      frameSlider.value = currentFrame;
+      frameDisplay.textContent = `${currentFrame}/${totalFrames}`;
+      currentFrameDisplay.textContent = `${currentFrame}`;
     }
 
     function updateFPS() {
@@ -590,33 +597,33 @@ export function setupCanvas() {
     }
 
     function nextFrame() {
-        currentFrame = (currentFrame % totalFrames) + 1;
-        updateDisplay();
-        updateModelAnimation(currentFrame - 1);
-        if (currentFrame === 1 && !loop) {
-            pause();
-        }
+      currentFrame = (currentFrame % totalFrames) + 1;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+      if (currentFrame === 1 && !loop) {
+        pause();
+      }
     }
 
     function previousFrame() {
-        currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
-        updateDisplay();
-        updateModelAnimation(currentFrame - 1);
-        if (currentFrame === totalFrames && !loop) {
-            pause();
-        }
+      currentFrame = (currentFrame - 2 + totalFrames) % totalFrames + 1;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
+      if (currentFrame === totalFrames && !loop) {
+        pause();
+      }
     }
 
     function firstFrame() {
-        currentFrame = 1;
-        updateDisplay();
-        updateModelAnimation(currentFrame - 1);
+      currentFrame = 1;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
     }
 
     function lastFrame() {
-        currentFrame = totalFrames;
-        updateDisplay();
-        updateModelAnimation(currentFrame - 1);
+      currentFrame = totalFrames;
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
     }
 
     function toggleLoop() {
@@ -628,6 +635,12 @@ export function setupCanvas() {
       isReversing = !isReversing;
       reverseButton.classList.toggle('active');
     }
+
+    // Add an event listener to the select element
+    easingFunctionSelect.addEventListener("change", function () {
+      // Update the selected easing function
+      selectedEasingFunction = easingFunctionSelect.value;
+    });
 
     function interpolateFrames(frame1, frame2, t, easing) {
       const interpolatedFrame = {};
@@ -763,7 +776,7 @@ export function setupCanvas() {
         console.log("fram1", frame1)
         console.log("fram2", frame2)
 
-        const easingFunction = easingFunctions['quadInOut'];
+        const easingFunction = easingFunctions[selectedEasingFunction];
         let interpolatedFrame;
         if (isReversing) {
           interpolatedFrame = interpolateFrames(frame2, frame1, t, easingFunction);
@@ -803,10 +816,10 @@ export function setupCanvas() {
               currentFrame = Math.min(currentFrame + sf, totalFrames);
               if (currentFrame === totalFrames) {
                 dt = 1;
-              }          
+              }
             }
           }
-                
+
         }
 
         console.log("currentFrame", currentFrame)
@@ -871,7 +884,7 @@ export function setupCanvas() {
       }
     }
 
-    function moveFirstFrame () {
+    function moveFirstFrame() {
       if (currentFrame != 1) {
         let frame = animation.frames[currentFrame - 1];
         animation.frames.splice(currentFrame - 1, 1);
@@ -882,7 +895,7 @@ export function setupCanvas() {
       }
     }
 
-    function moveLastFrame () {
+    function moveLastFrame() {
       if (currentFrame != totalFrames) {
         let frame = animation.frames[currentFrame - 1];
         animation.frames.splice(currentFrame - 1, 1);
@@ -919,7 +932,7 @@ export function setupCanvas() {
     moveToFirstFrame.addEventListener('click', moveFirstFrame);
     moveToLastFrame.addEventListener('click', moveLastFrame);
     saveAnimation.addEventListener('click', saveAnim);
-    loadAnimation.addEventListener('click', function() {
+    loadAnimation.addEventListener('click', function () {
       document.getElementById('fileInput').click();
     });
 
@@ -957,9 +970,9 @@ export function setupCanvas() {
       });
 
     frameSlider.addEventListener('input', function () {
-        currentFrame = parseInt(this.value);
-        updateDisplay();
-        updateModelAnimation(currentFrame - 1);
+      currentFrame = parseInt(this.value);
+      updateDisplay();
+      updateModelAnimation(currentFrame - 1);
     });
 
     fpsSlider.addEventListener('input', updateFPS);
@@ -969,7 +982,7 @@ export function setupCanvas() {
 
     updateFPS();
     updateDisplay();
-    function updateModelAnimation(frameNum, frame=null) {
+    function updateModelAnimation(frameNum, frame = null) {
       if (frameNum !== -1) {
         model.applyFrame(animation.frames[frameNum]);
       } else {
@@ -978,9 +991,9 @@ export function setupCanvas() {
     }
 
     function convertAnimationToJsString(animation) {
-      let jsString = "export default ";    
+      let jsString = "export default ";
       jsString += JSON.stringify(animation, null, 4).replace(/"([^"]+)":/g, '$1:');
-    
+
       return jsString;
     }
   });
@@ -1003,7 +1016,7 @@ export function selectComponent(compName) {
 
   // Event handler functions
   function handleShininessChange(e) {
-    app.comp.material.shininess = Number(e.target.value);    
+    app.comp.material.shininess = Number(e.target.value);
   }
 
   function handleAmbientChange(e) {

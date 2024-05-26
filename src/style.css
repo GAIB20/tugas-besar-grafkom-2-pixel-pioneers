@@ -81,7 +81,8 @@ body {
 
 canvas {
   width: 100%;
-  height: 50%;
+  height: 49.7%;
+  border: 1px solid black;
   background-color: white;
 }
 

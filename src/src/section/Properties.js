@@ -26,7 +26,7 @@ export function setupProperties(element) {
                 <p class="prop-title">Radius</p>
                 <div class="slider-container-2">
                     <p class="value-display" id="fullview-camera-radius-value">0</p>
-                    <input type="range" min="0" max="400" value="200" class="slider" id="fullview-camera-radius-slider">
+                    <input type="range" min="0" max="500" value="200" class="slider" id="fullview-camera-radius-slider">
                 </div>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="fullview-camera-oblique-angle">
@@ -73,7 +73,7 @@ export function setupProperties(element) {
                 <p class="prop-title">Radius</p>
                 <div class="slider-container-2">
                     <p class="value-display" id="camera-2-radius-value">0</p>
-                    <input type="range" min="0" max="400" value="200" class="slider" id="camera-2-radius-slider">
+                    <input type="range" min="0" max="500" value="200" class="slider" id="camera-2-radius-slider">
                 </div>
             </div>
             <div class="transformation-container" style="margin-top:2%" id="camera-2-oblique-angle">
@@ -209,6 +209,39 @@ export function setupProperties(element) {
                     </div>
                     <p class="value-display" id="fpsDisplay">30 FPS</p>
                 </div>
+                <div class="easing-container">
+                <p>Easing Function</p>
+                <select id="easingFunction" name="options">
+                    <option value="sineIn">Sine In</option>
+                    <option value="sineOut">Sine Out</option>
+                    <option value="sineInOut">Sine InOut</option>
+                    <option value="quadIn">Quad In</option>
+                    <option value="quadOut">Quad Out</option>
+                    <option value="quadInOut">Quad InOut</option>
+                    <option value="cubicIn">Cubic In</option>
+                    <option value="cubicOut">Cubic Out</option>
+                    <option value="cubicInOut">Cubic InOut</option>
+                    <option value="quartIn">Quart In</option>
+                    <option value="quartOut">Quart Out</option>
+                    <option value="quartInOut">Quart InOut</option>
+                    <option value="expoIn">Expo In</option>
+                    <option value="expoOut">Expo Out</option>
+                    <option value="expoInOut">Expo InOut</option>
+                    <option value="circIn">Circ In</option>
+                    <option value="circOut">Circ Out</option>
+                    <option value="circInOut">Circ InOut</option>
+                    <option value="backIn">Back In</option>
+                    <option value="backOut">Back Out</option>
+                    <option value="backInOut">Back InOut</option>
+                    <option value="elasticIn">Elastic In</option>
+                    <option value="elasticOut">Elastic Out</option>
+                    <option value="elasticInOut">Elastic InOut</option>
+                    <option value="bounceIn">Bounce In</option>
+                    <option value="bounceOut">Bounce Out</option>
+                    <option value="bounceInOut">Bounce InOut</option>
+                </select>
+            </div>
+
                 <h4>Editor</h4>
                 <p>Current Frame: <span id="currentFrameDisplay">1</span></p>
                 <div>
