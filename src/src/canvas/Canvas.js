@@ -1,32 +1,14 @@
 import { PerspectiveCamera } from "../camera/PerspectiveCamera";
 import { OrthographicCamera } from "../camera/OrthographicCamera";
-import { Matrix4 } from "../math/Matrix4";
 import { WebGL } from "../primitives/WebGL";
-import { rpVertices, rpColors } from "../models/hollow/rectanglePipe";
 import { ObliqueCamera } from "../camera/ObliqueCamera";
-import { pyramid, pyramidColor } from "../models/hollow/pyramid";
-import { Component } from "../primitives/Component";
 import { Scene } from "../primitives/Scene";
-import { BoxGeometry } from "../geometry/BoxGeometry";
-import { BufferGeometry } from "../geometry/BufferGeometry";
 import { BasicMaterial } from "../material/BasicMaterial";
-import { Mesh } from "../primitives/Mesh";
 import { Color } from "../primitives/Color";
 import { ArticulatedModel } from "../primitives/ArticulatedModel";
-import { Geometry } from "../geometry/Geometry";
 import { PhongMaterial } from "../material/PhongMaterial";
 import "../primitives/Deserialize";
-import minecraft from "../models/articulated/minecraft";
-import { bamboo, bambooColor } from "../models/hollow/bamboo"
-import fish from "../models/articulated/fish";
-import cat from "../models/articulated/cat";
-import obj from "../models/articulated/obj";
 import { DirectionalLight } from "../light/DirectionalLight";
-import minecraftAnimation from "../models/animations/minecraftAnimation";
-import objAnimation from "../models/animations/objAnimation";
-import fishAnimation from "../models/animations/fishAnimation";
-import catAnimation from "../models/animations/catAnimation";
-import { hollowCube, hollowCubeColor, hollowCubeUV } from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
 import { setupSceneGraph } from "../section/Board";
 
@@ -136,16 +118,12 @@ export function setupCanvas() {
   var webgl2 = new WebGL(gl2);
   var currentCamera = setupCamera(1);
   var currentCamera2 = setupCamera(2);
-  var animation = minecraftAnimation;
+  var animation = null;
   let currentFrame = 1;
 
   var scene = new Scene();
-  var geometry = new Geometry(bamboo, bambooColor);
-  var material = new BasicMaterial("Basic");
-  var mesh = new Mesh(geometry, material);
-
-  const model = ArticulatedModel.fromModel(minecraft);
-  model.scale.mul(40);
+  var model = null;
+  var mesh = null;
 
   globalThis.app = {
     model,
@@ -167,7 +145,6 @@ export function setupCanvas() {
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, null);
   app.scene.add(light);
-  app.scene.add(model);
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
@@ -734,7 +711,11 @@ export function setupCanvas() {
     app.webgl.render(app.scene, app.currentCamera);
     app.webgl2.render(app.scene, app.currentCamera2);
     requestAnimationFrame(render);
-    updateObjectSliders();
+
+    if (app.model) {
+      updateObjectSliders();
+    }
+
     if (app.comp) {
       updateComponentSliders();
     }
@@ -870,7 +851,7 @@ export function setupCanvas() {
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    let totalFrames = animation.frames.length;
+    let totalFrames = 0;
     let isPlaying = false;
     let isReversing = false;
     let loop = false;
@@ -1290,9 +1271,9 @@ export function setupCanvas() {
     updateDisplay();
     function updateModelAnimation(frameNum, frame = null) {
       if (frameNum !== -1) {
-        model.applyFrame(animation.frames[frameNum]);
+        app.model.applyFrame(animation.frames[frameNum]);
       } else {
-        model.applyFrame(frame);
+        app.model.applyFrame(frame);
       }
     }
 
