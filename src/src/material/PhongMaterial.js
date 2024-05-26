@@ -179,6 +179,7 @@ export class PhongMaterial extends ShaderMaterial {
       uniform float u_shininess;
       uniform bool u_useVertexColors;
       uniform bool u_useEnvironmentMapping;
+      uniform bool u_useTextureMapping;
       uniform samplerCube u_environmentMap;
 
       varying vec3 v_lightDirection;
@@ -196,7 +197,7 @@ export class PhongMaterial extends ShaderMaterial {
           vec4 diffuse;
           vec4 specular;
 
-          if (u_useNormalMap) {
+          if (u_useNormalMap && u_useTextureMapping) {
               N = texture2D(u_normalMap, v_texcoord).rgb;
               N = normalize(N * 2.0 - 1.0);
           } else {
@@ -206,7 +207,7 @@ export class PhongMaterial extends ShaderMaterial {
           vec3 direction = reflect(normalize(v_vertexPosition - v_cameraPosition), N);
           vec4 ambient = u_ambientColor * u_lightColor * 0.2;
 
-          if (u_useDiffuseMap) {
+          if (u_useDiffuseMap && u_useTextureMapping) {
             diffuse =
               u_diffuseColor *
               max(dot(L, N), 0.0) *
@@ -217,7 +218,7 @@ export class PhongMaterial extends ShaderMaterial {
               max(dot(L, N), 0.0);
           }
 
-          if (u_useSpecularMap) {
+          if (u_useSpecularMap && u_useTextureMapping) {
             u_specularColor *
               pow(max(dot(N, H), 0.0), u_shininess) *
               texture2D(u_specularMap, v_texcoord);

@@ -308,11 +308,11 @@ export class WebGL {
     return texture;
   }
 
-  loadTextures() {
-    this.loadTexture(this.gl, "./textures/brick/brick_normal.png", 1);
-    this.loadTexture(this.gl, "./textures/brick/brick_diffuse.png", 2);
-    this.loadTexture(this.gl, "./textures/brick/brick_specular.png", 3);
-    this.loadTexture(this.gl, "./textures/brick/brick_displacement.png", 4);
+  loadTextures(normal, diffuse, specular, displacement) {
+    this.loadTexture(this.gl, normal, 1);
+    this.loadTexture(this.gl, diffuse, 2);
+    this.loadTexture(this.gl, specular, 3);
+    this.loadTexture(this.gl, displacement, 4);
   }
 
   render(scene, currentCamera) {
@@ -337,15 +337,16 @@ export class WebGL {
         cameraPosition: currentCamera.worldPosition,
         viewMatrix: currentCamera.viewProjectionMatrix,
         useEnvironmentMapping: app.environmentMapping,
+        useTextureMapping: app.textureMapping,
         environmentMap: 0,
         normalMap: 1,
         diffuseMap: 2,
         specularMap: 3,
         displacementMap: 4,
-        useDiffuseMap: true,
-        useSpecularMap: true,
-        useNormalMap: true,
-        useDisplacementMap: true,
+        useDiffuseMap: app.useDiffuseMap,
+        useSpecularMap: app.useSpecularMap,
+        useNormalMap: app.useNormalMap,
+        useDisplacementMap: app.useDisplacementMap,
       },
       lights
     );

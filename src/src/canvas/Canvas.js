@@ -115,12 +115,17 @@ export function setupCanvas() {
   var obliqueContainer2 = document.querySelector("#camera-2-oblique-angle");
 
   var mappingSelect = document.getElementById("mapping");
+  var textureProperties = document.getElementById("texture-properties");
+  var diffuseChecbox = document.getElementById("diffuse");
+  var specularChecbox = document.getElementById("specular");
+  var normalChecbox = document.getElementById("normal");
+  var displacementChecbox = document.getElementById("displacement");
+  var textureSelect = document.getElementById("select-texture");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var cameras2 = [new PerspectiveCamera(gl2, 60, 0, 200, 1, 2000)];
   var currentCameraIdx = 0;
   var currentCamera2Idx = 0;
-  var environmentMapping = false;
 
   var webgl = new WebGL(gl);
   var webgl2 = new WebGL(gl2);
@@ -144,7 +149,12 @@ export function setupCanvas() {
     currentCamera2,
     webgl,
     webgl2,
-    environmentMapping: environmentMapping,
+    environmentMapping: false,
+    textureMapping: false,
+    useNormalMap: true,
+    useDiffuseMap: true,
+    useSpecularMap: true,
+    useDisplacementMap: true,
   };
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
@@ -356,11 +366,90 @@ export function setupCanvas() {
   mappingSelect.addEventListener("change", function (e) {
     if (e.target.value === "environment") {
       app.environmentMapping = true;
+      app.textureMapping = false;
+      textureProperties.style.display = 'none';
+    } else if (e.target.value === "color") {
+      app.environmentMapping = false;
+      app.textureMapping = false;
+      textureProperties.style.display = "none";
+    } else if (e.target.value === "texture") {
+      app.environmentMapping = false;
+      app.textureMapping = true;
+      textureProperties.style.display = "block";
     } else {
       app.environmentMapping = false;
+      app.textureMapping = false;
+      textureProperties.style.display = "none";
     }
   })
 
+  textureSelect.addEventListener("change", function (e) {
+    if (e.target.value === "brick") {
+      app.webgl.loadTextures(
+        "./textures/brick/brick_normal.png",
+        "./textures/brick/brick_diffuse.png",
+        "./textures/brick/brick_specular.png",
+        "./textures/brick/brick_displacement.png"
+      );
+
+      app.webgl2.loadTextures(
+        "./textures/brick/brick_normal.png",
+        "./textures/brick/brick_diffuse.png",
+        "./textures/brick/brick_specular.png",
+        "./textures/brick/brick_displacement.png"
+      );
+    } else if (e.target.value === "metal") {
+      app.webgl.loadTextures(
+        "./textures/metal/metal_normal.jpg",
+        "./textures/metal/metal_diffuse.jpg",
+        "./textures/metal/metal_specular.jpg",
+        "./textures/metal/metal_displacement.jpg"
+      );
+
+      app.webgl2.loadTextures(
+        "./textures/metal/metal_normal.jpg",
+        "./textures/metal/metal_diffuse.jpg",
+        "./textures/metal/metal_specular.jpg",
+        "./textures/metal/metal_displacement.jpg"
+      );
+    } else if (e.target.value === "wood") {
+      app.webgl.loadTextures(
+        "./textures/wood/wood_normal.jpg",
+        "./textures/wood/wood_diffuse.jpg",
+        "./textures/wood/wood_specular.jpg",
+        "./textures/wood/wood_displacement.jpg"
+      );
+
+      app.webgl2.loadTextures(
+        "./textures/wood/wood_normal.jpg",
+        "./textures/wood/wood_diffuse.jpg",
+        "./textures/wood/wood_specular.jpg",
+        "./textures/wood/wood_displacement.jpg"
+      );
+    } 
+  })
+
+  diffuseChecbox.checked = app.useDiffuseMap;
+  specularChecbox.checked = app.useSpecularMap;
+  normalChecbox.checked = app.useNormalMap;
+  displacementChecbox.checked = app.useDisplacementMap;
+
+  diffuseChecbox.addEventListener('change', function() {
+    app.useDiffuseMap = this.checked;
+  })
+
+  specularChecbox.addEventListener("change", function () {
+    app.useSpecularMap = this.checked;
+  });
+  
+  normalChecbox.addEventListener("change", function () {
+    app.useNormalMap = this.checked;
+  });
+  
+  displacementChecbox.addEventListener("change", function () {
+    app.useDisplacementMap = this.checked;
+  });
+  
   cameraDropdown1
     .addEventListener("change", function () {
       if (this.value == 2) {
@@ -485,10 +574,22 @@ export function setupCanvas() {
   app.webgl.loadEnvironmentMapping();
   app.webgl2.loadEnvironmentMapping();
 
-  app.webgl.loadTextures();
-  app.webgl2.loadTextures();
+  // Default to brick
+  app.webgl.loadTextures(
+    "./textures/brick/brick_normal.png",
+    "./textures/brick/brick_diffuse.png",
+    "./textures/brick/brick_specular.png",
+    "./textures/brick/brick_displacement.png"
+  );
+
+  app.webgl2.loadTextures(
+    "./textures/brick/brick_normal.png",
+    "./textures/brick/brick_diffuse.png",
+    "./textures/brick/brick_specular.png",
+    "./textures/brick/brick_displacement.png"
+  );
+
   requestAnimationFrame(render);
-  render();
 
   function setupCamera(mode) {
     var currentCameraToSet = mode == 1 ? currentCamera : currentCamera2;

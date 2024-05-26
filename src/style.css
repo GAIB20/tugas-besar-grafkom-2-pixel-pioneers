@@ -272,3 +272,30 @@ option {
   gap: 2rem;
   align-items: center;
 }
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.checkbox-table {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px 20px;
+  align-items: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.prop-subtitle {
+  font-size: 16px;
+}
+
+#texture-properties {
+  display: none;
+}

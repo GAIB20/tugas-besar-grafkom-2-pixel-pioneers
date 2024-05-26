@@ -99,6 +99,42 @@ export function setupProperties(element) {
                 </div>
             <div/>
             <button class="btn-purple" id="reset-camera-2-view" style="width: 100%; margin-top: 1.5rem;">Reset View</button>
+            <div class="transformation-container" style="margin-top:2%">
+                <h3 class="prop-title">Mapping</h3>
+                <select id="mapping" name="options">
+                    <option value="color">Color</option>
+                    <option value="texture">Texture</option>
+                    <option value="environment">Environment</option>
+                </select>
+            </div>
+            <div id="texture-properties">
+                <div class="transformation-container">
+                    <h3 class="prop-title">Texture</h3>
+                    <select id="select-texture" name="options">
+                        <option value="brick">Brick</option>
+                        <option value="metal">Metal</option>
+                        <option value="wood">Wood</option>
+                    </select>
+                </div>
+                <div class="checkbox-table">
+                    <div class="checkbox-container">
+                        <h3 class="prop-subtitle">Diffuse Texture</h3>
+                        <input type="checkbox" class="checkbox" id="diffuse">
+                    </div>
+                    <div class="checkbox-container">
+                        <h3 class="prop-subtitle">Specular Texture</h3>
+                        <input type="checkbox" class="checkbox" id="specular">
+                    </div>
+                    <div class="checkbox-container">
+                        <h3 class="prop-subtitle">Normal Texture</h3>
+                        <input type="checkbox" class="checkbox" id="normal">
+                    </div>
+                    <div class="checkbox-container">
+                        <h3 class="prop-subtitle">Displacement Texture</h3>
+                        <input type="checkbox" class="checkbox" id="displacement">
+                    </div>
+                </div>
+            </div>
             <div id="material-controller">
                 <h3>Component Material</h3>
                 <div class="material-container">
@@ -178,13 +214,6 @@ export function setupProperties(element) {
                         <p id="fullview-object-scalez-value" class="value-display">1</p>
                     </div>
                 </div>
-            </div>
-            <div class="transformation-container" style="margin-top:2%">
-                <h3 class="prop-title">Mapping</h3>
-                <select id="mapping" name="options">
-                    <option value="texture">Texture</option>
-                    <option value="environment">Environment</option>
-                </select>
             </div>
             <h3>Animation</h3>
             <div class="animation-container">
