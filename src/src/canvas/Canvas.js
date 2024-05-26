@@ -24,6 +24,7 @@ import obj from "../models/articulated/obj";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
 import objAnimation from "../models/animations/objAnimation";
+import catAnimation from "../models/animations/catAnimation";
 import { hollowCube, hollowCubeColor, hollowCubeUV } from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
 import { setupSceneGraph } from "../section/Board";
@@ -638,6 +639,10 @@ export function setupCanvas() {
     app.webgl.render(app.scene, app.currentCamera);
     app.webgl2.render(app.scene, app.currentCamera2);
     requestAnimationFrame(render);
+    updateObjectSliders();
+    if (app.comp) {
+      updateComponentSliders();
+    }
   }
 
   app.webgl.loadEnvironmentMapping();
@@ -698,6 +703,75 @@ export function setupCanvas() {
     angleYSliderToSet.value = parseInt(currentCameraToSet.transform.angleY * 180 / Math.PI);
 
     return currentCameraToSet;
+  }
+
+  function updateComponentSliders() {
+    angleObjXSlider.value = app.comp.rotation.x * (180 / Math.PI);
+    angleObjYSlider.value = app.comp.rotation.y * (180 / Math.PI);
+    angleObjZSlider.value = app.comp.rotation.z * (180 / Math.PI);
+    angleObjXValue.textContent = app.comp.rotation.x * (180 / Math.PI);
+    angleObjYValue.textContent = app.comp.rotation.y * (180 / Math.PI);
+    angleObjZValue.textContent = app.comp.rotation.z * (180 / Math.PI);
+
+    translateObjXSlider.value = app.comp.position.x;
+    translateObjYSlider.value = app.comp.position.y;
+    translateObjZSlider.value = app.comp.position.z;
+    translateObjXValue.textContent = app.comp.position.x;
+    translateObjYValue.textContent = app.comp.position.y;
+    translateObjZValue.textContent = app.comp.position.z;
+
+    scaleObjXSlider.value = app.comp.scale.x;
+    scaleObjYSlider.value = app.comp.scale.y;
+    scaleObjZSlider.value = app.comp.scale.z;
+    scaleObjXValue.textContent = app.comp.scale.x;
+    scaleObjYValue.textContent = app.comp.scale.y;
+    scaleObjZValue.textContent = app.comp.scale.z;
+  }
+
+  function updateObjectSliders() {
+    if (app.isHollow) {
+      angleObjectXSlider.value = app.hollowObject.rotation.x * (180 / Math.PI);
+      angleObjectYSlider.value = app.hollowObject.rotation.y * (180 / Math.PI);
+      angleObjectZSlider.value = app.hollowObject.rotation.z * (180 / Math.PI);
+      angleObjectXValue.textContent = app.hollowObject.rotation.x * (180 / Math.PI);
+      angleObjectYValue.textContent = app.hollowObject.rotation.y * (180 / Math.PI);
+      angleObjectZValue.textContent = app.hollowObject.rotation.z * (180 / Math.PI);
+
+      translateXSlider.value = app.hollowObject.position.x;
+      translateYSlider.value = app.hollowObject.position.y;
+      translateZSlider.value = app.hollowObject.position.z;
+      translateXValue.textContent = app.hollowObject.position.x;
+      translateYValue.textContent = app.hollowObject.position.y;
+      translateZValue.textContent = app.hollowObject.position.z;
+
+      scaleXSlider.value = app.hollowObject.scale.x;
+      scaleYSlider.value = app.hollowObject.scale.y;
+      scaleZSlider.value = app.hollowObject.scale.z;
+      scaleXValue.textContent = app.hollowObject.scale.x;
+      scaleYValue.textContent = app.hollowObject.scale.y;
+      scaleZValue.textContent = app.hollowObject.scale.z;
+    } else {
+      angleObjectXSlider.value = app.model.children[0].rotation.x * (180 / Math.PI);
+      angleObjectYSlider.value = app.model.children[0].rotation.y * (180 / Math.PI);
+      angleObjectZSlider.value = app.model.children[0].rotation.z * (180 / Math.PI);
+      angleObjectXValue.textContent = app.model.children[0].rotation.x * (180 / Math.PI);
+      angleObjectYValue.textContent = app.model.children[0].rotation.y * (180 / Math.PI);
+      angleObjectZValue.textContent = app.model.children[0].rotation.z * (180 / Math.PI);
+
+      translateXSlider.value = app.model.children[0].position.x;
+      translateYSlider.value = app.model.children[0].position.y;
+      translateZSlider.value = app.model.children[0].position.z;
+      translateXValue.textContent = app.model.children[0].position.x;
+      translateYValue.textContent = app.model.children[0].position.y;
+      translateZValue.textContent = app.model.children[0].position.z;
+
+      scaleXSlider.value = app.model.children[0].scale.x;
+      scaleYSlider.value = app.model.children[0].scale.y;
+      scaleZSlider.value = app.model.children[0].scale.z;
+      scaleXValue.textContent = app.model.children[0].scale.x;
+      scaleYValue.textContent = app.model.children[0].scale.y;
+      scaleZValue.textContent = app.model.children[0].scale.z;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
