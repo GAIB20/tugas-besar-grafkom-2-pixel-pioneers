@@ -342,6 +342,10 @@ export class WebGL {
         diffuseMap: 2,
         specularMap: 3,
         displacementMap: 4,
+        useDiffuseMap: true,
+        useSpecularMap: true,
+        useNormalMap: true,
+        useDisplacementMap: true,
       },
       lights
     );

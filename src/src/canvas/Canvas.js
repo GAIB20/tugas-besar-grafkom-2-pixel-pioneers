@@ -134,7 +134,7 @@ export function setupCanvas() {
   var material = new PhongMaterial("Phong")
   var mesh = new Mesh(geometry, material);
 
-  const model = ArticulatedModel.fromModel(obj);
+  const model = ArticulatedModel.fromModel(minecraft);
   model.scale.mul(40);
 
   globalThis.app = {

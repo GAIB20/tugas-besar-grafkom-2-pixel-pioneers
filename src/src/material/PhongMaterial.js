@@ -244,10 +244,6 @@ export class PhongMaterial extends ShaderMaterial {
       ambientColor: ambientColor,
       diffuseColor: diffuseColor,
       specularColor: specularColor,
-      useDiffuseMap: true,
-      useSpecularMap: true,
-      useNormalMap: true,
-      useDisplacementMap: true,
       shininess,
     };
 
