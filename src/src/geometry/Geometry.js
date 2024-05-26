@@ -5,9 +5,9 @@ export class Geometry extends BufferGeometry {
   constructor(
     vertices,
     colors = [],
+    textureCoords = [],
     position = { x: 0, y: 0, z: 0 },
     size = { x: 1, y: 1, z: 1 },
-    textureCoords = [],
   ) {
     super(colors);
 

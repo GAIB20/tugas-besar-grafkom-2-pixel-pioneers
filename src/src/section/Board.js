@@ -40,13 +40,18 @@ export function setupBoard(element) {
 }
 
 export const setupSceneGraph = () => {
+  const tbody = document.querySelector("tbody");
+  tbody.innerHTML = "";
+
+  if(!app.model) {
+    return;
+  }
+
   let buttonsHTML;
   if (app.model.getTree()) {
     buttonsHTML = createComponentButtons(app.model.getTree());
   }
 
-  const tbody = document.querySelector("tbody");
-  tbody.innerHTML = "";
   Object.values(buttonsHTML).forEach((buttonHTML) => {
     tbody.insertAdjacentHTML("beforeend", buttonHTML);
   });

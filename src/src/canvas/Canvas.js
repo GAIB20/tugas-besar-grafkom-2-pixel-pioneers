@@ -24,7 +24,7 @@ import obj from "../models/articulated/obj";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
 import objAnimation from "../models/animations/objAnimation";
-import { hollowCube, hollowCubeColor } from "../models/hollow/hollowCube"
+import { hollowCube, hollowCubeColor, hollowCubeUV } from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
 import { setupSceneGraph } from "../section/Board";
 
@@ -121,6 +121,8 @@ export function setupCanvas() {
   var normalChecbox = document.getElementById("normal");
   var displacementChecbox = document.getElementById("displacement");
   var textureSelect = document.getElementById("select-texture");
+  var basicContainer = document.getElementById("basic-container");
+  var phongContainer = document.getElementById("phong-container");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var cameras2 = [new PerspectiveCamera(gl2, 60, 0, 200, 1, 2000)];
@@ -131,12 +133,12 @@ export function setupCanvas() {
   var webgl2 = new WebGL(gl2);
   var currentCamera = setupCamera(1);
   var currentCamera2 = setupCamera(2);
-  var animation = objAnimation;
+  var animation = minecraftAnimation;
   let currentFrame = 1;
 
   var scene = new Scene();
   var geometry = new Geometry(hollowCube, hollowCubeColor);
-  var material = new PhongMaterial("Phong")
+  var material = new BasicMaterial("Basic");
   var mesh = new Mesh(geometry, material);
 
   const model = ArticulatedModel.fromModel(minecraft);
@@ -155,6 +157,9 @@ export function setupCanvas() {
     useDiffuseMap: true,
     useSpecularMap: true,
     useDisplacementMap: true,
+    isHollow: false,
+    hollowObject: mesh,
+    materialSelect: document.getElementById("select-material"),
   };
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
@@ -263,11 +268,22 @@ export function setupCanvas() {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
       rotationObjectValues[axis].textContent = angle;
-      app.model.children[0].rotation[axis] = angleRadian;
-      if (!animation.frames[currentFrame - 1][app.model.children[0].name].rotation) {
-        animation.frames[currentFrame - 1][app.model.children[0].name].rotation = [0, 0, 0];
+      if (app.isHollow) {
+        app.hollowObject.rotation[axis] = angleRadian;
+      } else {
+        app.model.children[0].rotation[axis] = angleRadian;
+        if (
+          !animation.frames[currentFrame - 1][app.model.children[0].name]
+            .rotation
+        ) {
+          animation.frames[currentFrame - 1][
+            app.model.children[0].name
+          ].rotation = [0, 0, 0];
+        }
+        animation.frames[currentFrame - 1][app.model.children[0].name].rotation[
+          axisMapping[axis]
+        ] = angleRadian;
       }
-      animation.frames[currentFrame - 1][app.model.children[0].name].rotation[axisMapping[axis]] = angleRadian;
     });
   });
 
@@ -287,12 +303,15 @@ export function setupCanvas() {
     translationObjectSliders[axis].addEventListener("input", function (event) {
       var translation = parseFloat(event.target.value);
       translationObjectValues[axis].textContent = translation;
-      app.model.children[0].position[axis] = translation;
-      if (!animation.frames[currentFrame - 1][app.model.children[0].name].position) {
-        animation.frames[currentFrame - 1][app.model.children[0].name].position = [0, 0, 0];
+      if (app.isHollow) {
+        app.hollowObject.position[axis] = translation;
+      } else {
+        app.model.children[0].position[axis] = translation;
+        if (!animation.frames[currentFrame - 1][app.model.children[0].name].position) {
+          animation.frames[currentFrame - 1][app.model.children[0].name].position = [0, 0, 0];
+        }
+        animation.frames[currentFrame - 1][app.model.children[0].name].position[axisMapping[axis]] = translation;
       }
-      animation.frames[currentFrame - 1][app.model.children[0].name].position[axisMapping[axis]] = translation;
-      console.log(animation.frames[currentFrame - 1]);
     });
   });
 
@@ -312,11 +331,20 @@ export function setupCanvas() {
     scaleObjectSliders[axis].addEventListener("input", function (event) {
       var scale = parseFloat(event.target.value);
       scaleObjectValues[axis].textContent = scale;
-      app.model.children[0].scale[axis] = scale;
-      if (!animation.frames[currentFrame - 1][app.model.children[0].name].scale) {
-        animation.frames[currentFrame - 1][app.model.children[0].name].scale = [1, 1, 1];
+      if (app.isHollow) {
+        app.hollowObject.scale[axis] = scale;
+      } else {
+        app.model.children[0].scale[axis] = scale;
+        if (
+          !animation.frames[currentFrame - 1][app.model.children[0].name].scale
+        ) {
+          animation.frames[currentFrame - 1][app.model.children[0].name].scale =
+            [1, 1, 1];
+        }
+        animation.frames[currentFrame - 1][app.model.children[0].name].scale[
+          axisMapping[axis]
+        ] = scale;
       }
-      animation.frames[currentFrame - 1][app.model.children[0].name].scale[axisMapping[axis]] = scale;
     });
   });
 
@@ -449,6 +477,19 @@ export function setupCanvas() {
   displacementChecbox.addEventListener("change", function () {
     app.useDisplacementMap = this.checked;
   });
+
+  app.materialSelect.addEventListener("change", function (e) {
+    if (e.target.value === "basic") {
+      app.comp.material = new BasicMaterial("Basic" + app.comp.name, new Color(1, 1, 1, 1));
+      basicContainer.style.display = "block";
+      phongContainer.style.display = "none";
+    } else if (e.target.value === "phong") {
+      app.comp.material = new PhongMaterial("Phong" + app.comp.name, new Color(0, 0, 0, 0.5));
+      basicContainer.style.display = "none";
+      phongContainer.style.display = "block";
+    }
+    handleMaterialChange(app.comp.name);
+  });
   
   cameraDropdown1
     .addEventListener("change", function () {
@@ -540,13 +581,26 @@ export function setupCanvas() {
         const jsonModel = JSON.parse(event.target.result);
         const read = window.DeserializePrimitive(jsonModel);
         app.scene = read;
+        app.model = null;
+        app.isHollow = true;
         for (let child of app.scene.children) {
           if (child.type == "ArticulatedModel") {
             app.model = child;
+            app.isHollow = false;
             break;
           }
         }
-        setupSceneGraph();
+        
+        if (app.isHollow) {
+          for (let child of app.scene.children) {
+            if (child.type == "Mesh") {
+              app.hollowObject = child;
+              break;
+            }
+          }
+        } else {
+          setupSceneGraph();
+        }
       };
     }
   });
@@ -1101,11 +1155,19 @@ export function setupCanvas() {
 }
 
 export function selectComponent(compName) {
+  app.comp = ArticulatedModel.findChildByNameRecursive(app.model, compName);
+  handleMaterialChange(compName);
+}
+
+export function handleMaterialChange(compName) {
   const materialName = document.getElementById("material-name");
   const materialAmbient = document.getElementById("material-ambient");
   const materialDiffuse = document.getElementById("material-diffuse");
   const materialSpecular = document.getElementById("material-specular");
   const materialShininess = document.getElementById("material-shininess");
+  const materialColor = document.getElementById("material-color");
+  const basicContainer = document.getElementById("basic-container");
+  const phongContainer = document.getElementById("phong-container");
 
   // Function to remove existing event listeners
   function removeEventListeners() {
@@ -1113,9 +1175,14 @@ export function selectComponent(compName) {
     materialAmbient.removeEventListener("change", handleAmbientChange);
     materialDiffuse.removeEventListener("change", handleDiffuseChange);
     materialSpecular.removeEventListener("change", handleSpecularChange);
+    materialColor.removeEventListener("change", handleColorChange);
   }
 
   // Event handler functions
+  function handleColorChange(e) {
+    app.comp.material.color = e.target.value;
+  }
+
   function handleShininessChange(e) {
     app.comp.material.shininess = Number(e.target.value);
   }
@@ -1132,22 +1199,46 @@ export function selectComponent(compName) {
     app.comp.material.specular = e.target.value;
   }
 
-  app.comp = ArticulatedModel.findChildByNameRecursive(app.model, compName);
-
   if (compName.startsWith("P") && app.comp && app.comp.material) {
     materialName.value = app.comp.material.name;
-    materialShininess.value = app.comp.material.shininess;
-    materialAmbient.value = app.comp.material.ambient.hex;
-    materialDiffuse.value = app.comp.material.diffuse.hex;
-    materialSpecular.value = app.comp.material.specular.hex;
 
-    // Remove existing event listeners
-    removeEventListeners();
+    if (app.comp.material instanceof PhongMaterial) {
+      materialShininess.value = app.comp.material.shininess;
+      materialAmbient.value = app.comp.material.ambient.hex;
+      materialDiffuse.value = app.comp.material.diffuse.hex;
+      materialSpecular.value = app.comp.material.specular.hex;
 
-    // Add new event listeners
-    materialShininess.addEventListener("change", handleShininessChange);
-    materialAmbient.addEventListener("change", handleAmbientChange);
-    materialDiffuse.addEventListener("change", handleDiffuseChange);
-    materialSpecular.addEventListener("change", handleSpecularChange);
+      // Remove existing event listeners
+      removeEventListeners();
+
+      // Add new event listeners
+      materialShininess.addEventListener("change", handleShininessChange);
+      materialAmbient.addEventListener("change", handleAmbientChange);
+      materialDiffuse.addEventListener("change", handleDiffuseChange);
+      materialSpecular.addEventListener("change", handleSpecularChange);
+    } else if (app.comp.material instanceof BasicMaterial) {
+      materialColor.value = app.comp.material.color.hex;
+      removeEventListeners();
+      materialColor.addEventListener("change", handleColorChange);
+    }
+
+    const setMaterial = (element, value) => {
+      for (let i = 0; i < element.options.length; i++) {
+        if (element.options[i].value === value) {
+          element.selectedIndex = i;
+          break;
+        }
+      }
+    };
+
+    if (app.comp.material instanceof PhongMaterial) {
+      setMaterial(app.materialSelect, "phong");
+      basicContainer.style.display = "none";
+      phongContainer.style.display = "block";
+    } else if (app.comp.material instanceof BasicMaterial) {
+      setMaterial(app.materialSelect, "basic");
+      basicContainer.style.display = "block";
+      phongContainer.style.display = "none";
+    }
   }
 }

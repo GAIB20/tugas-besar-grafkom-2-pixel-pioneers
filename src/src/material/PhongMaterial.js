@@ -205,7 +205,7 @@ export class PhongMaterial extends ShaderMaterial {
           }
 
           vec3 direction = reflect(normalize(v_vertexPosition - v_cameraPosition), N);
-          vec4 ambient = u_ambientColor * u_lightColor * 0.2;
+          vec4 ambient = u_ambientColor * u_lightColor * 0.3;
 
           if (u_useDiffuseMap && u_useTextureMapping) {
             diffuse =

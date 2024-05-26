@@ -138,24 +138,39 @@ export function setupProperties(element) {
             <div id="material-controller">
                 <h3>Component Material</h3>
                 <div class="material-container">
+                    <h4>Material Type</h4>
+                    <select id="select-material" name="options">
+                        <option value="basic">Basic</option>
+                        <option value="phong">Phong</option>
+                    </select>
+                </div>
+                <div class="material-container">
                     <h4>Name</h4>
                     <input type="text" disabled id="material-name"/>
                 </div>
-                <div class="material-container">
-                    <h4>Ambient Color</h4>
-                    <input type="color" id="material-ambient"/>
+                <div id="basic-container">
+                    <div class="material-container">
+                        <h4>Color</h4>
+                        <input type="color" id="material-color"/>
+                    </div>
                 </div>
-                <div class="material-container">
-                    <h4>Diffuse Color</h4>
-                    <input type="color" id="material-diffuse"/>
-                </div>
-                <div class="material-container">
-                    <h4>Specular Color</h4>
-                    <input type="color" id="material-specular"/>
-                </div>
-                <div class="material-container">
-                    <h4>Shininess</h4>
-                    <input type="number" id="material-shininess"/>
+                <div id="phong-container">
+                    <div class="material-container">
+                        <h4>Ambient Color</h4>
+                        <input type="color" id="material-ambient"/>
+                    </div>
+                    <div class="material-container">
+                        <h4>Diffuse Color</h4>
+                        <input type="color" id="material-diffuse"/>
+                    </div>
+                    <div class="material-container">
+                        <h4>Specular Color</h4>
+                        <input type="color" id="material-specular"/>
+                    </div>
+                    <div class="material-container">
+                        <h4>Shininess</h4>
+                        <input type="number" id="material-shininess"/>
+                    </div>
                 </div>
             </div>
             <div id="component-controller">
