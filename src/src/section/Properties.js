@@ -6,6 +6,10 @@ export function setupProperties(element) {
         <div class="properties-content"> 
             <h2>Properties</h2>
             <div class="transformation-container">
+                <h3>Light Color</h3>
+                <input type="color" id="light-color" style="width: 60%"/>
+            </div>
+            <div class="transformation-container">
                 <h3>Camera 1</h3>
                 <div class="transformation-container">
                     <button class="btn-purple" id="full-view-add-camera">Add</button>

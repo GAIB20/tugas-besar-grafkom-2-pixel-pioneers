@@ -123,6 +123,7 @@ export function setupCanvas() {
   var textureSelect = document.getElementById("select-texture");
   var basicContainer = document.getElementById("basic-container");
   var phongContainer = document.getElementById("phong-container");
+  var lightColorInput = document.getElementById("light-color");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var cameras2 = [new PerspectiveCamera(gl2, 60, 0, 200, 1, 2000)];
@@ -490,6 +491,20 @@ export function setupCanvas() {
     }
     handleMaterialChange(app.comp.name);
   });
+
+  for (let child of app.scene.children) {
+    if (child instanceof DirectionalLight) {
+      lightColorInput.value = child.color.hex;
+    }
+  }
+
+  lightColorInput.addEventListener("change", function(e) {
+    for(let child of app.scene.children) {
+      if (child instanceof DirectionalLight) {
+        child.color.setHex(e.target.value)
+      }
+    }
+  })
   
   cameraDropdown1
     .addEventListener("change", function () {
