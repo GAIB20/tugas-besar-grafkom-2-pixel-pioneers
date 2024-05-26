@@ -23,7 +23,7 @@ export class OrthographicCamera extends Camera {
 
   computeProjectionMatrix() {
     const d = [
-      (this.right - this.left) / (2 * this.transform.translateZ / 300),
+      (this.right - this.left) / (2 * this.transform.translateZ / 600),
       (this.top - this.bottom) / (2 * this.transform.translateZ / 300),
       (this.right - this.left) / 2,
       (this.top - this.bottom) / 2,
