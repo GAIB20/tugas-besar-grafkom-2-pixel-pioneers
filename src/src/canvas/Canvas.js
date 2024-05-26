@@ -166,7 +166,7 @@ export function setupCanvas() {
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
   app.scene.add(light);
-  app.scene.add(model);
+  app.scene.add(mesh);
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
@@ -1197,7 +1197,10 @@ export function setupCanvas() {
               const anim = module.default;
               animation = anim;
               totalFrames = animation.frames.length;
+              currentFrame = 1;
               updateDisplay();
+              updateModelAnimation(currentFrame - 1);
+              document.getElementById("animFileNameDisplay").textContent = `${file.name}`;
             } catch (error) {
               console.error("Failed to load script content:", error);
             } finally {

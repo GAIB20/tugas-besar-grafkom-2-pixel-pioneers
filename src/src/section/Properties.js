@@ -307,6 +307,7 @@ export function setupProperties(element) {
                     <button id="moveToLastFrame"><i class="fas fa-step-forward"></i></button>
                 </div>
                 <p>Load Animation</p>
+                <p id="animFileNameDisplay"></p>
                 <input type="file" id="fileInput" accept=".js" style="display: none;">
                 <button id="loadAnimation">Load Animation</button>
                 <p>Save Animation</p>
