@@ -166,7 +166,7 @@ export function setupCanvas() {
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, null);
   app.scene.add(light);
-  app.scene.add(mesh);
+  app.scene.add(model);
 
   // Object TRS section
   // Fungsi untuk mengubah derajat menjadi radian
