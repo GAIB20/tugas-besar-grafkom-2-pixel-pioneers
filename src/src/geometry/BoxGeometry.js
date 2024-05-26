@@ -170,6 +170,7 @@ export class BoxGeometry extends BufferGeometry {
   toJSON() {
     const parent = super.toJSON();
     delete parent.attributes.position;
+    delete parent.attributes.texcoord;
     return {
       ...parent,
       width: this.width,
