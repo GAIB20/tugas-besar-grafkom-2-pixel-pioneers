@@ -17,32 +17,39 @@ export class Light extends Component {
     return this._uniforms;
   }
 
+  set color(value) {
+    this._color = value;
+  }
+  set uniforms(value) {
+    this._uniforms = value;
+  }
+
   static fromJSON(json, light) {
     const uniforms = {};
+    let color = null;
     for (const key in json.uniforms) {
       const uniform = json.uniforms[key];
       if (uniform[0] === "Vector3") {
         uniforms[key] = Vector3.fromJSON(uniform[1]);
       } else if (uniform[0] === "Color") {
-        uniforms[key] = Color.fromJSON(uniform[1]);
+        color = Color.fromJSON(uniform[1]);
+        uniforms[key] = color;
       } else {
         uniforms[key] = uniform;
       }
     }
 
     if (!light) {
-      light = new Light(
-        Color.fromJSON(json.color),
-        uniforms
-      );
+      light = new Light(color, uniforms);
     } else {
+      light.color = color;
       light.uniforms = uniforms;
     }
 
     return light;
   }
 
-  toJSON(){
+  toJSON() {
     const uniforms = {};
 
     for (const key in this._uniforms) {
@@ -59,7 +66,7 @@ export class Light extends Component {
     }
     return {
       uniforms,
-      color: this._color
-    }
+      color: this._color,
+    };
   }
 }

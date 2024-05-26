@@ -56,18 +56,19 @@ export class DirectionalLight extends Light {
 
   static fromJSON(json, light = null) {
     const uniforms = {};
+    let color = null;
     for (const key in json.uniforms) {
       const uniform = json.uniforms[key];
       if (uniform[0] === "Vector3") {
         uniforms[key] = Vector3.fromJSON(uniform[1]);
       } else if (uniform[0] === "Color") {
-        uniforms[key] = Color.fromJSON(uniform[1]);
+        continue;
       } else {
         uniforms[key] = uniform;
       }
     }
 
-    if (!light) light = new DirectionalLight(Color.fromJSON(json.color), uniforms);
+    if (!light) light = new DirectionalLight(color, uniforms);
     super.fromJSON(json, light);
 
     return light;
