@@ -27,7 +27,7 @@ var fish = {
           PBottomHead: {
             options: {
               scale: [1, 0.14, 0.47],
-              rotation: [-1, 0, 0],
+              rotation: [1, 0, 0],
             },
           },
         },
@@ -42,16 +42,16 @@ var fish = {
               scale: [0.29, 0.41, 0.42],
             },
           },
-        },
-      },
-      RTail: {
-        options: {
-          position: [-1, 0.2, -1.74],
-        },
-        children: {
-          PTail: {
+          RTail: {
             options: {
-              scale: [0.19, 0.68, 0.63],
+              position: [0, 0, -0.4],
+            },
+            children: {
+              PTail: {
+                options: {
+                  scale: [0.19, 0.68, 0.63],
+                },
+              },
             },
           },
         },
@@ -64,7 +64,7 @@ var fish = {
           PRightFin: {
             options: {
               scale: [0.81, 0.14, 0.41],
-              rotation: [0, 0, 22.93],
+              rotation: [0, 0, -22.93],
             },
           },
         },
@@ -77,7 +77,7 @@ var fish = {
           PLeftFin: {
             options: {
               scale: [0.81, 0.14, 0.41],
-              rotation: [0, 0, -22.93],
+              rotation: [0, 0, 22.93],
             },
           },
         },
