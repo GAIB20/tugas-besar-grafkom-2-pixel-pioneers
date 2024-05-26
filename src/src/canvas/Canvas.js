@@ -178,7 +178,7 @@ export function setupCanvas() {
     rotationSliders[axis].addEventListener("input", function (event) {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
-      rotationValues[axis].textContent = angle;
+      rotationValues[axis].textContent = parseInt(angle);
       app.comp.rotation[axis] = angleRadian;
       if (!animation.frames[currentFrame - 1][app.comp.name].rotation) {
         animation.frames[currentFrame - 1][app.comp.name].rotation = [0, 0, 0];
@@ -251,7 +251,7 @@ export function setupCanvas() {
     rotationObjectSliders[axis].addEventListener("input", function (event) {
       var angle = parseFloat(event.target.value);
       var angleRadian = Math.radians(angle);
-      rotationObjectValues[axis].textContent = angle;
+      rotationObjectValues[axis].textContent = parseInt(angle);
       if (app.isHollow) {
         app.hollowObject.rotation[axis] = angleRadian;
       } else {
@@ -797,9 +797,9 @@ export function setupCanvas() {
     angleObjXSlider.value = app.comp.rotation.x * (180 / Math.PI);
     angleObjYSlider.value = app.comp.rotation.y * (180 / Math.PI);
     angleObjZSlider.value = app.comp.rotation.z * (180 / Math.PI);
-    angleObjXValue.textContent = app.comp.rotation.x * (180 / Math.PI);
-    angleObjYValue.textContent = app.comp.rotation.y * (180 / Math.PI);
-    angleObjZValue.textContent = app.comp.rotation.z * (180 / Math.PI);
+    angleObjXValue.textContent = parseInt(app.comp.rotation.x * (180 / Math.PI));
+    angleObjYValue.textContent = parseInt(app.comp.rotation.y * (180 / Math.PI));
+    angleObjZValue.textContent = parseInt(app.comp.rotation.z * (180 / Math.PI));
 
     translateObjXSlider.value = app.comp.position.x;
     translateObjYSlider.value = app.comp.position.y;
@@ -821,9 +821,9 @@ export function setupCanvas() {
       angleObjectXSlider.value = app.hollowObject.rotation.x * (180 / Math.PI);
       angleObjectYSlider.value = app.hollowObject.rotation.y * (180 / Math.PI);
       angleObjectZSlider.value = app.hollowObject.rotation.z * (180 / Math.PI);
-      angleObjectXValue.textContent = app.hollowObject.rotation.x * (180 / Math.PI);
-      angleObjectYValue.textContent = app.hollowObject.rotation.y * (180 / Math.PI);
-      angleObjectZValue.textContent = app.hollowObject.rotation.z * (180 / Math.PI);
+      angleObjectXValue.textContent = parseInt(app.hollowObject.rotation.x * (180 / Math.PI));
+      angleObjectYValue.textContent = parseInt(app.hollowObject.rotation.y * (180 / Math.PI));
+      angleObjectZValue.textContent = parseInt(app.hollowObject.rotation.z * (180 / Math.PI));
 
       translateXSlider.value = app.hollowObject.position.x;
       translateYSlider.value = app.hollowObject.position.y;
@@ -842,9 +842,9 @@ export function setupCanvas() {
       angleObjectXSlider.value = app.model.children[0].rotation.x * (180 / Math.PI);
       angleObjectYSlider.value = app.model.children[0].rotation.y * (180 / Math.PI);
       angleObjectZSlider.value = app.model.children[0].rotation.z * (180 / Math.PI);
-      angleObjectXValue.textContent = app.model.children[0].rotation.x * (180 / Math.PI);
-      angleObjectYValue.textContent = app.model.children[0].rotation.y * (180 / Math.PI);
-      angleObjectZValue.textContent = app.model.children[0].rotation.z * (180 / Math.PI);
+      angleObjectXValue.textContent = parseInt(app.model.children[0].rotation.x * (180 / Math.PI));
+      angleObjectYValue.textContent = parseInt(app.model.children[0].rotation.y * (180 / Math.PI));
+      angleObjectZValue.textContent = parseInt(app.model.children[0].rotation.z * (180 / Math.PI));
 
       translateXSlider.value = app.model.children[0].position.x;
       translateYSlider.value = app.model.children[0].position.y;
