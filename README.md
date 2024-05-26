@@ -53,4 +53,4 @@ NIM      | Name                       | Task |
 13521111 | Tabitha Permalla           | Save and Load, Animation, Animation Editor, Model                   |
 13521124 | Michael Jonathan Halim     | Hollow Object Definition, Basic and Phong Material, Textures, Scene Graph, Environment Mapping, Vertex Colors, Model                  |
 13521160 | M. Dimas Sakti Widyatmaja  | Articulated Object Definition, Scene Graph, Animation Tweening, Model                  |
-13521162 | Antonio Natthan Krishna    | Projection, Camera, Multiview, UI, Model |
+13521162 | Antonio Natthan Krishna    | Rendering & Projection, Camera, Multiview, UI, Model |
