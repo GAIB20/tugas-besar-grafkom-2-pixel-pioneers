@@ -63,29 +63,27 @@ export class BasicMaterial extends ShaderMaterial {
     super(name, vertex_shader, fragment_shader, {
       color: color,
     });
-
-    this._color = color;
   }
 
   get color() {
-    return this._color;
+    return this._uniforms["color"];
   }
 
   set color(value) {
-    this._color.setHex(value);
+    this._uniforms["color"].setHex(value);
   }
 
   toJSON() {
     const data = super.toJSON();
     return {
       ...data,
-      color: this._color,
+      color: this._uniforms["color"],
       type: "BasicMaterial",
     };
   }
 
   static fromJSON(json, material = null) {
-    if (!material) material = new BasicMaterial(json.name, Color.fromJSON(json.color));
+    if (!material) material = new BasicMaterial(json.name, json.color);
     super.fromJSON(json, material);
 
     return material;

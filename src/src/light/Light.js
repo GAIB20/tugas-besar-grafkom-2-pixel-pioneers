@@ -7,42 +7,40 @@ export class Light extends Component {
     super();
     this._uniforms = uniforms;
     this._uniforms["lightColor"] = color;
-    this._color = color;
   }
 
   get color() {
-    return this._color;
+    return this._uniforms["lightColor"];
   }
+
   get uniforms() {
     return this._uniforms;
   }
 
   set color(value) {
-    this._color = value;
+    this._uniforms["lightColor"] = value;
   }
+
   set uniforms(value) {
     this._uniforms = value;
   }
 
   static fromJSON(json, light) {
     const uniforms = {};
-    let color = null;
     for (const key in json.uniforms) {
       const uniform = json.uniforms[key];
       if (uniform[0] === "Vector3") {
         uniforms[key] = Vector3.fromJSON(uniform[1]);
       } else if (uniform[0] === "Color") {
-        color = Color.fromJSON(uniform[1]);
-        uniforms[key] = color;
+        uniforms[key] = Color.fromJSON(uniform[1]);
       } else {
         uniforms[key] = uniform;
       }
     }
 
     if (!light) {
-      light = new Light(color, uniforms);
+      light = new Light(Color.fromJSON(json.color), uniforms);
     } else {
-      light.color = color;
       light.uniforms = uniforms;
     }
 
