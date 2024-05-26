@@ -620,6 +620,15 @@ export function setupCanvas() {
               break;
             }
           }
+          const containers = document.querySelectorAll('.animation-container');
+          containers.forEach(container => {
+              container.style.display = 'none';
+          });
+        } else {
+          const containers = document.querySelectorAll('.animation-container');
+          containers.forEach(container => {
+              container.style.display = '';
+          });
         }
 
         setupSceneGraph();

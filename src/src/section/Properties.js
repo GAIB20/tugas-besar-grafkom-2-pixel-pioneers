@@ -234,8 +234,8 @@ export function setupProperties(element) {
                     </div>
                 </div>
             </div>
-            <h3>Animation</h3>
             <div class="animation-container">
+                <h3>Animation</h3>
                 <h4>Player</h4>
                 <div class="slider-container-3">
                     <input type="range" min="1" max="60" value="1" class="slider" id="frameSlider">
@@ -312,6 +312,7 @@ export function setupProperties(element) {
                 <button id="loadAnimation">Load Animation</button>
                 <p>Save Animation</p>
                 <button id="saveAnimation">Save Animation</button>
+            </div>
                 <h3>Object</h3>
                 <h4>Translation</h4>
                 <div class="transformation-container">
@@ -367,7 +368,6 @@ export function setupProperties(element) {
                         <p id="partview-object-scalez-value" class="value-display">1</p>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 `;
