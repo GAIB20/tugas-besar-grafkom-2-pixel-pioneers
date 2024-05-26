@@ -194,6 +194,7 @@ export class WebGL {
     // Create a texture.
     var texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_CUBE_MAP, texture);
+    this.gl.activeTexture(this.gl.TEXTURE0);
 
     const faceInfos = [
       {
@@ -263,6 +264,57 @@ export class WebGL {
     );
   }
 
+  loadTexture(gl, url, unit) {
+    const texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    const level = 0;
+    const internalFormat = gl.RGBA;
+    const width = 1;
+    const height = 1;
+    const border = 0;
+    const srcFormat = gl.RGBA;
+    const srcType = gl.UNSIGNED_BYTE;
+    const pixel = new Uint8Array([0, 0, 255, 255]);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      level,
+      internalFormat,
+      width,
+      height,
+      border,
+      srcFormat,
+      srcType,
+      pixel
+    );
+
+    const image = new Image();
+    image.onload = () => {
+      gl.activeTexture(gl.TEXTURE0 + unit);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        level,
+        internalFormat,
+        srcFormat,
+        srcType,
+        image
+      );
+      gl.generateMipmap(gl.TEXTURE_2D);
+    };
+
+    image.src = url;
+    return texture;
+  }
+
+  loadTextures() {
+    this.loadTexture(this.gl, "./textures/brick/brick_normal.png", 1);
+    this.loadTexture(this.gl, "./textures/brick/brick_diffuse.png", 2);
+    this.loadTexture(this.gl, "./textures/brick/brick_specular.png", 3);
+    this.loadTexture(this.gl, "./textures/brick/brick_displacement.png", 4);
+  }
+
   render(scene, currentCamera) {
     this.resizeCanvasToDisplaySize();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -285,6 +337,11 @@ export class WebGL {
         cameraPosition: currentCamera.worldPosition,
         viewMatrix: currentCamera.viewProjectionMatrix,
         useEnvironmentMapping: app.environmentMapping,
+        environmentMap: 0,
+        normalMap: 1,
+        diffuseMap: 2,
+        specularMap: 3,
+        displacementMap: 4,
       },
       lights
     );

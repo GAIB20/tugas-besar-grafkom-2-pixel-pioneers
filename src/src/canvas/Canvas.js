@@ -482,7 +482,11 @@ export function setupCanvas() {
   
   app.webgl.loadEnvironmentMapping();
   app.webgl2.loadEnvironmentMapping();
+
+  app.webgl.loadTextures();
+  app.webgl2.loadTextures();
   requestAnimationFrame(render);
+  render();
 
   function setupCamera(mode) {
     var currentCameraToSet = mode == 1 ? currentCamera : currentCamera2;

@@ -141,6 +141,29 @@ export class BoxGeometry extends BufferGeometry {
     ]);
 
     this.setAttribute("position", new BufferAttribute(vertices, 3));
+
+    const texCoord = new Float32Array([
+      // Front face
+      0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+
+      // Back face
+      0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0,
+
+      // Top face
+      0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+
+      // Bottom face
+      0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,
+
+      // Right face
+      0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+
+      // Left face
+      0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+    ]);
+
+    this.setAttribute("texcoord", new BufferAttribute(texCoord, 2));
+
     this.calculateNormals();
   }
 

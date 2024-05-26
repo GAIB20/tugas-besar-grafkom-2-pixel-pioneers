@@ -6,7 +6,8 @@ export class Geometry extends BufferGeometry {
     vertices,
     colors = [],
     position = { x: 0, y: 0, z: 0 },
-    size = { x: 1, y: 1, z: 1 }
+    size = { x: 1, y: 1, z: 1 },
+    textureCoords = [],
   ) {
     super(colors);
 
@@ -40,6 +41,8 @@ export class Geometry extends BufferGeometry {
         })
       );
     }
+    const texCoord = new Float32Array(textureCoords);
+    this.setAttribute("texcoord", new BufferAttribute(texCoord, 2));
     this.calculateNormals();
   }
 

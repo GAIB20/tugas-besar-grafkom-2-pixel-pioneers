@@ -29,6 +29,16 @@ export class PlaneGeometry extends BufferGeometry {
       hh,
     ]);
     this.setAttribute("position", new BufferAttribute(vertices, 3));
+
+    const texCoord = new Float32Array([
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0,
+        0, 1,
+        1, 0,
+    ]);
+    this.setAttribute("texcoord", new BufferAttribute(texCoord, 2));
     this.calculateNormals();
   }
 
