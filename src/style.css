@@ -79,6 +79,14 @@ body {
   background-color: #242424;
 }
 
+h3 {
+  margin: 15px 0;
+}
+
+h4 {
+  margin: 0;
+}
+
 canvas {
   width: 100%;
   height: 49.7%;
@@ -269,8 +277,8 @@ option {
 
 .material-container {
   display: flex;
-  gap: 2rem;
   align-items: center;
+  justify-content: space-between;
 }
 
 .checkbox {
@@ -298,4 +306,22 @@ option {
 
 #texture-properties {
   display: none;
+}
+
+.button-anim {
+  max-width: 55px;
+}
+
+.easing-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.camera-prop-title {
+  margin: 10px 0;
+}
+
+.component-material-title {
+  margin: 10px 0;
 }
