@@ -689,6 +689,8 @@ export function setupCanvas() {
           }
         }
 
+        displacementFactor.value = app.displacementFactor;
+
         setupSceneGraph();
       };
     }
