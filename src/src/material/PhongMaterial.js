@@ -16,6 +16,8 @@ export class PhongMaterial extends ShaderMaterial {
         attribute vec3 normal;
         attribute vec2 texcoord;
         uniform bool u_useVertexColors;
+        uniform bool u_useDisplacementMap;
+        uniform bool u_useTextureMapping;
 
         uniform float u_shininess;
         uniform vec3 u_lightDirection;
@@ -39,13 +41,22 @@ export class PhongMaterial extends ShaderMaterial {
         varying vec3 v_normal;
 
         void main() {
-          gl_Position = u_viewMatrix * u_worldMatrix * position;
-          v_vertexPosition = gl_Position.xyz / gl_Position.w;
           v_normal = mat3(u_worldMatrix) * normal;
+          vec4 pos = u_worldMatrix * position;
+          float d = texture2D(u_displacementMap, texcoord).r;
+          pos.xyz += d * u_displacementFactor * v_normal;
+
+          if (u_useDisplacementMap && u_useTextureMapping) {
+            gl_Position = u_viewMatrix * pos;
+          } else {
+            gl_Position = u_viewMatrix * u_worldMatrix * position;
+          }
+
           v_color = color;
           v_lightDirection = u_lightDirection;
           v_cameraPosition = u_cameraPosition;
           v_texcoord = texcoord;
+          v_vertexPosition = gl_Position.xyz / gl_Position.w;
         }
         `;
 

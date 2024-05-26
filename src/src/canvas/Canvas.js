@@ -108,6 +108,7 @@ export function setupCanvas() {
   var basicContainer = document.getElementById("basic-container");
   var phongContainer = document.getElementById("phong-container");
   var lightColorInput = document.getElementById("light-color");
+  var displacementFactor = document.getElementById("displacement-factor");
 
   var cameras = [new PerspectiveCamera(gl, 60, 0, 200, 1, 2000)];
   var cameras2 = [new PerspectiveCamera(gl2, 60, 0, 200, 1, 2000)];
@@ -141,7 +142,10 @@ export function setupCanvas() {
     isHollow: false,
     hollowObject: mesh,
     materialSelect: document.getElementById("select-material"),
+    displacementFactor: 0,
   };
+
+  displacementFactor.value = 0;
 
   const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, null);
   app.scene.add(light);
@@ -390,6 +394,10 @@ export function setupCanvas() {
     }
   })
 
+  displacementFactor.addEventListener("change", function (e) {
+    app.displacementFactor = Number(e.target.value);
+  })
+
   textureSelect.addEventListener("change", function (e) {
     if (e.target.value === "brick") {
       app.webgl.loadTextures(
@@ -424,14 +432,14 @@ export function setupCanvas() {
         "./textures/wood/wood_normal.jpg",
         "./textures/wood/wood_diffuse.jpg",
         "./textures/wood/wood_specular.jpg",
-        "./textures/wood/wood_displacement.jpg"
+        "./textures/wood/wood_displacement.png"
       );
 
       app.webgl2.loadTextures(
         "./textures/wood/wood_normal.jpg",
         "./textures/wood/wood_diffuse.jpg",
         "./textures/wood/wood_specular.jpg",
-        "./textures/wood/wood_displacement.jpg"
+        "./textures/wood/wood_displacement.png"
       );
     } 
   })
@@ -579,6 +587,7 @@ export function setupCanvas() {
         app.useDiffuseMap = json.useDiffuseMap;
         app.useSpecularMap = json.useSpecularMap;
         app.useDisplacementMap = json.useDisplacementMap;
+        app.displacementFactor = json.displacementFactor || 0;
         app.texture = json.texture;
         app.scene = read;
         app.model = null;
@@ -695,6 +704,7 @@ export function setupCanvas() {
       useSpecularMap: app.useSpecularMap,
       useDisplacementMap: app.useDisplacementMap,
       texture: textureSelect.value,
+      displacementFactor: app.displacementFactor
     };
     const dataStr =
       "data:text/json;charset=utf-8," +

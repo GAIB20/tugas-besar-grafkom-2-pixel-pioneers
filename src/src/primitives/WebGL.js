@@ -347,6 +347,7 @@ export class WebGL {
         useSpecularMap: app.useSpecularMap,
         useNormalMap: app.useNormalMap,
         useDisplacementMap: app.useDisplacementMap,
+        displacementFactor: app.displacementFactor,
       },
       lights
     );

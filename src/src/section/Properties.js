@@ -138,6 +138,10 @@ export function setupProperties(element) {
                         <input type="checkbox" class="checkbox" id="displacement">
                     </div>
                 </div>
+                <div class="material-container">
+                    <h4 class="component-material-title">Displacement Factor</h4>
+                    <input type="number" id="displacement-factor" value="0" step="0.1"/>
+                </div>
             </div>
             <div id="material-controller">
                 <h3>Component Material</h3>
