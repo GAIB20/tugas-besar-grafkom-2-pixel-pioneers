@@ -41,7 +41,7 @@ export function setupProperties(element) {
                 </div>
             </div>
             <div id="fullview-camera-angle">
-                <h4>Angle</h4>
+                <h4 class="camera-prop-title">Angle</h4>
                 <div class="transformation-container">
                     <div class="slider-container-3">
                         <p>X</p>
@@ -88,7 +88,7 @@ export function setupProperties(element) {
                 </div>
             </div>
             <div id="partview-camera-angle">
-                <h4>Angle</h4>
+                <h4 class="camera-prop-title">Angle</h4>
                 <div class="transformation-container">
                     <div class="slider-container-3">
                         <p>X</p>
@@ -122,19 +122,19 @@ export function setupProperties(element) {
                 </div>
                 <div class="checkbox-table">
                     <div class="checkbox-container">
-                        <h3 class="prop-subtitle">Diffuse Texture</h3>
+                        <h4 class="prop-subtitle">Diffuse Texture</h4>
                         <input type="checkbox" class="checkbox" id="diffuse">
                     </div>
                     <div class="checkbox-container">
-                        <h3 class="prop-subtitle">Specular Texture</h3>
+                        <h4 class="prop-subtitle">Specular Texture</h4>
                         <input type="checkbox" class="checkbox" id="specular">
                     </div>
                     <div class="checkbox-container">
-                        <h3 class="prop-subtitle">Normal Texture</h3>
+                        <h4 class="prop-subtitle">Normal Texture</h4>
                         <input type="checkbox" class="checkbox" id="normal">
                     </div>
                     <div class="checkbox-container">
-                        <h3 class="prop-subtitle">Displacement Texture</h3>
+                        <h4 class="prop-subtitle">Displacement Texture</h4>
                         <input type="checkbox" class="checkbox" id="displacement">
                     </div>
                 </div>
@@ -142,44 +142,44 @@ export function setupProperties(element) {
             <div id="material-controller">
                 <h3>Component Material</h3>
                 <div class="material-container">
-                    <h4>Material Type</h4>
+                    <h4 class="component-material-title">Material Type</h4>
                     <select id="select-material" name="options">
                         <option value="basic">Basic</option>
                         <option value="phong">Phong</option>
                     </select>
                 </div>
                 <div class="material-container">
-                    <h4>Name</h4>
+                    <h4 class="component-material-title">Name</h4>
                     <input type="text" disabled id="material-name"/>
                 </div>
                 <div id="basic-container">
                     <div class="material-container">
-                        <h4>Color</h4>
+                        <h4 class="component-material-title">Color</h4>
                         <input type="color" id="material-color"/>
                     </div>
                 </div>
                 <div id="phong-container">
                     <div class="material-container">
-                        <h4>Ambient Color</h4>
+                        <h4 class="component-material-title">Ambient Color</h4>
                         <input type="color" id="material-ambient"/>
                     </div>
                     <div class="material-container">
-                        <h4>Diffuse Color</h4>
+                        <h4 class="component-material-title">Diffuse Color</h4>
                         <input type="color" id="material-diffuse"/>
                     </div>
                     <div class="material-container">
-                        <h4>Specular Color</h4>
+                        <h4 class="component-material-title">Specular Color</h4>
                         <input type="color" id="material-specular"/>
                     </div>
                     <div class="material-container">
-                        <h4>Shininess</h4>
+                        <h4 class="component-material-title">Shininess</h4>
                         <input type="number" id="material-shininess"/>
                     </div>
                 </div>
             </div>
             <div id="component-controller">
                 <h3>Component Controller</h3>
-                <h4>Translation</h4>
+                <h4 class="component-material-title">Translation</h4>
                 <div class="transformation-container">
                     <div class="slider-container">
                         <p>X</p>
@@ -197,7 +197,7 @@ export function setupProperties(element) {
                         <p id="fullview-object-translatez-value" class="value-display">0</p>
                     </div>
                 </div>
-                <h4>Angle</h4>
+                <h4 class="component-material-title">Angle</h4>
                 <div class="transformation-container">
                     <div class="slider-container">
                         <p>X</p>
@@ -215,7 +215,7 @@ export function setupProperties(element) {
                         <p id="fullview-object-anglez-value" class="value-display">0</p>
                     </div>
                 </div>
-                <h4>Scale</h4>
+                <h4 class="component-material-title">Scale</h4>
                 <div class="transformation-container">
                     <div class="slider-container">
                         <p>X</p>
@@ -242,13 +242,13 @@ export function setupProperties(element) {
                     <p class="value-display" id="frameDisplay">1/60</p>
                 </div>
                 <div>
-                    <button id="first"><i class="fas fa-step-backward"></i></button>
-                    <button id="previous"><i class="fas fa-backward"></i></button>
-                    <button id="play-pause"><i class="fas fa-play"></i></button>
-                    <button id="next"><i class="fas fa-forward"></i></button>
-                    <button id="last"><i class="fas fa-step-forward"></i></button>
-                    <button id="reverse"><i class="fas fa-undo"></i></button>
-                    <button id="loop"><i class="fas fa-sync-alt"></i></button>
+                    <button id="first" class="button-anim"><i class="fas fa-step-backward"></i></button>
+                    <button id="previous" class="button-anim"><i class="fas fa-backward"></i></button>
+                    <button id="play-pause" class="button-anim"><i class="fas fa-play"></i></button>
+                    <button id="next" class="button-anim"><i class="fas fa-forward"></i></button>
+                    <button id="last" class="button-anim"><i class="fas fa-step-forward"></i></button>
+                    <button id="reverse" class="button-anim"><i class="fas fa-undo"></i></button>
+                    <button id="loop" class="button-anim"><i class="fas fa-sync-alt"></i></button>
                 </div>
                 <div class="fps-controller">
                     <p>Frames per Second</p>
@@ -258,37 +258,37 @@ export function setupProperties(element) {
                     <p class="value-display" id="fpsDisplay">30 FPS</p>
                 </div>
                 <div class="easing-container">
-                <p>Easing Function</p>
-                <select id="easingFunction" name="options">
-                    <option value="sineIn">Sine In</option>
-                    <option value="sineOut">Sine Out</option>
-                    <option value="sineInOut">Sine InOut</option>
-                    <option value="quadIn">Quad In</option>
-                    <option value="quadOut">Quad Out</option>
-                    <option value="quadInOut">Quad InOut</option>
-                    <option value="cubicIn">Cubic In</option>
-                    <option value="cubicOut">Cubic Out</option>
-                    <option value="cubicInOut">Cubic InOut</option>
-                    <option value="quartIn">Quart In</option>
-                    <option value="quartOut">Quart Out</option>
-                    <option value="quartInOut">Quart InOut</option>
-                    <option value="expoIn">Expo In</option>
-                    <option value="expoOut">Expo Out</option>
-                    <option value="expoInOut">Expo InOut</option>
-                    <option value="circIn">Circ In</option>
-                    <option value="circOut">Circ Out</option>
-                    <option value="circInOut">Circ InOut</option>
-                    <option value="backIn">Back In</option>
-                    <option value="backOut">Back Out</option>
-                    <option value="backInOut">Back InOut</option>
-                    <option value="elasticIn">Elastic In</option>
-                    <option value="elasticOut">Elastic Out</option>
-                    <option value="elasticInOut">Elastic InOut</option>
-                    <option value="bounceIn">Bounce In</option>
-                    <option value="bounceOut">Bounce Out</option>
-                    <option value="bounceInOut">Bounce InOut</option>
-                </select>
-            </div>
+                    <p>Easing Function</p>
+                    <select id="easingFunction" name="options">
+                        <option value="sineIn">Sine In</option>
+                        <option value="sineOut">Sine Out</option>
+                        <option value="sineInOut">Sine InOut</option>
+                        <option value="quadIn">Quad In</option>
+                        <option value="quadOut">Quad Out</option>
+                        <option value="quadInOut">Quad InOut</option>
+                        <option value="cubicIn">Cubic In</option>
+                        <option value="cubicOut">Cubic Out</option>
+                        <option value="cubicInOut">Cubic InOut</option>
+                        <option value="quartIn">Quart In</option>
+                        <option value="quartOut">Quart Out</option>
+                        <option value="quartInOut">Quart InOut</option>
+                        <option value="expoIn">Expo In</option>
+                        <option value="expoOut">Expo Out</option>
+                        <option value="expoInOut">Expo InOut</option>
+                        <option value="circIn">Circ In</option>
+                        <option value="circOut">Circ Out</option>
+                        <option value="circInOut">Circ InOut</option>
+                        <option value="backIn">Back In</option>
+                        <option value="backOut">Back Out</option>
+                        <option value="backInOut">Back InOut</option>
+                        <option value="elasticIn">Elastic In</option>
+                        <option value="elasticOut">Elastic Out</option>
+                        <option value="elasticInOut">Elastic InOut</option>
+                        <option value="bounceIn">Bounce In</option>
+                        <option value="bounceOut">Bounce Out</option>
+                        <option value="bounceInOut">Bounce InOut</option>
+                    </select>
+                </div>
 
                 <h4>Editor</h4>
                 <p>Current Frame: <span id="currentFrameDisplay">1</span></p>
@@ -306,10 +306,11 @@ export function setupProperties(element) {
                     <button id="moveToNextFrame"><i class="fas fa-forward"></i></button>
                     <button id="moveToLastFrame"><i class="fas fa-step-forward"></i></button>
                 </div>
-                <p>Load Frame</p>
+                <p>Load Animation</p>
+                <p id="animFileNameDisplay"></p>
                 <input type="file" id="fileInput" accept=".js" style="display: none;">
                 <button id="loadAnimation">Load Animation</button>
-                <p>Save Frame</p>
+                <p>Save Animation</p>
                 <button id="saveAnimation">Save Animation</button>
                 <h3>Object</h3>
                 <h4>Translation</h4>
