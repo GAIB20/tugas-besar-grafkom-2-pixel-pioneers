@@ -37,6 +37,10 @@ export class ArticulatedModel extends Component {
     return this._materials;
   }
 
+  setMaterial(objName, material) {
+    this._materials[objName] = [material];
+  }
+
   getTree() {
     function getComponentTree(children) {
       const components = {};

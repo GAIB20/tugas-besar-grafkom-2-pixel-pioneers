@@ -2,13 +2,15 @@ import { Vector3 } from "../math/Vector3";
 import { Color } from "../primitives/Color";
 
 export class ShaderMaterial {
+  static _lastId = 0;
+
   constructor(
     name = "",
     vertexShader = "",
     fragmentShader = "",
     uniforms = {}
   ) {
-    this.id = Date.now().toString(36) + Math.random().toString(36).slice(0, 2);
+    this.id = ++ShaderMaterial._lastId;
     this._name = name;
     this._vertexShader = vertexShader;
     this._fragmentShader = fragmentShader;

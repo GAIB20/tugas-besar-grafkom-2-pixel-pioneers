@@ -468,10 +468,12 @@ export function setupCanvas() {
   app.materialSelect.addEventListener("change", function (e) {
     if (e.target.value === "basic") {
       app.comp.material = new BasicMaterial("Basic" + app.comp.name, new Color(1, 1, 1, 1));
+      app.model.setMaterial(app.comp.name, app.comp.material);
       basicContainer.style.display = "block";
       phongContainer.style.display = "none";
     } else if (e.target.value === "phong") {
       app.comp.material = new PhongMaterial("Phong" + app.comp.name, new Color(0, 0, 0, 0.5));
+      app.model.setMaterial(app.comp.name, app.comp.material);
       basicContainer.style.display = "none";
       phongContainer.style.display = "block";
     }
