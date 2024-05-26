@@ -140,7 +140,7 @@ export function setupCanvas() {
   let currentFrame = 1;
 
   var scene = new Scene();
-  var geometry = new Geometry(hollowCube, hollowCubeColor);
+  var geometry = new Geometry(bamboo, bambooColor);
   var material = new BasicMaterial("Basic");
   var mesh = new Mesh(geometry, material);
 
@@ -370,7 +370,6 @@ export function setupCanvas() {
 
   addCameraButton2
     .addEventListener("click", function () {
-      console.log("MASUKK");
       var option = document.createElement("option");
       option.text = "Camera " + (selectCamera2.options.length + 1);
       option.value = selectCamera2.options.length + 1;
@@ -1077,44 +1076,18 @@ export function setupCanvas() {
     function animate(ts) {
       const frameTime = 1000 / fps;
 
-      // if (!ts) ts = 0;
       if (!ts) ts = performance.now(); // Inisialisasi ts dengan waktu saat ini jika tidak ada nilai yang diteruskan
 
-      // ts = performance.now();
       if (isPlaying) {
         dt += (ts - lt) / frameTime;
 
-        console.log("dt", dt)
-        console.log("ts", ts)
-        console.log("lt", lt)
-        console.log("frameTime", frameTime)
-
-        // animationRequestId = requestAnimationFrame(animate);
-        // let elapsedFrames = Math.floor(performance.now() / frameTime);
-        // if (isReversing) {
-        //   elapsedFrames = totalFrames - elapsedFrames % totalFrames;
-        //   currentFrame = elapsedFrames === 0 ? totalFrames - 1 : elapsedFrames - 1;
-        // } else {
-        //   currentFrame = (elapsedFrames % totalFrames);
-        // }
-
-        // const elapsedFrames = Math.floor(performance.now() / frameTime);
-        // const frameIndex1 = elapsedFrames % totalFrames;
-        // const frameIndex2 = (frameIndex1 + 1) % totalFrames;
         const frameIndex1 = currentFrame % totalFrames;
         const frameIndex2 = (currentFrame + 1) % totalFrames;
 
-        // const t = (performance.now() % frameTime) / frameTime;
         const t = dt;
-
-        console.log("currentFrame", currentFrame)
-        console.log("fr1", frameIndex1)
-        console.log("fr2", frameIndex2)
 
         const frame1 = animation.frames[frameIndex1];
         const frame2 = animation.frames[frameIndex2];
-        console.log("fram1", frame1)
-        console.log("fram2", frame2)
 
         const easingFunction = easingFunctions[selectedEasingFunction];
         let interpolatedFrame;
@@ -1123,22 +1096,14 @@ export function setupCanvas() {
         } else {
           interpolatedFrame = interpolateFrames(frame1, frame2, t, easingFunction);
         }
-        // console.log("ifr", interpolatedFrame.RArmL)
 
-        // updateModelAnimation(currentFrame);
         lt = ts;
 
         updateModelAnimation(-1, interpolatedFrame);
 
         if (dt >= 1) {
           const sf = Math.floor(dt / 1);
-          // dt = 0;
           dt = dt % 1;
-          // if (isReversing) {
-          //   currentFrame = (currentFrame - sf + totalFrames) % totalFrames;
-          // } else {
-          //   currentFrame = (currentFrame + sf) % totalFrames;
-          // }
 
           if (isReversing) {
             if (currentFrame === 1) {
@@ -1162,14 +1127,12 @@ export function setupCanvas() {
 
         }
 
-        console.log("currentFrame", currentFrame)
         if (!loop && ((currentFrame === 1 && isReversing) || (currentFrame === totalFrames && !isReversing))) {
           if (isReversing) {
             currentFrame = totalFrames
           } else {
             currentFrame = 1
           }
-          console.log("pause")
           pause();
         }
         updateDisplay();
