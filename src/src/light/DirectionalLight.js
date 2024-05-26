@@ -18,9 +18,16 @@ export class DirectionalLight extends Light {
           this.target.worldPosition.z
         )
         .sub(this.worldPosition)
+        .mul(-1)
         .normalize();
     } else {
-      this._direction = new Vector3(0.85, 0.8, 0.75);
+      this._direction
+        .set(
+          this.worldPosition.x,
+          this.worldPosition.y,
+          this.worldPosition.z
+        )
+        .normalize();
     }
     return this._direction;
   }

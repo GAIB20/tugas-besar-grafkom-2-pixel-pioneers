@@ -164,7 +164,7 @@ export function setupCanvas() {
     materialSelect: document.getElementById("select-material"),
   };
 
-  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, model);
+  const light = new DirectionalLight(new Color(1, 1, 1, 1), {}, null);
   app.scene.add(light);
   app.scene.add(model);
 
@@ -594,8 +594,14 @@ export function setupCanvas() {
       const reader = new FileReader();
       reader.readAsText(file, "UTF-8");
       reader.onload = function (event) {
-        const jsonModel = JSON.parse(event.target.result);
-        const read = window.DeserializePrimitive(jsonModel);
+        const json = JSON.parse(event.target.result);
+        const read = window.DeserializePrimitive(json.scene);
+        app.environmentMapping = json.environmentMapping;
+        app.textureMapping = json.textureMapping;
+        app.useNormalMap = json.useNormalMap;
+        app.useDiffuseMap = json.useDiffuseMap;
+        app.useSpecularMap = json.useSpecularMap;
+        app.useDisplacementMap = json.useDisplacementMap;
         app.scene = read;
         app.model = null;
         app.isHollow = true;
@@ -614,9 +620,9 @@ export function setupCanvas() {
               break;
             }
           }
-        } else {
-          setupSceneGraph();
         }
+
+        setupSceneGraph();
       };
     }
   });
@@ -624,9 +630,18 @@ export function setupCanvas() {
   const saveModelButton = document.getElementById("save-model");
   saveModelButton.addEventListener("click", function () {
     const sceneJSON = app.scene.toJSON();
+    const json = {
+      scene: sceneJSON,
+      environmentMapping: app.environmentMapping,
+      textureMapping: app.textureMapping,
+      useNormalMap: app.useNormalMap,
+      useDiffuseMap: app.useDiffuseMap,
+      useSpecularMap: app.useSpecularMap,
+      useDisplacementMap: app.useDisplacementMap,
+    };
     const dataStr =
       "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(sceneJSON));
+      encodeURIComponent(JSON.stringify(json));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", "scene.json");

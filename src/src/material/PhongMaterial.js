@@ -76,7 +76,7 @@ export class PhongMaterial extends ShaderMaterial {
       varying vec4 v_color;
 
       void main() {
-          vec3 L = -normalize(v_lightDirection - v_vertexPosition);
+          vec3 L = normalize(v_lightDirection - v_vertexPosition);
           vec3 V = normalize(v_cameraPosition);
           vec3 H = normalize(L + V);
           vec3 N;
@@ -105,11 +105,11 @@ export class PhongMaterial extends ShaderMaterial {
           }
 
           if (u_useSpecularMap && u_useTextureMapping) {
-            u_specularColor *
+            specular = u_specularColor *
               pow(max(dot(N, H), 0.0), u_shininess) *
               texture2D(u_specularMap, v_texcoord);
           } else {
-            u_specularColor *
+            specular = u_specularColor *
               pow(max(dot(N, H), 0.0), u_shininess);
           }
 
