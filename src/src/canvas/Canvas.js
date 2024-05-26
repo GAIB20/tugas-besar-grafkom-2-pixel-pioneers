@@ -24,6 +24,7 @@ import obj from "../models/articulated/obj";
 import { DirectionalLight } from "../light/DirectionalLight";
 import minecraftAnimation from "../models/animations/minecraftAnimation";
 import objAnimation from "../models/animations/objAnimation";
+import fishAnimation from "../models/animations/fishAnimation";
 import catAnimation from "../models/animations/catAnimation";
 import { hollowCube, hollowCubeColor, hollowCubeUV } from "../models/hollow/hollowCube"
 import { OrbitControl } from "../camera/OrbitControl";
