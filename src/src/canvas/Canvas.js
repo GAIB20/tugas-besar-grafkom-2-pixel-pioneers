@@ -602,6 +602,7 @@ export function setupCanvas() {
         app.useDiffuseMap = json.useDiffuseMap;
         app.useSpecularMap = json.useSpecularMap;
         app.useDisplacementMap = json.useDisplacementMap;
+        app.texture = json.texture;
         app.scene = read;
         app.model = null;
         app.isHollow = true;
@@ -612,13 +613,82 @@ export function setupCanvas() {
             break;
           }
         }
-        
+
         if (app.isHollow) {
           for (let child of app.scene.children) {
             if (child.type == "Mesh") {
               app.hollowObject = child;
               break;
             }
+          }
+        }
+
+        // Set HTML
+        if (app.environmentMapping) {
+          setOption(mappingSelect, "environment")
+          textureProperties.style.display = "none";
+        } else if (app.textureMapping) {
+          setOption(mappingSelect, "texture")
+          textureProperties.style.display = "block";
+
+          if (app.texture === "brick") {
+            app.webgl.loadTextures(
+              "./textures/brick/brick_normal.png",
+              "./textures/brick/brick_diffuse.png",
+              "./textures/brick/brick_specular.png",
+              "./textures/brick/brick_displacement.png"
+            );
+
+            app.webgl2.loadTextures(
+              "./textures/brick/brick_normal.png",
+              "./textures/brick/brick_diffuse.png",
+              "./textures/brick/brick_specular.png",
+              "./textures/brick/brick_displacement.png"
+            );
+          } else if (app.texture === "metal") {
+            app.webgl.loadTextures(
+              "./textures/metal/metal_normal.jpg",
+              "./textures/metal/metal_diffuse.jpg",
+              "./textures/metal/metal_specular.jpg",
+              "./textures/metal/metal_displacement.jpg"
+            );
+
+            app.webgl2.loadTextures(
+              "./textures/metal/metal_normal.jpg",
+              "./textures/metal/metal_diffuse.jpg",
+              "./textures/metal/metal_specular.jpg",
+              "./textures/metal/metal_displacement.jpg"
+            );
+          } else if (app.texture === "wood") {
+            app.webgl.loadTextures(
+              "./textures/wood/wood_normal.jpg",
+              "./textures/wood/wood_diffuse.jpg",
+              "./textures/wood/wood_specular.jpg",
+              "./textures/wood/wood_displacement.jpg"
+            );
+
+            app.webgl2.loadTextures(
+              "./textures/wood/wood_normal.jpg",
+              "./textures/wood/wood_diffuse.jpg",
+              "./textures/wood/wood_specular.jpg",
+              "./textures/wood/wood_displacement.jpg"
+            );
+          } 
+
+        } else {
+          setOption(mappingSelect, "color");
+          textureProperties.style.display = "none";
+        }
+
+        diffuseChecbox.checked = app.useDiffuseMap;
+        specularChecbox.checked = app.useSpecularMap;
+        normalChecbox.checked = app.useNormalMap;
+        displacementChecbox.checked = app.useDisplacementMap;
+        textureSelect.value = app.texture;
+
+        for (let child of app.scene.children) {
+          if (child instanceof DirectionalLight) {
+            lightColorInput.value = child.color.hex;
           }
         }
 
@@ -638,6 +708,7 @@ export function setupCanvas() {
       useDiffuseMap: app.useDiffuseMap,
       useSpecularMap: app.useSpecularMap,
       useDisplacementMap: app.useDisplacementMap,
+      texture: textureSelect.value,
     };
     const dataStr =
       "data:text/json;charset=utf-8," +
@@ -1329,23 +1400,23 @@ export function handleMaterialChange(compName) {
       materialColor.addEventListener("change", handleColorChange);
     }
 
-    const setMaterial = (element, value) => {
-      for (let i = 0; i < element.options.length; i++) {
-        if (element.options[i].value === value) {
-          element.selectedIndex = i;
-          break;
-        }
-      }
-    };
-
     if (app.comp.material instanceof PhongMaterial) {
-      setMaterial(app.materialSelect, "phong");
+      setOption(app.materialSelect, "phong");
       basicContainer.style.display = "none";
       phongContainer.style.display = "block";
     } else if (app.comp.material instanceof BasicMaterial) {
-      setMaterial(app.materialSelect, "basic");
+      setOption(app.materialSelect, "basic");
       basicContainer.style.display = "block";
       phongContainer.style.display = "none";
     }
   }
 }
+
+const setOption = (element, value) => {
+  for (let i = 0; i < element.options.length; i++) {
+    if (element.options[i].value === value) {
+      element.selectedIndex = i;
+      break;
+    }
+  }
+};

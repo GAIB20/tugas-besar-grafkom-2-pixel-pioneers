@@ -40,7 +40,7 @@ export class Spotlight extends Light {
 
     if (!spotlight) {
       spotlight = new Spotlight(
-        json.color,
+        Color.fromJSON(json.color),
         uniforms.spotlightPosition,
         uniforms.spotlightDirection,
         uniforms.spotlightCutoff,

@@ -85,7 +85,7 @@ export class BasicMaterial extends ShaderMaterial {
   }
 
   static fromJSON(json, material = null) {
-    if (!material) material = new BasicMaterial(json.name, json.color);
+    if (!material) material = new BasicMaterial(json.name, Color.fromJSON(json.color));
     super.fromJSON(json, material);
 
     return material;

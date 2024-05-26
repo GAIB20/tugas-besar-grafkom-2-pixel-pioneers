@@ -67,7 +67,7 @@ export class DirectionalLight extends Light {
       }
     }
 
-    if (!light) light = new DirectionalLight(json.color, uniforms);
+    if (!light) light = new DirectionalLight(Color.fromJSON(json.color), uniforms);
     super.fromJSON(json, light);
 
     return light;

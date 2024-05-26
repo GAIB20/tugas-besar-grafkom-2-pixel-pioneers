@@ -32,7 +32,7 @@ export class Light extends Component {
 
     if (!light) {
       light = new Light(
-        json.color,
+        Color.fromJSON(json.color),
         uniforms
       );
     } else {
@@ -57,7 +57,6 @@ export class Light extends Component {
 
       uniforms[key] = uniformValue;
     }
-
     return {
       uniforms,
       color: this._color
