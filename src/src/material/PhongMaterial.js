@@ -87,8 +87,8 @@ export class PhongMaterial extends ShaderMaterial {
       varying vec4 v_color;
 
       void main() {
-          vec3 L = -normalize(v_lightDirection - v_vertexPosition);
-          vec3 V = normalize(v_cameraPosition);
+          vec3 L = normalize(-v_lightDirection);
+          vec3 V = normalize(v_cameraPosition - v_vertexPosition);
           vec3 H = normalize(L + V);
           vec3 N;
           vec4 diffuse;
