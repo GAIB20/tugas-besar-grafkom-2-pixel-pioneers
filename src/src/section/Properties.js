@@ -197,17 +197,17 @@ export function setupProperties(element) {
                 <div class="transformation-container">
                     <div class="slider-container">
                         <p>X</p>
-                        <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglex-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-object-anglex-slider">
                         <p id="fullview-object-anglex-value" class="value-display">0</p>
                     </div>
                     <div class="slider-container">
                         <p>Y</p>
-                        <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-angley-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-object-angley-slider">
                         <p id="fullview-object-angley-value" class="value-display">0</p>
                     </div>
                     <div class="slider-container">
                         <p>Z</p>
-                        <input type="range" min="0" max="360" value="0" class="slider" id="fullview-object-anglez-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="fullview-object-anglez-slider">
                         <p id="fullview-object-anglez-value" class="value-display">0</p>
                     </div>
                 </div>
@@ -330,17 +330,17 @@ export function setupProperties(element) {
                 <div class="transformation-container">
                     <div class="slider-container">
                         <p>X</p>
-                        <input type="range" min="0" max="360" value="0" class="slider" id="partview-object-anglex-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="partview-object-anglex-slider">
                         <p id="partview-object-anglex-value" class="value-display">0</p>
                     </div>
                     <div class="slider-container">
                         <p>Y</p>
-                        <input type="range" min="0" max="360" value="0" class="slider" id="partview-object-angley-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="partview-object-angley-slider">
                         <p id="partview-object-angley-value" class="value-display">0</p>
                     </div>
                     <div class="slider-container">
                         <p>Z</p>
-                        <input type="range" min="0" max="360" value="0" class="slider" id="partview-object-anglez-slider">
+                        <input type="range" min="-180" max="180" value="0" class="slider" id="partview-object-anglez-slider">
                         <p id="partview-object-anglez-value" class="value-display">0</p>
                     </div>
                 </div>
